@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student ID Card Generator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTML2Canvas for capturing DOM as image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF for generating PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Cropper.js for image editing -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=Playfair+Display:wght@400;700;900&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for the ID card to ensure exact dimensions and professional look */
+        .id-card-container {
+            width: 3.375in; /* Standard landscape ID card width */
+            height: 2.125in; /* Standard landscape ID card height */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            background-color: white;
+            position: relative;
+        }
+        
+        .id-card-back {
+            flex-direction: column !important;
+        }
+ 
+        .photo-section {
+            width: 35%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+ 
+        .photo-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top; /* Keeps headshots focused on the face */
+        }
+        
+        .info-section {
+            width: 65%;
+            padding: 0.15in;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Barcode Pattern */
+        .barcode {
+            background: repeating-linear-gradient(
+                90deg,
+                #000,
+                #000 1px,
+                #fff 1px,
+                #fff 3px
+            );
+        }
+
+        /* Style for the 3D "ghost" buttons */
+        .modern-button {
+            background-color: transparent; /* No fill color by default */
+            color: #4F46E5; /* Text color is the indigo */
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px; /* Pill shape */
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 600; /* semibold */
+            transition: all 0.15s ease-out; /* Snappy transition */
+            border: 2px solid #4F46E5; /* Visible outline */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px #4338CA; /* Darker indigo shadow for depth */
+            position: relative;
+            top: 0;
+        }
+ 
+        .modern-button:hover {
+            background-color: #4F46E5; /* Fill color appears on hover */
+            color: #fff; /* White text on hover */
+            top: 2px;
+            box-shadow: 0 2px #4338CA; /* Reduce shadow to simulate pressing */
+        }
+        
+        .modern-button:active {
+            top: 4px;
+            box-shadow: 0 0 #4338CA;
+        }
+
+        .modern-button-green {
+            background-color: transparent;
+            color: #16A34A; /* green-600 */
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.15s ease-out;
+            border: 2px solid #16A34A;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px #14532D; /* green-800 */
+            position: relative;
+            top: 0;
+        }
+
+        .modern-button-green:hover {
+            background-color: #16A34A;
+            color: #fff;
+            top: 2px;
+            box-shadow: 0 2px #14532D;
+        }
+
+        .modern-button-green:active {
+            top: 4px;
+            box-shadow: 0 0 #14532D;
+        }
+        
+        .modern-button-purple {
+            background-color: transparent;
+            color: #9333EA; /* purple-600 */
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.15s ease-out;
+            border: 2px solid #9333EA;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px #7E22CE; /* purple-800 */
+            position: relative;
+            top: 0;
+        }
+
+        .modern-button-purple:hover {
+            background-color: #9333EA;
+            color: #fff;
+            top: 2px;
+            box-shadow: 0 2px #7E22CE;
+        }
+
+        .modern-button-purple:active {
+            top: 4px;
+            box-shadow: 0 0 #7E22CE;
+        }
+
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .font-cursive {
+            font-family: 'Great Vibes', cursive;
+        }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://esm.run/@google/genai"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
