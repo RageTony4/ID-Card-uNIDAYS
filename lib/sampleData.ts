@@ -15,7 +15,8 @@ const lastNames = [
 
 const universities = [
   'Community-Ed Academy',
-  'CommunityNI'
+  'CommunityNI',
+  'University of Warwick'
 ];
 
 const streets = [

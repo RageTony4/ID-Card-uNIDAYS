@@ -32,7 +32,8 @@ const FEMALE_HEADSHOTS = [
 
 const SCHOOLS = [
     'Community-Ed Academy',
-    'CommunityNI'
+    'CommunityNI',
+    'University of Warwick'
 ];
 
 const EditorPanel: React.FC<EditorPanelProps> = ({ 
@@ -159,7 +160,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="md:col-span-2">
              <label className="block text-sm font-medium text-gray-700 mb-1">Select School</label>
-             <div className="flex gap-2 mb-2">
+             <div className="flex flex-wrap gap-2 mb-2">
                 {SCHOOLS.map(school => (
                     <button
                         key={school}
