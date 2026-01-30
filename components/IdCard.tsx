@@ -86,7 +86,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
   // Calculate expiry date (Common logic)
   const today = new Date();
-  const expiryYear = today.getFullYear() + 3;
+  const expiryYear = 2029; // Fixed relative to 2026 enrollment
   const expiryMonth = String(today.getMonth() + 1).padStart(2, '0');
   const expiryDay = String(today.getDate()).padStart(2, '0');
   const expiryDateString = `${expiryDay}-${expiryMonth}-${expiryYear}`;
@@ -136,10 +136,10 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                          <span className="font-black text-black">{studentInfo.studentId}</span>
                     </div>
                     
-                     {/* Enrolled */}
+                     {/* Enrolled - Updated to 2026 */}
                     <div className="flex items-baseline text-[10px]">
                          <span className="text-gray-500 font-medium w-14">Enrolled</span>
-                         <span className="font-black text-black">2025</span>
+                         <span className="font-black text-black">2026</span>
                     </div>
                 </div>
 
@@ -177,9 +177,20 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   // Elegant Template
   if (template === 'elegant') {
     const names = studentInfo.studentName.split(' ');
-    const lastName = names.length > 1 ? names[names.length - 1] : names[0];
-    const firstName = names.length > 1 ? names.slice(0, -1).join(' ') : '';
-    const location = studentInfo.universityName === 'CommunityNI' ? 'Belfast' : 'Great Yarmouth, GB';
+    // Keep names in input order (First Last)
+    const displayName = studentInfo.studentName;
+    const lastNamePart = names.length > 1 ? names[names.length - 1] : names[0];
+    
+    // Geographical Logic
+    let location = 'Great Yarmouth, GB';
+    if (studentInfo.universityName.includes('Kenya Medical Training College')) {
+      location = 'Kakamega, Kenya';
+    } else if (studentInfo.universityName === 'CommunityNI') {
+      location = 'Belfast';
+    }
+
+    // Header Font Scaling for long names like KMTC
+    const isLongName = studentInfo.universityName.length > 25;
 
     return (
       <div ref={ref} className="id-card-container shadow-lg relative bg-white overflow-hidden flex flex-row">
@@ -207,7 +218,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             <div className="flex-1 flex flex-col pt-1 pl-2">
                 {/* Header */}
                 <div className="text-center mb-4">
-                    <h1 className="font-sans text-[18px] font-black tracking-tight leading-none text-gray-900 uppercase">
+                    <h1 className={`font-sans ${isLongName ? 'text-[14px]' : 'text-[18px]'} font-black tracking-tight leading-tight text-gray-900 uppercase`}>
                         {studentInfo.universityName}
                     </h1>
                     <p className="text-[11px] text-gray-900 font-bold mt-0.5">
@@ -218,8 +229,8 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 {/* Name */}
                 <div className="mb-2">
                     <p className="font-playfair font-bold text-[9px] text-black leading-none mb-0.5 opacity-80">Name</p>
-                    <p className="font-playfair font-black text-sm text-black leading-none">
-                        {lastName}, {firstName}
+                    <p className="font-playfair font-black text-sm text-black leading-none uppercase">
+                        {displayName}
                     </p>
                 </div>
 
@@ -232,7 +243,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                             alt="Ghost" 
                             className="w-14 h-16 object-cover border border-gray-300 bg-orange-50 opacity-90" 
                         />
-                        <p className="text-[7px] font-bold text-black text-center uppercase leading-none mt-0.5 w-full overflow-hidden text-ellipsis">{lastName}</p>
+                        <p className="text-[7px] font-bold text-black text-center uppercase leading-none mt-0.5 w-full overflow-hidden text-ellipsis">{lastNamePart}</p>
                     </div>
 
                     <div className="flex flex-col space-y-2 pt-0.5">
@@ -250,9 +261,10 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                                 <p className="text-[10px] text-black font-black leading-none">{studentInfo.dob}</p>
                             </div>
                             
-                            <div className="bg-yellow-50 border-l-2 border-black pl-2 pr-1 py-0.5 -ml-2">
+                            {/* Date Enrolled Box - Updated to 2026 */}
+                            <div className="bg-yellow-50 border-l-2 border-black pl-2 pr-1 py-1 -ml-2">
                                 <p className="text-[8px] text-black font-bold leading-none mb-0.5 uppercase">Date Enrolled</p>
-                                <p className="text-[12px] text-black font-black leading-none">2025</p>
+                                <p className="text-[12px] text-black font-black leading-none">2026</p>
                             </div>
                         </div>
                     </div>
@@ -353,7 +365,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 <div className="mt-auto flex justify-between items-end">
                      <div>
                          <p className="text-[6px] text-gray-400 uppercase font-bold tracking-wider">Expires</p>
-                         <p className="text-[8px] font-bold text-gray-800">AUG 2025</p>
+                         <p className="text-[8px] font-bold text-gray-800">AUG 2029</p>
                      </div>
                      {/* QR Code Placeholder */}
                      <div className="w-10 h-10 bg-white border border-gray-200 p-0.5">

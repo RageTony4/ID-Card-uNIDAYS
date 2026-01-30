@@ -11,10 +11,10 @@ const App: React.FC = () => {
     universityName: 'Community-Ed Academy',
     studentName: 'EMILY WATSON',
     dob: '14 May 2004',
-    studentId: 'CEA-24-8219',
+    studentId: 'CEA-26-8219',
     phone: '+44 7700 900461',
     address: '42 High Street, Kensington, London, SW7 2AZ',
-    academicYear: '2024/2025',
+    academicYear: '2026/2027',
     photo: 'https://picsum.photos/seed/ukstudent/252/324',
     logo: null,
     bloodGroup: 'O+',
@@ -56,10 +56,11 @@ const App: React.FC = () => {
   };
 
   const handleGenerateSample = () => {
-    const newInfo = generateRandomStudentInfo();
-    // Keep existing logo if user uploaded one, otherwise reset to null or keep random behavior
+    // Pass current university to keep it fixed while randomizing other details
+    const newInfo = generateRandomStudentInfo(studentInfo.universityName);
+    // Keep existing logo if user uploaded one
     setStudentInfo(prev => ({ ...newInfo, logo: prev.logo })); 
-    showToast('Sample data generated!', 'success');
+    showToast('Student details randomized!', 'success');
   };
 
   const showToast = (message: string, type: ToastType) => {

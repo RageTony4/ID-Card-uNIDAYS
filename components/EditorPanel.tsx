@@ -33,7 +33,8 @@ const FEMALE_HEADSHOTS = [
 const SCHOOLS = [
     'Community-Ed Academy',
     'CommunityNI',
-    'University of Warwick'
+    'University of Warwick',
+    'Kenya Medical Training College (Kakamega)'
 ];
 
 const EditorPanel: React.FC<EditorPanelProps> = ({ 
