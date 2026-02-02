@@ -20,6 +20,16 @@ const universities = [
   'Community-Ed Academy',
   'CommunityNI',
   'University of Warwick',
+  'Brookfield Community School',
+  'Cranford Community College',
+  'Delgado Community College',
+  'Faringdon Community College',
+  'Heston Community School',
+  'Hinds Community College',
+  'Knowsley Community College',
+  'Laurelhill Community College',
+  'Bournemouth University',
+  'Church Stretton School',
   'Kenya Medical Training College (Kakamega)'
 ];
 

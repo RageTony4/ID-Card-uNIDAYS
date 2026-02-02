@@ -13,11 +13,10 @@ interface PreviewPanelProps {
 const MOCKUP_SCENES = [
   { url: "https://files.catbox.moe/021b0u.png", label: "Table Lanyard" },
   { url: "https://files.catbox.moe/6rjppv.jfif", label: "Hand Held" },
-  { url: "https://files.catbox.moe/7whmdp.jpg", label: "Scene 3" },
-  { url: "https://files.catbox.moe/f1s4iq.jfif", label: "Scene 4" },
-  { url: "https://files.catbox.moe/a9m3dg.jfif", label: "Scene 5" },
-  { url: "https://files.catbox.moe/tznqvs.png", label: "Scene 6" },
-  { url: "https://files.catbox.moe/5x1rs6.png", label: "Scene 7" }
+  { url: "https://files.catbox.moe/j9s890.png", label: "Natural View 1" },
+  { url: "https://files.catbox.moe/0nk6tf.png", label: "Natural View 2" },
+  { url: "https://files.catbox.moe/jkxmsd.png", label: "Natural View 3" },
+  { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, showToast }) => {
@@ -252,7 +251,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
               }
             },
             {
-              text: "The first image is a real photo of an ID card in a scene (on a table, in a holder, or on a lanyard). The second image is a flat digital ID card design. Replace the visual content of the ID card in the first image with the design from the second image. Maintain the exact perspective, lighting, shadows, glare, color temperature, and any physical obstructions (like lanyards, clips, or plastic holders) of the original photo. The result should look like a realistic photograph of the new ID card in the original scene."
+              text: "The first image is a real photo of an ID card in a scene with a phone camera aesthetic, featuring natural lighting and realistic reflections. The second image is a flat digital ID card design. Replace the visual content of the ID card in the first image with the design from the second image. Meticulously preserve the phone camera lens characteristics, natural lighting, soft shadows, realistic glares/reflections on the card surface, color temperature, and any physical obstructions (like lanyards, clips, or plastic holders). The result must look like a realistic smartphone snapshot of the new ID card in the original scene."
             }
           ]
         }
