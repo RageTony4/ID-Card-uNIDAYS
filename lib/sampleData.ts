@@ -1,19 +1,44 @@
 
 import { StudentInfo } from '../types';
 
-const firstNames = [
+const UK_FIRST_NAMES = [
   'James', 'Olivia', 'Jack', 'Sophie', 'Harry', 'Emily', 'Charlie', 'Amelia', 'Thomas', 'Isabella',
   'George', 'Ava', 'Oscar', 'Mia', 'William', 'Grace', 'Noah', 'Lily', 'Alfie', 'Evie',
   'Leo', 'Freya', 'Jacob', 'Florence', 'Archie', 'Daisy', 'Henry', 'Poppy', 'Joshua', 'Sienna',
-  'Kiprop', 'Wanjala', 'Achieng', 'Moraa', 'Nekesa', 'Juma', 'Kiplagat', 'Kamau', 'Mutua',
-  'Samuel', 'David', 'Sarah', 'Jessica', 'Daniel', 'Michael', 'Ruth', 'Naomi', 'Peter', 'John'
+  'Arthur', 'Ivy', 'Theo', 'Willow', 'Freddie', 'Phoebe', 'Mason', 'Evelyn', 'Isaac', 'Ella',
+  'Zoe', 'Lucas', 'Arlo', 'Luna', 'Teddy', 'Maya', 'Finley', 'Mila', 'Toby', 'Thea',
+  'Jude', 'Ada', 'Hugo', 'Hallie', 'Roman', 'Lottie', 'Sebastian', 'Rose', 'Felix', 'Aurora',
+  'Reuben', 'Orla', 'Rory', 'Iris', 'Ezra', 'Matilda', 'Oliver', 'Charlotte', 'Benjamin', 'Alice'
 ];
 
-const lastNames = [
+const UK_LAST_NAMES = [
   'Smith', 'Jones', 'Taylor', 'Williams', 'Brown', 'Davies', 'Evans', 'Wilson', 'Thomas', 'Roberts',
   'Johnson', 'Lewis', 'Walker', 'Robinson', 'Wood', 'Thompson', 'White', 'Watson', 'Jackson', 'Wright',
   'Green', 'Harris', 'Cooper', 'King', 'Lee', 'Martin', 'Clarke', 'James', 'Morgan', 'Hughes',
-  'Onyango', 'Kariuki', 'Mwangi', 'Otieno', 'Njoroge', 'Maina', 'Kipchumba', 'Ochieng', 'Kamau', 'Karanja'
+  'Edwards', 'Hill', 'Moore', 'Harrison', 'Scott', 'Young', 'Morris', 'Ward', 'Knight', 'Turner',
+  'Miller', 'Davis', 'Anderson', 'Clark', 'Marshall', 'Collins', 'Bennett', 'Cox', 'Richardson', 'Fox',
+  'Gray', 'Rose', 'Chapman', 'Hunt', 'Palmer', 'Mills', 'Holmes', 'Rogers', 'Stevens', 'Walsh',
+  'Hunter', 'Webb', 'Simpson', 'Mason', 'Butler'
+];
+
+const KENYA_FIRST_NAMES = [
+  'Kiprop', 'Wanjala', 'Achieng', 'Moraa', 'Nekesa', 'Juma', 'Kiplagat', 'Kamau', 'Mutua', 'Samuel',
+  'David', 'Sarah', 'Jessica', 'Daniel', 'Michael', 'Ruth', 'Naomi', 'Peter', 'John', 'Kibet',
+  'Kipkorir', 'Kipkemoi', 'Maina', 'Mwangi', 'Njoroge', 'Karanja', 'Njenga', 'Kimani', 'Otieno', 'Onyango',
+  'Ochieng', 'Odhiambo', 'Okoth', 'Owino', 'Atieno', 'Adhiambo', 'Akoth', 'Akinyi', 'Anyango', 'Wekesa',
+  'Wafula', 'Simiyu', 'Barasa', 'Nafula', 'Nasimiyu', 'Njeri', 'Wambui', 'Wangari', 'Muthoni', 'Nyambura',
+  'Mumbi', 'Dzame', 'Mbeyu', 'Khadija', 'Fatuma', 'Amina', 'Zainabu', 'Zawadi', 'Neema', 'Pendo',
+  'Rehema', 'Hamisi', 'Bakari', 'Omar', 'Ali', 'Hassan', 'Saidi', 'Abdallah', 'Musa', 'Yusuf', 'Ibrahim'
+];
+
+const KENYA_LAST_NAMES = [
+  'Onyango', 'Kariuki', 'Mwangi', 'Otieno', 'Njoroge', 'Maina', 'Kipchumba', 'Ochieng', 'Kamau', 'Karanja',
+  'Kipkorir', 'Kipkemoi', 'Kiprotich', 'Kipchirchir', 'Kipsang', 'Kiprono', 'Kiplagat', 'Kiprop', 'Kiptoo', 'Kiptum',
+  'Chebet', 'Chepkoech', 'Chepkirui', 'Cherono', 'Cheruiyot', 'Chepngetich', 'Chepkorir', 'Juma', 'Wanjala', 'Wafula',
+  'Simiyu', 'Wekesa', 'Barasa', 'Nekesa', 'Nafula', 'Nasimiyu', 'Okoth', 'Owino', 'Odhiambo', 'Omondi',
+  'Okeyo', 'Oluoch', 'Obiero', 'Ouma', 'Okumu', 'Ogeto', 'Moraa', 'Nyaboke', 'Kerubo', 'Kwamboka',
+  'Kemunto', 'Mogaka', 'Onsongo', 'Nyambane', 'Makori', 'Kebaso', 'Mutua', 'Musyoka', 'Muli', 'Mwikali',
+  'Syombua', 'Ndambuki', 'Kilonzo', 'Mutisya', 'Musyoki'
 ];
 
 const universities = [
@@ -33,10 +58,13 @@ const universities = [
   'Kenya Medical Training College (Kakamega)'
 ];
 
-const cities = [
+const UK_CITIES = [
   'London', 'Manchester', 'Birmingham', 'Leeds', 'Glasgow', 'Southampton', 'Liverpool', 'Newcastle', 'Sheffield',
-  'Bristol', 'Nottingham', 'Leicester', 'Edinburgh', 'Cardiff', 'Belfast', 'Brighton', 'Cambridge', 'Oxford',
-  'Kakamega', 'Nairobi', 'Kisumu', 'Mombasa', 'Eldoret'
+  'Bristol', 'Nottingham', 'Leicester', 'Edinburgh', 'Cardiff', 'Belfast', 'Brighton', 'Cambridge', 'Oxford'
+];
+
+const KENYA_CITIES = [
+  'Kakamega', 'Nairobi', 'Kisumu', 'Mombasa', 'Eldoret', 'Nakuru', 'Machakos', 'Thika'
 ];
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -80,15 +108,15 @@ const getRandomPostcode = (isKenyan: boolean): string => {
 
 /**
  * Generates random student info. 
- * If fixedUniversity is provided, it will stay on that school.
+ * If fixedUniversity is provided, it will stay on that school and use relevant region data.
  */
 export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo => {
   const university = fixedUniversity || getRandomElement(universities);
   const isKenyan = university.includes('Kenya Medical Training College');
   
-  const firstName = getRandomElement(firstNames);
-  const lastName = getRandomElement(lastNames);
-  const city = isKenyan ? 'Kakamega' : getRandomElement(cities);
+  const firstName = isKenyan ? getRandomElement(KENYA_FIRST_NAMES) : getRandomElement(UK_FIRST_NAMES);
+  const lastName = isKenyan ? getRandomElement(KENYA_LAST_NAMES) : getRandomElement(UK_LAST_NAMES);
+  const city = isKenyan ? getRandomElement(KENYA_CITIES) : getRandomElement(UK_CITIES);
   const postcode = getRandomPostcode(isKenyan);
 
   // Using timestamp in seed to ensure high uniqueness for photos
@@ -100,7 +128,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     dob: getRandomDate(),
     studentId: getRandomId(university),
     phone: getRandomPhoneNumber(isKenyan),
-    address: isKenyan ? `${postcode}, Kakamega, Kenya` : `${Math.floor(Math.random() * 100) + 1} High Street, ${city}, ${postcode}`,
+    address: isKenyan ? `${postcode}, ${city}, Kenya` : `${Math.floor(Math.random() * 100) + 1} High Street, ${city}, ${postcode}`,
     academicYear: '2026/2027',
     photo: `https://picsum.photos/seed/${photoSeed}/252/324`,
     logo: null,
