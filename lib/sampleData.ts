@@ -1,14 +1,47 @@
 
 import { StudentInfo } from '../types';
 
-const UK_FIRST_NAMES = [
-  'James', 'Olivia', 'Jack', 'Sophie', 'Harry', 'Emily', 'Charlie', 'Amelia', 'Thomas', 'Isabella',
-  'George', 'Ava', 'Oscar', 'Mia', 'William', 'Grace', 'Noah', 'Lily', 'Alfie', 'Evie',
-  'Leo', 'Freya', 'Jacob', 'Florence', 'Archie', 'Daisy', 'Henry', 'Poppy', 'Joshua', 'Sienna',
-  'Arthur', 'Ivy', 'Theo', 'Willow', 'Freddie', 'Phoebe', 'Mason', 'Evelyn', 'Isaac', 'Ella',
-  'Zoe', 'Lucas', 'Arlo', 'Luna', 'Teddy', 'Maya', 'Finley', 'Mila', 'Toby', 'Thea',
-  'Jude', 'Ada', 'Hugo', 'Hallie', 'Roman', 'Lottie', 'Sebastian', 'Rose', 'Felix', 'Aurora',
-  'Reuben', 'Orla', 'Rory', 'Iris', 'Ezra', 'Matilda', 'Oliver', 'Charlotte', 'Benjamin', 'Alice'
+const MALE_AVATARS = [
+  "https://files.catbox.moe/m7lj8u.png",
+  "https://files.catbox.moe/u1skwz.png",
+  "https://files.catbox.moe/z2ersq.png",
+  "https://files.catbox.moe/3kliif.png",
+  "https://files.catbox.moe/a4f1ct.png",
+  "https://files.catbox.moe/8eq6dp.png"
+];
+
+const FEMALE_AVATARS = [
+  "https://files.catbox.moe/bx9f18.png",
+  "https://files.catbox.moe/w22pf1.png",
+  "https://files.catbox.moe/4w42hk.png",
+  "https://files.catbox.moe/c0ot8t.png"
+];
+
+const UK_MALE_FIRST_NAMES = [
+  'James', 'Jack', 'Harry', 'Charlie', 'George', 'Oscar', 'William', 'Noah', 'Alfie', 'Leo',
+  'Jacob', 'Archie', 'Henry', 'Joshua', 'Arthur', 'Theo', 'Freddie', 'Mason', 'Isaac', 'Lucas',
+  'Arlo', 'Teddy', 'Finley', 'Toby', 'Jude', 'Hugo', 'Roman', 'Sebastian', 'Felix', 'Reuben',
+  'Rory', 'Ezra', 'Oliver', 'Benjamin'
+];
+
+const UK_FEMALE_FIRST_NAMES = [
+  'Olivia', 'Sophie', 'Emily', 'Amelia', 'Isabella', 'Ava', 'Mia', 'Grace', 'Lily', 'Evie',
+  'Freya', 'Florence', 'Daisy', 'Poppy', 'Sienna', 'Ivy', 'Willow', 'Phoebe', 'Evelyn', 'Ella',
+  'Zoe', 'Luna', 'Maya', 'Mila', 'Thea', 'Ada', 'Hallie', 'Lottie', 'Rose', 'Aurora',
+  'Orla', 'Iris', 'Matilda', 'Charlotte', 'Alice'
+];
+
+const KENYA_MALE_FIRST_NAMES = [
+  'Kiprop', 'Wanjala', 'Juma', 'Kiplagat', 'Kamau', 'Mutua', 'Samuel', 'David', 'Daniel', 'Michael',
+  'Peter', 'John', 'Kibet', 'Kipkorir', 'Kipkemoi', 'Maina', 'Mwangi', 'Njoroge', 'Karanja', 'Njenga',
+  'Kimani', 'Otieno', 'Onyango', 'Ochieng', 'Odhiambo', 'Okoth', 'Owino', 'Wekesa', 'Wafula', 'Simiyu',
+  'Barasa', 'Hamisi', 'Bakari', 'Omar', 'Ali', 'Hassan', 'Saidi', 'Abdallah', 'Musa', 'Yusuf', 'Ibrahim'
+];
+
+const KENYA_FEMALE_FIRST_NAMES = [
+  'Achieng', 'Moraa', 'Nekesa', 'Sarah', 'Jessica', 'Ruth', 'Naomi', 'Atieno', 'Adhiambo', 'Akoth',
+  'Akinyi', 'Anyango', 'Nafula', 'Nasimiyu', 'Njeri', 'Wambui', 'Wangari', 'Muthoni', 'Nyambura', 'Mumbi',
+  'Dzame', 'Mbeyu', 'Khadija', 'Fatuma', 'Amina', 'Zainabu', 'Zawadi', 'Neema', 'Pendo', 'Rehema'
 ];
 
 const UK_LAST_NAMES = [
@@ -16,19 +49,7 @@ const UK_LAST_NAMES = [
   'Johnson', 'Lewis', 'Walker', 'Robinson', 'Wood', 'Thompson', 'White', 'Watson', 'Jackson', 'Wright',
   'Green', 'Harris', 'Cooper', 'King', 'Lee', 'Martin', 'Clarke', 'James', 'Morgan', 'Hughes',
   'Edwards', 'Hill', 'Moore', 'Harrison', 'Scott', 'Young', 'Morris', 'Ward', 'Knight', 'Turner',
-  'Miller', 'Davis', 'Anderson', 'Clark', 'Marshall', 'Collins', 'Bennett', 'Cox', 'Richardson', 'Fox',
-  'Gray', 'Rose', 'Chapman', 'Hunt', 'Palmer', 'Mills', 'Holmes', 'Rogers', 'Stevens', 'Walsh',
-  'Hunter', 'Webb', 'Simpson', 'Mason', 'Butler'
-];
-
-const KENYA_FIRST_NAMES = [
-  'Kiprop', 'Wanjala', 'Achieng', 'Moraa', 'Nekesa', 'Juma', 'Kiplagat', 'Kamau', 'Mutua', 'Samuel',
-  'David', 'Sarah', 'Jessica', 'Daniel', 'Michael', 'Ruth', 'Naomi', 'Peter', 'John', 'Kibet',
-  'Kipkorir', 'Kipkemoi', 'Maina', 'Mwangi', 'Njoroge', 'Karanja', 'Njenga', 'Kimani', 'Otieno', 'Onyango',
-  'Ochieng', 'Odhiambo', 'Okoth', 'Owino', 'Atieno', 'Adhiambo', 'Akoth', 'Akinyi', 'Anyango', 'Wekesa',
-  'Wafula', 'Simiyu', 'Barasa', 'Nafula', 'Nasimiyu', 'Njeri', 'Wambui', 'Wangari', 'Muthoni', 'Nyambura',
-  'Mumbi', 'Dzame', 'Mbeyu', 'Khadija', 'Fatuma', 'Amina', 'Zainabu', 'Zawadi', 'Neema', 'Pendo',
-  'Rehema', 'Hamisi', 'Bakari', 'Omar', 'Ali', 'Hassan', 'Saidi', 'Abdallah', 'Musa', 'Yusuf', 'Ibrahim'
+  'Miller', 'Davis', 'Anderson', 'Clark', 'Marshall', 'Collins', 'Bennett', 'Cox', 'Richardson', 'Fox'
 ];
 
 const KENYA_LAST_NAMES = [
@@ -36,9 +57,7 @@ const KENYA_LAST_NAMES = [
   'Kipkorir', 'Kipkemoi', 'Kiprotich', 'Kipchirchir', 'Kipsang', 'Kiprono', 'Kiplagat', 'Kiprop', 'Kiptoo', 'Kiptum',
   'Chebet', 'Chepkoech', 'Chepkirui', 'Cherono', 'Cheruiyot', 'Chepngetich', 'Chepkorir', 'Juma', 'Wanjala', 'Wafula',
   'Simiyu', 'Wekesa', 'Barasa', 'Nekesa', 'Nafula', 'Nasimiyu', 'Okoth', 'Owino', 'Odhiambo', 'Omondi',
-  'Okeyo', 'Oluoch', 'Obiero', 'Ouma', 'Okumu', 'Ogeto', 'Moraa', 'Nyaboke', 'Kerubo', 'Kwamboka',
-  'Kemunto', 'Mogaka', 'Onsongo', 'Nyambane', 'Makori', 'Kebaso', 'Mutua', 'Musyoka', 'Muli', 'Mwikali',
-  'Syombua', 'Ndambuki', 'Kilonzo', 'Mutisya', 'Musyoki'
+  'Okeyo', 'Oluoch', 'Obiero', 'Ouma', 'Okumu', 'Ogeto', 'Moraa', 'Nyaboke', 'Kerubo', 'Kwamboka'
 ];
 
 const universities = [
@@ -114,13 +133,22 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   const university = fixedUniversity || getRandomElement(universities);
   const isKenyan = university.includes('Kenya Medical Training College');
   
-  const firstName = isKenyan ? getRandomElement(KENYA_FIRST_NAMES) : getRandomElement(UK_FIRST_NAMES);
+  const gender = Math.random() > 0.5 ? 'male' : 'female';
+  
+  let firstName: string;
+  let photo: string;
+
+  if (gender === 'male') {
+    firstName = isKenyan ? getRandomElement(KENYA_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
+    photo = getRandomElement(MALE_AVATARS);
+  } else {
+    firstName = isKenyan ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
+    photo = getRandomElement(FEMALE_AVATARS);
+  }
+
   const lastName = isKenyan ? getRandomElement(KENYA_LAST_NAMES) : getRandomElement(UK_LAST_NAMES);
   const city = isKenyan ? getRandomElement(KENYA_CITIES) : getRandomElement(UK_CITIES);
   const postcode = getRandomPostcode(isKenyan);
-
-  // Using timestamp in seed to ensure high uniqueness for photos
-  const photoSeed = `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
   return {
     universityName: university,
@@ -130,7 +158,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     phone: getRandomPhoneNumber(isKenyan),
     address: isKenyan ? `${postcode}, ${city}, Kenya` : `${Math.floor(Math.random() * 100) + 1} High Street, ${city}, ${postcode}`,
     academicYear: '2026/2027',
-    photo: `https://picsum.photos/seed/${photoSeed}/252/324`,
+    photo: photo,
     logo: null,
     bloodGroup: getRandomElement(bloodGroups),
     emergencyContact: getRandomPhoneNumber(isKenyan),
