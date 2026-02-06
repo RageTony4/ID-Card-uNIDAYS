@@ -21,27 +21,65 @@ const UK_MALE_FIRST_NAMES = [
   'James', 'Jack', 'Harry', 'Charlie', 'George', 'Oscar', 'William', 'Noah', 'Alfie', 'Leo',
   'Jacob', 'Archie', 'Henry', 'Joshua', 'Arthur', 'Theo', 'Freddie', 'Mason', 'Isaac', 'Lucas',
   'Arlo', 'Teddy', 'Finley', 'Toby', 'Jude', 'Hugo', 'Roman', 'Sebastian', 'Felix', 'Reuben',
-  'Rory', 'Ezra', 'Oliver', 'Benjamin'
+  'Rory', 'Ezra', 'Oliver', 'Benjamin', 'Samuel', 'Alexander', 'Daniel', 'Joseph', 'Harrison',
+  'Edward', 'Sebastian', 'Adam', 'Luke', 'Max', 'Dylan', 'Zachary', 'Toby', 'Nathan', 'Ethan',
+  'Lewis', 'Tyler', 'Harvey', 'Caleb', 'Liam', 'Elijah', 'Gabriel', 'Owen', 'Elliot', 'Carter',
+  'Stanley', 'Albert', 'Frankie', 'Louis', 'Jackson', 'Frederick', 'Bobby', 'Ronnie', 'Reggie',
+  'Chester', 'Otis', 'Miles', 'Jasper', 'Wilfred', 'Alfred', 'Rafferty', 'Sonny', 'Ellis', 'Albie',
+  'Oakley', 'Brody', 'Finn', 'Leon', 'Kai', 'Gabriel', 'Caleb', 'Seth', 'Ralph', 'Monty',
+  'Leonard', 'Vincent', 'Victor', 'Francis', 'Benedict', 'Julian', 'Dominic', 'Marcus', 'Adrian',
+  'Austin', 'Maxwell', 'Sidney', 'Percy', 'Rupert', 'Barnaby', 'Caspian', 'Gideon', 'Hamish',
+  'Fergus', 'Lachlan', 'Cormac', 'Ewan', 'Callum', 'Angus', 'Alastair', 'Fraser', 'Rowan',
+  'Tristan', 'Xavier', 'Rafael', 'Dante', 'Marco', 'Nico', 'Enzo', 'Luca', 'Matteo', 'Giovanni',
+  'Stefan', 'Erik', 'Axel', 'Magnus', 'Soren', 'Lars', 'Anders', 'Bjorn', 'Klaus', 'Hans'
 ];
 
 const UK_FEMALE_FIRST_NAMES = [
   'Olivia', 'Sophie', 'Emily', 'Amelia', 'Isabella', 'Ava', 'Mia', 'Grace', 'Lily', 'Evie',
   'Freya', 'Florence', 'Daisy', 'Poppy', 'Sienna', 'Ivy', 'Willow', 'Phoebe', 'Evelyn', 'Ella',
   'Zoe', 'Luna', 'Maya', 'Mila', 'Thea', 'Ada', 'Hallie', 'Lottie', 'Rose', 'Aurora',
-  'Orla', 'Iris', 'Matilda', 'Charlotte', 'Alice'
+  'Orla', 'Iris', 'Matilda', 'Charlotte', 'Alice', 'Lucy', 'Chloe', 'Ruby', 'Jessica', 'Eleanor',
+  'Imogen', 'Holly', 'Elizabeth', 'Scarlett', 'Harriet', 'Eliza', 'Penelope', 'Mollie', 'Nancy',
+  'Beatrice', 'Martha', 'Clara', 'Violet', 'Mabel', 'Hazel', 'Olive', 'Delilah', 'Aria', 'Lyra',
+  'Elowen', 'Seraphina', 'Genevieve', 'Arabella', 'Clementine', 'Tabitha', 'Jemima', 'Ophelia',
+  'Cordelia', 'Beatrix', 'Emmeline', 'Adelaide', 'Margot', 'Etta', 'Edith', 'Nellie', 'Annie',
+  'Bonnie', 'Winnie', 'Dottie', 'Dolly', 'Effie', 'Nelly', 'Hattie', 'Tilly', 'Millie', 'Maisie',
+  'Lola', 'Layla', 'Nora', 'Erin', 'Aoife', 'Siobhan', 'Caoimhe', 'Niamh', 'Eimear', 'Roisin',
+  'Maeve', 'Clodagh', 'Saoirse', 'Aisling', 'Bronagh', 'Catriona', 'Sinead', 'Orlagh', 'Tara',
+  'Elena', 'Sofia', 'Isabel', 'Clara', 'Julia', 'Marta', 'Lucia', 'Chiara', 'Alessia', 'Giorgia',
+  'Heidi', 'Greta', 'Ingrid', 'Astrid', 'Freja', 'Sigrid', 'Lumi', 'Saga', 'Linnea', 'Klara'
 ];
 
 const KENYA_MALE_FIRST_NAMES = [
   'Kiprop', 'Wanjala', 'Juma', 'Kiplagat', 'Kamau', 'Mutua', 'Samuel', 'David', 'Daniel', 'Michael',
   'Peter', 'John', 'Kibet', 'Kipkorir', 'Kipkemoi', 'Maina', 'Mwangi', 'Njoroge', 'Karanja', 'Njenga',
   'Kimani', 'Otieno', 'Onyango', 'Ochieng', 'Odhiambo', 'Okoth', 'Owino', 'Wekesa', 'Wafula', 'Simiyu',
-  'Barasa', 'Hamisi', 'Bakari', 'Omar', 'Ali', 'Hassan', 'Saidi', 'Abdallah', 'Musa', 'Yusuf', 'Ibrahim'
+  'Barasa', 'Hamisi', 'Bakari', 'Omar', 'Ali', 'Hassan', 'Saidi', 'Abdallah', 'Musa', 'Yusuf', 'Ibrahim',
+  'Titus', 'Festus', 'Meshack', 'Shadrack', 'Abednego', 'Moses', 'Aaron', 'Joshua', 'Caleb', 'Gideon',
+  'Solomon', 'Ezekiel', 'Jeremiah', 'Isaiah', 'Job', 'Lazarus', 'Barnabas', 'Silas', 'Timothy', 'Elias',
+  'Elisha', 'Malachi', 'Zachariah', 'Amos', 'Joel', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk',
+  'Zephaniah', 'Haggai', 'Emmanuel', 'Abigael', 'Beryl', 'Collins', 'Dennis', 'Evans', 'Felix', 'Geoffrey',
+  'Humphrey', 'Ian', 'Justus', 'Kelvin', 'Leakey', 'Morgan', 'Newton', 'Oscar', 'Patrick', 'Quentin',
+  'Robert', 'Stephen', 'Victor', 'Wycliffe', 'Xavier', 'Yussuf', 'Zaddock', 'Mwashumbe', 'Mwakideu',
+  'Mwangemi', 'Mwamose', 'Mwamburi', 'Kipchumba', 'Kiprotich', 'Kipchirchir', 'Kiprono', 'Kiptoo',
+  'Kiptum', 'Chelimo', 'Chemboi', 'Kigen', 'Kandie', 'Lagat', 'Cheruiyot', 'Rono', 'Yego', 'Biwott',
+  'Korir', 'Tanui', 'Bett', 'Komen', 'Rotich', 'Serem', 'Kosgei', 'Keino', 'Tergat', 'Rudisha'
 ];
 
 const KENYA_FEMALE_FIRST_NAMES = [
   'Achieng', 'Moraa', 'Nekesa', 'Sarah', 'Jessica', 'Ruth', 'Naomi', 'Atieno', 'Adhiambo', 'Akoth',
   'Akinyi', 'Anyango', 'Nafula', 'Nasimiyu', 'Njeri', 'Wambui', 'Wangari', 'Muthoni', 'Nyambura', 'Mumbi',
-  'Dzame', 'Mbeyu', 'Khadija', 'Fatuma', 'Amina', 'Zainabu', 'Zawadi', 'Neema', 'Pendo', 'Rehema'
+  'Dzame', 'Mbeyu', 'Khadija', 'Fatuma', 'Amina', 'Zainabu', 'Zawadi', 'Neema', 'Pendo', 'Rehema',
+  'Mercy', 'Faith', 'Hope', 'Joy', 'Grace', 'Peace', 'Patience', 'Blessing', 'Lydia', 'Tabitha',
+  'Dorcas', 'Priscilla', 'Eunice', 'Lois', 'Mary', 'Martha', 'Magdalene', 'Salome', 'Elizabeth', 'Damaris',
+  'Hadassah', 'Esther', 'Deborah', 'Miriam', 'Rachel', 'Leah', 'Rebecca', 'Sarah', 'Hannah', 'Jemimah',
+  'Keziah', 'Keren', 'Zipporah', 'Abigail', 'Delilah', 'Peninah', 'Dinah', 'Tamar', 'Vashti', 'Beryl',
+  'Cynthia', 'Daisy', 'Everlyne', 'Fridah', 'Gloria', 'Hellen', 'Irene', 'Jane', 'Karen', 'Lucy',
+  'Mildred', 'Nancy', 'Phyllis', 'Rose', 'Stacy', 'Trudy', 'Ursula', 'Vivian', 'Winifred', 'Zilda',
+  'Wanjiku', 'Wanjira', 'Waceke', 'Wambere', 'Wandia', 'Wawira', 'Waguthi', 'Wamaitha', 'Wamuyu', 'Wanja',
+  'Chebet', 'Chepkoech', 'Chepkirui', 'Cherono', 'Chepngetich', 'Chepkorir', 'Jebet', 'Jerono', 'Jepchirchir',
+  'Jepkosgei', 'Jepkemoi', 'Jegat', 'Jerotich', 'Jemutai', 'Jeptoo', 'Jepkorir', 'Kwamboka', 'Nyaboke',
+  'Kerubo', 'Kemunto', 'Bosibori', 'Minsari', 'Mokeira', 'Gesare', 'Biyaki', 'Osebe', 'Mogiti', 'Nyanchama'
 ];
 
 const UK_LAST_NAMES = [
@@ -49,7 +87,17 @@ const UK_LAST_NAMES = [
   'Johnson', 'Lewis', 'Walker', 'Robinson', 'Wood', 'Thompson', 'White', 'Watson', 'Jackson', 'Wright',
   'Green', 'Harris', 'Cooper', 'King', 'Lee', 'Martin', 'Clarke', 'James', 'Morgan', 'Hughes',
   'Edwards', 'Hill', 'Moore', 'Harrison', 'Scott', 'Young', 'Morris', 'Ward', 'Knight', 'Turner',
-  'Miller', 'Davis', 'Anderson', 'Clark', 'Marshall', 'Collins', 'Bennett', 'Cox', 'Richardson', 'Fox'
+  'Miller', 'Davis', 'Anderson', 'Clark', 'Marshall', 'Collins', 'Bennett', 'Cox', 'Richardson', 'Fox',
+  'Gray', 'Hunter', 'Palmer', 'Rose', 'Ball', 'Chapman', 'Powell', 'Payne', 'Rogers', 'Webb', 'Rice',
+  'Porter', 'Birch', 'Stone', 'Grant', 'Lane', 'Wells', 'Ford', 'Owen', 'Cole', 'Ellis', 'West', 'Day',
+  'Mills', 'Read', 'May', 'Hart', 'Hunt', 'Page', 'Cross', 'Shaw', 'Cook', 'Brooks', 'Bell', 'Webb',
+  'Barker', 'Butler', 'Pearson', 'Gardner', 'Fletcher', 'Stevens', 'Holland', 'Andrews', 'Berry', 'Bird',
+  'Fisher', 'Newman', 'Sutton', 'Jordan', 'Curtis', 'Sharp', 'Banks', 'Oliver', 'Dean', 'Mason',
+  'Arnold', 'Harvey', 'Walsh', 'Foster', 'Atkinson', 'Austin', 'Bailey', 'Baker', 'Barber', 'Barnes',
+  'Barrett', 'Barton', 'Bates', 'Baxter', 'Beattie', 'Bellamy', 'Bennett', 'Benson', 'Bentley', 'Beverly',
+  'Bishop', 'Black', 'Blair', 'Blake', 'Blanchard', 'Blythe', 'Bolton', 'Booth', 'Bourne', 'Bowen',
+  'Boyd', 'Bradley', 'Bradshaw', 'Brady', 'Brennan', 'Brewster', 'Briggs', 'Bright', 'Brock', 'Brophy',
+  'Broughton', 'Buckley', 'Bullock', 'Burgess', 'Burke', 'Burnett', 'Burns', 'Burrows', 'Burton', 'Bush'
 ];
 
 const KENYA_LAST_NAMES = [
@@ -57,7 +105,15 @@ const KENYA_LAST_NAMES = [
   'Kipkorir', 'Kipkemoi', 'Kiprotich', 'Kipchirchir', 'Kipsang', 'Kiprono', 'Kiplagat', 'Kiprop', 'Kiptoo', 'Kiptum',
   'Chebet', 'Chepkoech', 'Chepkirui', 'Cherono', 'Cheruiyot', 'Chepngetich', 'Chepkorir', 'Juma', 'Wanjala', 'Wafula',
   'Simiyu', 'Wekesa', 'Barasa', 'Nekesa', 'Nafula', 'Nasimiyu', 'Okoth', 'Owino', 'Odhiambo', 'Omondi',
-  'Okeyo', 'Oluoch', 'Obiero', 'Ouma', 'Okumu', 'Ogeto', 'Moraa', 'Nyaboke', 'Kerubo', 'Kwamboka'
+  'Okeyo', 'Oluoch', 'Obiero', 'Ouma', 'Okumu', 'Ogeto', 'Moraa', 'Nyaboke', 'Kerubo', 'Kwamboka',
+  'Kemunto', 'Bosibori', 'Minsari', 'Mokeira', 'Gesare', 'Biyaki', 'Osebe', 'Mogiti', 'Nyanchama',
+  'Wambui', 'Njeri', 'Wanjiku', 'Wanjira', 'Waceke', 'Muthoni', 'Nyambura', 'Wangari', 'Mumbi', 'Ngugi',
+  'Kihika', 'Koinange', 'Michuki', 'Matiba', 'Kimathi', 'Kenyatta', 'Odinga', 'Mboya', 'Kariuki', 'Kodhek',
+  'Oneko', 'Ngei', 'Kaggia', 'Kubai', 'Khalwale', 'Wetangula', 'Lusaka', 'Panyako', 'Atwoli', 'Mudavadi',
+  'Kidero', 'Sonko', 'Igathe', 'Sakata', 'Sifuna', 'Passaris', 'Shebesh', 'Kananu', 'Sakaja', 'Aladwa',
+  'Murathe', 'Tuju', 'Kanyutu', 'Kinuthia', 'Kibe', 'Koinange', 'Gachagua', 'Ruto', 'Gideon', 'Moi',
+  'Biwott', 'Saitoti', 'Kalonzo', 'Musyoka', 'Ngilu', 'Kivutha', 'Mutua', 'Ndeti', 'Wavinya', 'Kingi',
+  'Joho', 'Mvurya', 'Nassir', 'Mbalu', 'Mule', 'Kilonzo', 'Maitha', 'Mungatana', 'Orengo', 'Rasanga'
 ];
 
 const universities = [
@@ -79,11 +135,13 @@ const universities = [
 
 const UK_CITIES = [
   'London', 'Manchester', 'Birmingham', 'Leeds', 'Glasgow', 'Southampton', 'Liverpool', 'Newcastle', 'Sheffield',
-  'Bristol', 'Nottingham', 'Leicester', 'Edinburgh', 'Cardiff', 'Belfast', 'Brighton', 'Cambridge', 'Oxford'
+  'Bristol', 'Nottingham', 'Leicester', 'Edinburgh', 'Cardiff', 'Belfast', 'Brighton', 'Cambridge', 'Oxford',
+  'Aberdeen', 'Plymouth', 'Hull', 'Wolverhampton', 'Stoke-on-Trent', 'Derby', 'Swansea', 'York', 'Bath', 'Durham'
 ];
 
 const KENYA_CITIES = [
-  'Kakamega', 'Nairobi', 'Kisumu', 'Mombasa', 'Eldoret', 'Nakuru', 'Machakos', 'Thika'
+  'Kakamega', 'Nairobi', 'Kisumu', 'Mombasa', 'Eldoret', 'Nakuru', 'Machakos', 'Thika', 'Garissa', 'Nyeri',
+  'Kitale', 'Malindi', 'Kericho', 'Lodwar', 'Voi', 'Isiolo', 'Busia', 'Narok', 'Bungoma', 'Webuye'
 ];
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -117,7 +175,7 @@ const getRandomId = (university: string): string => {
 
 const getRandomPostcode = (isKenyan: boolean): string => {
   if (isKenyan) {
-    return `P.O. BOX 535 - 50100`;
+    return `P.O. BOX ${Math.floor(Math.random() * 2000) + 100} - 50100`;
   }
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const L = () => letters.charAt(Math.floor(Math.random() * letters.length));

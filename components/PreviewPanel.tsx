@@ -4,10 +4,12 @@ import { StudentInfo, ToastType, IdCardTemplate } from '../types';
 import IdCard from './IdCard';
 import { GoogleGenAI } from "@google/genai";
 
+// Defining the missing props interface for PreviewPanel
 interface PreviewPanelProps {
   studentInfo: StudentInfo;
   template: IdCardTemplate;
   showToast: (message: string, type: ToastType) => void;
+  autoTrigger?: number;
 }
 
 const MOCKUP_SCENES = [
@@ -19,7 +21,7 @@ const MOCKUP_SCENES = [
   { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" }
 ];
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, showToast }) => {
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, showToast, autoTrigger = 0 }) => {
   const frontCardRef = useRef<HTMLDivElement>(null);
   const backCardRef = useRef<HTMLDivElement>(null);
   
@@ -27,7 +29,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
   const [mockupImage, setMockupImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isLoadingDefault, setIsLoadingDefault] = useState(false);
   const [mockupSide, setMockupSide] = useState<'front' | 'back'>('front');
 
   // Cropper Modal State
@@ -35,9 +36,21 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
   const editorImageRef = useRef<HTMLImageElement>(null);
   const cropperRef = useRef<any>(null);
 
+  // Auto Generate Effect
+  useEffect(() => {
+    if (autoTrigger > 0) {
+      const randomScene = MOCKUP_SCENES[Math.floor(Math.random() * MOCKUP_SCENES.length)];
+      setReferenceImage(randomScene.url);
+      setMockupImage(null);
+      // Brief delay to ensure state and DOM have updated with the randomized student info
+      setTimeout(() => {
+        handleGenerateMockup(randomScene.url);
+      }, 500);
+    }
+  }, [autoTrigger]);
+
   useEffect(() => {
     if (isEditModalOpen && editorImageRef.current) {
-        // Destroy previous instance if exists (safety)
         if (cropperRef.current) {
             cropperRef.current.destroy();
         }
@@ -80,6 +93,19 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
       width: card.offsetWidth,
       height: card.offsetHeight
     });
+  };
+
+  const handleCopyName = () => {
+    if (studentInfo.studentName) {
+      navigator.clipboard.writeText(studentInfo.studentName)
+        .then(() => {
+          showToast("Name copied to clipboard!", "success");
+        })
+        .catch((err) => {
+          console.error('Could not copy text: ', err);
+          showToast("Failed to copy name.", "error");
+        });
+    }
   };
 
   const handleDownloadImage = async (side: 'front' | 'back') => {
@@ -126,7 +152,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
         return;
       }
 
-      // Card dimensions in mm: 3.375in = 85.7mm, 2.125in = 54mm
       const pdfWidth = 85.7;
       const pdfHeight = 54;
 
@@ -136,10 +161,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
         format: [pdfWidth, pdfHeight]
       });
 
-      // Page 1: Front
       pdf.addImage(frontCanvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
-      
-      // Page 2: Back
       pdf.addPage();
       pdf.addImage(backCanvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
 
@@ -147,7 +169,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
       pdf.save(`${studentName}_id_card.pdf`);
 
       showToast("PDF downloaded!", "success");
-
     } catch (error) {
       console.error("Error generating PDF:", error);
       showToast("Failed to generate PDF.", "error");
@@ -162,7 +183,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
             const link = document.createElement('a');
             link.href = url;
             const safeName = studentInfo.studentName.trim().replace(/ /g, '_') || 'student';
-            // Filename is just the student name as requested
             link.download = `${safeName}.png`;
             document.body.appendChild(link);
             link.click();
@@ -172,43 +192,49 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
     }
   };
 
-  // AI Mockup Logic
   const handleReferenceUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
         setReferenceImage(event.target?.result as string);
-        setMockupImage(null); // Reset previous mockup
+        setMockupImage(null);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleUseDefaultMockup = async (url: string) => {
-    setIsLoadingDefault(true);
-    try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            if (typeof event.target?.result === 'string') {
-                setReferenceImage(event.target.result);
-                setMockupImage(null);
-                showToast("Default scene selected!", "success");
-            }
-        };
-        reader.readAsDataURL(blob);
-    } catch (error) {
-        console.error("Error loading default mockup:", error);
-        showToast("Failed to load default scene.", "error");
-    } finally {
-        setIsLoadingDefault(false);
-    }
+  const handleUseDefaultMockup = (url: string) => {
+    setReferenceImage(url);
+    setMockupImage(null);
+    showToast("Default scene selected!", "success");
   };
 
-  const handleGenerateMockup = async () => {
-    if (!referenceImage) {
+  const imageUrlToBase64 = async (url: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
+          const dataURL = canvas.toDataURL('image/jpeg', 0.8);
+          resolve(dataURL.split(',')[1]);
+        } else {
+          reject(new Error('Canvas context failed'));
+        }
+      };
+      img.onerror = () => reject(new Error('Image load failed (CORS or network issue)'));
+      img.src = url;
+    });
+  };
+
+  const handleGenerateMockup = async (overrideReference?: string) => {
+    const activeReference = overrideReference || referenceImage;
+    if (!activeReference) {
       showToast("Please upload or select a reference image first.", "error");
       return;
     }
@@ -222,37 +248,32 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
     try {
       showToast(`Capturing ${mockupSide} of ID card...`, "info");
       const refToCapture = mockupSide === 'front' ? frontCardRef : backCardRef;
-      const cardCanvas = await captureCard(refToCapture, 2); // Lower scale for AI is fine
+      const cardCanvas = await captureCard(refToCapture, 2);
       if (!cardCanvas) {
          throw new Error("Failed to capture ID card.");
       }
       
       const cardBase64 = cardCanvas.toDataURL('image/png').split(',')[1];
-      const referenceBase64 = referenceImage.split(',')[1];
+      
+      let referenceBase64 = '';
+      if (activeReference.startsWith('data:')) {
+        referenceBase64 = activeReference.split(',')[1];
+      } else {
+        showToast("Preparing reference scene...", "info");
+        referenceBase64 = await imageUrlToBase64(activeReference);
+      }
 
       showToast("AI processing... this may take a few seconds.", "info");
 
+      // Initializing GoogleGenAI client according to updated guidelines
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      // Using gemini-2.5-flash-image for editing capabilities
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
         contents: {
           parts: [
-            {
-              inlineData: {
-                mimeType: 'image/jpeg', // Assuming jpeg/png for reference
-                data: referenceBase64
-              }
-            },
-            {
-              inlineData: {
-                mimeType: 'image/png',
-                data: cardBase64
-              }
-            },
-            {
-              text: "The first image is a real photo of an ID card in a scene with a phone camera aesthetic, featuring natural lighting and realistic reflections. The second image is a flat digital ID card design. Replace the visual content of the ID card in the first image with the design from the second image. Meticulously preserve the phone camera lens characteristics, natural lighting, soft shadows, realistic glares/reflections on the card surface, color temperature, and any physical obstructions (like lanyards, clips, or plastic holders). The result must look like a realistic smartphone snapshot of the new ID card in the original scene."
-            }
+            { inlineData: { mimeType: 'image/jpeg', data: referenceBase64 } },
+            { inlineData: { mimeType: 'image/png', data: cardBase64 } },
+            { text: "The first image is a real photo of an ID card in a scene with a phone camera aesthetic, featuring natural lighting and realistic reflections. The second image is a flat digital ID card design. Replace the visual content of the ID card in the first image with the design from the second image. Meticulously preserve the phone camera lens characteristics, natural lighting, soft shadows, realistic glares/reflections on the card surface, color temperature, and any physical obstructions (like lanyards, clips, or plastic holders). The result must look like a realistic smartphone snapshot of the new ID card in the original scene." }
           ]
         }
       });
@@ -270,15 +291,13 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
       if (generatedImageUrl) {
         setMockupImage(generatedImageUrl);
         showToast("Mockup generated successfully!", "success");
-        setIsEditModalOpen(true); // Automatically open edit modal
+        setIsEditModalOpen(true);
       } else {
-        showToast("AI finished but returned no image.", "error");
-        console.log(response);
+        showToast("AI returned no image. Try a different scene.", "error");
       }
-
     } catch (error) {
       console.error("AI Mockup Error:", error);
-      showToast("Failed to generate mockup. Try again.", "error");
+      showToast("Failed to process scene. Ensure image is accessible.", "error");
     } finally {
       setIsGenerating(false);
     }
@@ -300,6 +319,9 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
       </div>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3 border-b border-gray-300 pb-8 w-full">
+        <button onClick={handleCopyName} className="modern-button text-xs">
+          Copy Name
+        </button>
         <button onClick={() => handleDownloadImage('front')} className="modern-button text-xs">
           Download Front PNG
         </button>
@@ -311,7 +333,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
         </button>
       </div>
 
-      {/* AI Reality Mockup Section */}
       <div className="mt-8 w-full max-w-md bg-white p-6 rounded-xl shadow-sm border border-gray-300">
         <div className="flex items-center gap-2 mb-4">
              <div className="bg-purple-100 p-2 rounded-full">
@@ -319,9 +340,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
              </div>
              <h3 className="text-lg font-bold text-gray-800">AI Reality Mockup</h3>
         </div>
-        <p className="text-xs text-gray-500 mb-4">
-            Upload a photo of an existing card (e.g. on a table) to see your new design in real life.
-        </p>
         
         <div className="space-y-4">
             <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 transition-colors">
@@ -348,8 +366,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
                          <button 
                             key={idx}
                             onClick={() => handleUseDefaultMockup(scene.url)}
-                            disabled={isLoadingDefault}
-                            className="flex flex-col items-center gap-1 group cursor-pointer p-1 rounded-md border border-gray-200 hover:border-purple-300 transition-all flex-shrink-0"
+                            className={`flex flex-col items-center gap-1 group cursor-pointer p-1 rounded-md border transition-all flex-shrink-0 ${referenceImage === scene.url ? 'border-purple-600 ring-2 ring-purple-50' : 'border-gray-200 hover:border-purple-300'}`}
                          >
                              <img 
                                 src={scene.url} 
@@ -364,7 +381,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
                  </div>
             </div>
 
-            {/* Side Selection */}
             <div className="bg-gray-50 p-2 rounded-lg flex items-center justify-between">
                 <span className="text-xs font-bold text-gray-600 ml-1">Render Side:</span>
                 <div className="flex bg-white rounded-md shadow-sm border border-gray-200 p-0.5">
@@ -384,7 +400,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
             </div>
 
             <button 
-                onClick={handleGenerateMockup} 
+                onClick={() => handleGenerateMockup()} 
                 disabled={!referenceImage || isGenerating}
                 className={`w-full py-2 rounded-full font-bold text-sm tracking-wide uppercase transition-all shadow-md ${
                     !referenceImage || isGenerating 
@@ -416,18 +432,10 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
                 <div className="rounded-lg overflow-hidden shadow-lg border border-gray-200">
                     <img src={mockupImage} alt="AI Mockup" className="w-full h-auto" />
                 </div>
-                <a 
-                    href={mockupImage} 
-                    download={`${studentInfo.studentName.replace(/ /g, '_') || 'student'}.png`}
-                    className="block text-center mt-2 text-purple-600 text-xs font-bold hover:underline"
-                >
-                    Download Original
-                </a>
             </div>
         )}
       </div>
 
-      {/* Editor Modal */}
       {isEditModalOpen && mockupImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4 backdrop-blur-sm">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl h-[80vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
@@ -446,26 +454,15 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
                 </div>
 
                 <div className="p-4 border-t bg-gray-50 flex justify-between items-center">
-                     <p className="text-xs text-gray-500">Drag corners to crop/resize. Double click to toggle drag mode.</p>
+                     <p className="text-xs text-gray-500">Drag corners to crop/resize.</p>
                      <div className="flex gap-3">
-                         <button 
-                            onClick={() => setIsEditModalOpen(false)} 
-                            className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-gray-800"
-                         >
-                            Cancel
-                         </button>
-                         <button 
-                            onClick={handleDownloadCrop} 
-                            className="modern-button-purple text-sm px-6"
-                         >
-                            Download Crop
-                         </button>
+                         <button onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-gray-800">Cancel</button>
+                         <button onClick={handleDownloadCrop} className="modern-button-purple text-sm px-6">Download Crop</button>
                      </div>
                 </div>
             </div>
         </div>
       )}
-
     </div>
   );
 };

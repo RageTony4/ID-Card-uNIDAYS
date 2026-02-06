@@ -23,6 +23,7 @@ const App: React.FC = () => {
 
   const [template, setTemplate] = useState<IdCardTemplate>('elegant');
   const [toast, setToast] = useState<ToastMessage | null>(null);
+  const [autoTrigger, setAutoTrigger] = useState(0);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -56,11 +57,14 @@ const App: React.FC = () => {
   };
 
   const handleGenerateSample = () => {
-    // Pass current university to keep it fixed while randomizing other details
     const newInfo = generateRandomStudentInfo(studentInfo.universityName);
-    // Keep existing logo if user uploaded one
     setStudentInfo(prev => ({ ...newInfo, logo: prev.logo })); 
     showToast('Student details randomized!', 'success');
+  };
+
+  const handleAutoTrigger = () => {
+    handleGenerateSample();
+    setAutoTrigger(prev => prev + 1);
   };
 
   const showToast = (message: string, type: ToastType) => {
@@ -79,11 +83,14 @@ const App: React.FC = () => {
           onLogoChange={handleLogoChange}
           onPhotoSelect={handlePhotoSelect}
           onGenerateSample={handleGenerateSample}
+          onAutoGenerate={handleAutoTrigger}
+          showToast={showToast}
         />
         <PreviewPanel 
           studentInfo={studentInfo} 
           template={template}
           showToast={showToast} 
+          autoTrigger={autoTrigger}
         />
       </div>
       {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}
