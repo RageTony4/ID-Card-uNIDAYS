@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StudentInfo, ToastMessage, ToastType, IdCardTemplate } from './types';
 import EditorPanel from './components/EditorPanel';
 import PreviewPanel from './components/PreviewPanel';
@@ -7,6 +7,7 @@ import Toast from './components/Toast';
 import { generateRandomStudentInfo } from './lib/sampleData';
 
 const App: React.FC = () => {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [studentInfo, setStudentInfo] = useState<StudentInfo>({
     universityName: 'Community-Ed Academy',
     studentName: 'EMILY WATSON',
@@ -24,6 +25,10 @@ const App: React.FC = () => {
   const [template, setTemplate] = useState<IdCardTemplate>('elegant');
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [autoTrigger, setAutoTrigger] = useState(0);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -72,11 +77,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-      <div className="flex flex-col lg:flex-row bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-7xl">
+    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${theme === 'dark' ? 'bg-zinc-950' : 'bg-gray-100'}`}>
+      <div className={`flex flex-col lg:flex-row rounded-xl shadow-2xl overflow-hidden w-full max-w-7xl border transition-colors duration-300 ${theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-white'}`}>
         <EditorPanel
           studentInfo={studentInfo}
           template={template}
+          theme={theme}
+          onToggleTheme={toggleTheme}
           onTemplateChange={setTemplate}
           onInputChange={handleInputChange}
           onPhotoChange={handlePhotoChange}
@@ -89,6 +96,7 @@ const App: React.FC = () => {
         <PreviewPanel 
           studentInfo={studentInfo} 
           template={template}
+          theme={theme}
           showToast={showToast} 
           autoTrigger={autoTrigger}
         />

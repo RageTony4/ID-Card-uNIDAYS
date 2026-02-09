@@ -8,6 +8,7 @@ import { GoogleGenAI } from "@google/genai";
 interface PreviewPanelProps {
   studentInfo: StudentInfo;
   template: IdCardTemplate;
+  theme: 'light' | 'dark';
   showToast: (message: string, type: ToastType) => void;
   autoTrigger?: number;
 }
@@ -21,7 +22,7 @@ const MOCKUP_SCENES = [
   { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" }
 ];
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, showToast, autoTrigger = 0 }) => {
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0 }) => {
   const frontCardRef = useRef<HTMLDivElement>(null);
   const backCardRef = useRef<HTMLDivElement>(null);
   
@@ -35,6 +36,8 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const editorImageRef = useRef<HTMLImageElement>(null);
   const cropperRef = useRef<any>(null);
+
+  const isDark = theme === 'dark';
 
   // Auto Generate Effect
   useEffect(() => {
@@ -304,21 +307,21 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
   };
 
   return (
-    <div className="w-full lg:w-1/2 p-6 md:p-8 flex flex-col items-center bg-gray-200 overflow-y-auto" style={{ maxHeight: '90vh' }}>
-      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Live ID Card Preview</h2>
+    <div className={`w-full lg:w-1/2 p-6 md:p-8 flex flex-col items-center overflow-y-auto transition-colors duration-300 ${isDark ? 'bg-zinc-950' : 'bg-gray-200'}`} style={{ maxHeight: '90vh' }}>
+      <h2 className={`text-3xl font-bold mb-6 text-center transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-800'}`}>Live ID Card Preview</h2>
       
       <div className="space-y-6 w-full flex flex-col items-center">
         <div>
-           <p className="text-gray-500 font-bold mb-2 text-center text-sm uppercase tracking-wide">Front Side</p>
+           <p className={`font-bold mb-2 text-center text-sm uppercase tracking-wide transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Front Side</p>
            <IdCard ref={frontCardRef} studentInfo={studentInfo} side="front" template={template} />
         </div>
         <div>
-           <p className="text-gray-500 font-bold mb-2 text-center text-sm uppercase tracking-wide">Back Side</p>
+           <p className={`font-bold mb-2 text-center text-sm uppercase tracking-wide transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Back Side</p>
            <IdCard ref={backCardRef} studentInfo={studentInfo} side="back" template={template} />
         </div>
       </div>
 
-      <div className="mt-8 flex flex-wrap justify-center gap-3 border-b border-gray-300 pb-8 w-full">
+      <div className={`mt-8 flex flex-wrap justify-center gap-3 border-b pb-8 w-full transition-colors duration-300 ${isDark ? 'border-zinc-800' : 'border-gray-300'}`}>
         <button onClick={handleCopyName} className="modern-button text-xs">
           Copy Name
         </button>
@@ -333,16 +336,16 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
         </button>
       </div>
 
-      <div className="mt-8 w-full max-w-md bg-white p-6 rounded-xl shadow-sm border border-gray-300">
+      <div className={`mt-8 w-full max-w-md p-6 rounded-xl shadow-sm border transition-colors duration-300 ${isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-gray-300'}`}>
         <div className="flex items-center gap-2 mb-4">
-             <div className="bg-purple-100 p-2 rounded-full">
-                <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
+             <div className={`p-2 rounded-full transition-colors duration-300 ${isDark ? 'bg-purple-900/40' : 'bg-purple-100'}`}>
+                <svg className={`w-5 h-5 transition-colors duration-300 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
              </div>
-             <h3 className="text-lg font-bold text-gray-800">AI Reality Mockup</h3>
+             <h3 className={`text-lg font-bold transition-colors duration-300 ${isDark ? 'text-zinc-100' : 'text-gray-800'}`}>AI Reality Mockup</h3>
         </div>
         
         <div className="space-y-4">
-            <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 transition-colors">
+            <div className={`relative border-2 border-dashed rounded-lg p-4 text-center transition-colors duration-300 ${isDark ? 'border-zinc-700 hover:bg-zinc-800' : 'border-gray-300 hover:bg-gray-50'}`}>
                 <input 
                     type="file" 
                     accept="image/*"
@@ -353,27 +356,27 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
                     <img src={referenceImage} alt="Reference" className="max-h-32 mx-auto rounded shadow-sm" />
                 ) : (
                     <div className="text-gray-400">
-                        <p className="text-sm font-medium">Click to upload Scene Photo</p>
+                        <p className={`text-sm font-medium transition-colors duration-300 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>Click to upload Scene Photo</p>
                         <p className="text-xs mt-1">JPEG or PNG</p>
                     </div>
                 )}
             </div>
 
-            <div className="flex flex-col gap-2 border-t border-b border-gray-100 py-3">
-                 <p className="text-xs text-gray-500 font-medium">Or select a default scene:</p>
+            <div className={`flex flex-col gap-2 border-t border-b py-3 transition-colors duration-300 ${isDark ? 'border-zinc-800' : 'border-gray-100'}`}>
+                 <p className={`text-xs font-medium transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Or select a default scene:</p>
                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                      {MOCKUP_SCENES.map((scene, idx) => (
                          <button 
                             key={idx}
                             onClick={() => handleUseDefaultMockup(scene.url)}
-                            className={`flex flex-col items-center gap-1 group cursor-pointer p-1 rounded-md border transition-all flex-shrink-0 ${referenceImage === scene.url ? 'border-purple-600 ring-2 ring-purple-50' : 'border-gray-200 hover:border-purple-300'}`}
+                            className={`flex flex-col items-center gap-1 group cursor-pointer p-1 rounded-md border transition-all flex-shrink-0 ${referenceImage === scene.url ? 'border-purple-600 ring-2 ring-purple-50' : isDark ? 'border-zinc-700 hover:border-purple-300' : 'border-gray-200 hover:border-purple-300'}`}
                          >
                              <img 
                                 src={scene.url} 
                                 alt={scene.label} 
                                 className="w-16 h-12 object-cover rounded shadow-sm opacity-80 group-hover:opacity-100" 
                              />
-                             <span className="text-[9px] font-bold text-gray-500 group-hover:text-purple-600">
+                             <span className={`text-[9px] font-bold group-hover:text-purple-600 transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>
                                 {scene.label}
                              </span>
                          </button>
@@ -381,9 +384,9 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
                  </div>
             </div>
 
-            <div className="bg-gray-50 p-2 rounded-lg flex items-center justify-between">
-                <span className="text-xs font-bold text-gray-600 ml-1">Render Side:</span>
-                <div className="flex bg-white rounded-md shadow-sm border border-gray-200 p-0.5">
+            <div className={`p-2 rounded-lg flex items-center justify-between transition-colors duration-300 ${isDark ? 'bg-zinc-800' : 'bg-gray-50'}`}>
+                <span className={`text-xs font-bold transition-colors duration-300 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>Render Side:</span>
+                <div className={`flex rounded-md shadow-sm border p-0.5 transition-colors duration-300 ${isDark ? 'bg-zinc-900 border-zinc-700' : 'bg-white border-gray-200'}`}>
                     <button 
                         onClick={() => setMockupSide('front')}
                         className={`text-xs px-3 py-1 rounded-sm font-bold transition-colors ${mockupSide === 'front' ? 'bg-purple-100 text-purple-700' : 'text-gray-500 hover:text-gray-700'}`}
@@ -404,7 +407,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
                 disabled={!referenceImage || isGenerating}
                 className={`w-full py-2 rounded-full font-bold text-sm tracking-wide uppercase transition-all shadow-md ${
                     !referenceImage || isGenerating 
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none' 
+                    ? isDark ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed shadow-none' : 'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none' 
                     : 'bg-purple-600 text-white hover:bg-purple-700 shadow-purple-900/20'
                 }`}
             >
@@ -422,14 +425,14 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
 
         {mockupImage && (
             <div className="mt-6 animate-in fade-in zoom-in duration-300 w-full">
-                <p className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide text-center">Latest Result</p>
+                <p className={`text-xs font-bold mb-2 uppercase tracking-wide text-center transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Latest Result</p>
                 <button 
                     onClick={() => setIsEditModalOpen(true)}
                     className="w-full mb-3 modern-button text-xs"
                 >
                     Preview & Edit Mockup
                 </button>
-                <div className="rounded-lg overflow-hidden shadow-lg border border-gray-200">
+                <div className={`rounded-lg overflow-hidden shadow-lg border transition-colors duration-300 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
                     <img src={mockupImage} alt="AI Mockup" className="w-full h-auto" />
                 </div>
             </div>
@@ -438,25 +441,25 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, show
 
       {isEditModalOpen && mockupImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4 backdrop-blur-sm">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl h-[80vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-                    <h3 className="font-bold text-lg text-gray-800">Preview & Resize Mockup</h3>
+            <div className={`rounded-xl shadow-2xl w-full max-w-5xl h-[80vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors duration-300 ${isDark ? 'bg-zinc-900' : 'bg-white'}`}>
+                <div className={`p-4 border-b flex justify-between items-center transition-colors duration-300 ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-gray-50'}`}>
+                    <h3 className={`font-bold text-lg transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-800'}`}>Preview & Resize Mockup</h3>
                     <button 
                         onClick={() => setIsEditModalOpen(false)} 
-                        className="text-gray-500 hover:text-gray-800 transition-colors p-1 rounded-full hover:bg-gray-200"
+                        className={`transition-colors p-1 rounded-full ${isDark ? 'text-zinc-400 hover:text-white hover:bg-zinc-800' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-200'}`}
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
                 
-                <div className="flex-1 bg-gray-900 overflow-hidden relative flex items-center justify-center">
+                <div className="flex-1 bg-black overflow-hidden relative flex items-center justify-center">
                     <img ref={editorImageRef} src={mockupImage} alt="Edit" className="max-w-full max-h-full" />
                 </div>
 
-                <div className="p-4 border-t bg-gray-50 flex justify-between items-center">
-                     <p className="text-xs text-gray-500">Drag corners to crop/resize.</p>
+                <div className={`p-4 border-t flex justify-between items-center transition-colors duration-300 ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-gray-50'}`}>
+                     <p className={`text-xs transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Drag corners to crop/resize.</p>
                      <div className="flex gap-3">
-                         <button onClick={() => setIsEditModalOpen(false)} className="px-4 py-2 text-sm font-bold text-gray-600 hover:text-gray-800">Cancel</button>
+                         <button onClick={() => setIsEditModalOpen(false)} className={`px-4 py-2 text-sm font-bold transition-colors duration-300 ${isDark ? 'text-zinc-400 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}>Cancel</button>
                          <button onClick={handleDownloadCrop} className="modern-button-purple text-sm px-6">Download Crop</button>
                      </div>
                 </div>
