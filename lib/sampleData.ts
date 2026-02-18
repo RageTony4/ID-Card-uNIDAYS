@@ -118,6 +118,13 @@ const KENYA_LAST_NAMES = [
 
 const universities = [
   'Community-Ed Academy',
+  'Birmingham City FC Community Trust',
+  'Communicate School',
+  'Manchester Communication Academy',
+  'Ysgol Comins Coch',
+  'Adanac Commercial College',
+  'Giggleswick School',
+  'Carlton Keighley',
   'CommunityNI',
   'University of Warwick',
   'Brookfield Community School',
@@ -205,7 +212,25 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   }
 
   const lastName = isKenyan ? getRandomElement(KENYA_LAST_NAMES) : getRandomElement(UK_LAST_NAMES);
-  const city = isKenyan ? getRandomElement(KENYA_CITIES) : getRandomElement(UK_CITIES);
+  
+  // Custom logic for specific schools to match user screenshots
+  let city: string;
+  if (university === 'Birmingham City FC Community Trust') {
+      city = 'Birmingham';
+  } else if (university === 'Communicate School' || university === 'Manchester Communication Academy') {
+      city = 'Manchester';
+  } else if (university === 'Ysgol Comins Coch') {
+      city = 'Ceredigion';
+  } else if (university === 'Giggleswick School') {
+      city = 'Settle';
+  } else if (university === 'Carlton Keighley') {
+      city = 'Keighley';
+  } else if (university === 'Adanac Commercial College') {
+      city = getRandomElement(['Birmingham', 'Manchester', 'London', 'Sheffield']);
+  } else {
+      city = isKenyan ? getRandomElement(KENYA_CITIES) : getRandomElement(UK_CITIES);
+  }
+
   const postcode = getRandomPostcode(isKenyan);
 
   return {

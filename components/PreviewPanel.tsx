@@ -31,6 +31,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
   const [mockupImage, setMockupImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [mockupSide, setMockupSide] = useState<'front' | 'back'>('front');
+  const [lockScene, setLockScene] = useState(false);
 
   // Cropper Modal State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -42,12 +43,19 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
   // Auto Generate Effect
   useEffect(() => {
     if (autoTrigger > 0) {
-      const randomScene = MOCKUP_SCENES[Math.floor(Math.random() * MOCKUP_SCENES.length)];
-      setReferenceImage(randomScene.url);
+      let finalScene = referenceImage;
+      
+      // If scene is not locked OR no scene is selected, pick a random one
+      if (!lockScene || !finalScene) {
+        const randomScene = MOCKUP_SCENES[Math.floor(Math.random() * MOCKUP_SCENES.length)];
+        finalScene = randomScene.url;
+        setReferenceImage(finalScene);
+      }
+      
       setMockupImage(null);
       // Brief delay to ensure state and DOM have updated with the randomized student info
       setTimeout(() => {
-        handleGenerateMockup(randomScene.url);
+        handleGenerateMockup(finalScene!);
       }, 500);
     }
   }, [autoTrigger]);
@@ -337,11 +345,28 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       </div>
 
       <div className={`mt-8 w-full max-w-md p-6 rounded-xl shadow-sm border transition-colors duration-300 ${isDark ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-gray-300'}`}>
-        <div className="flex items-center gap-2 mb-4">
-             <div className={`p-2 rounded-full transition-colors duration-300 ${isDark ? 'bg-purple-900/40' : 'bg-purple-100'}`}>
-                <svg className={`w-5 h-5 transition-colors duration-300 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
+        <div className="flex items-center justify-between gap-2 mb-4">
+             <div className="flex items-center gap-2">
+                <div className={`p-2 rounded-full transition-colors duration-300 ${isDark ? 'bg-purple-900/40' : 'bg-purple-100'}`}>
+                    <svg className={`w-5 h-5 transition-colors duration-300 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg>
+                </div>
+                <h3 className={`text-lg font-bold transition-colors duration-300 ${isDark ? 'text-zinc-100' : 'text-gray-800'}`}>AI Reality Mockup</h3>
              </div>
-             <h3 className={`text-lg font-bold transition-colors duration-300 ${isDark ? 'text-zinc-100' : 'text-gray-800'}`}>AI Reality Mockup</h3>
+
+             <div className="flex items-center gap-2 group cursor-pointer" onClick={() => setLockScene(!lockScene)}>
+                <span className={`text-[10px] font-bold uppercase tracking-tight transition-colors ${lockScene ? 'text-purple-500' : 'text-gray-400'}`}>
+                  {lockScene ? 'Locked' : 'Random'}
+                </span>
+                <div className={`w-10 h-5 rounded-full p-0.5 transition-colors duration-200 relative ${lockScene ? 'bg-purple-600' : 'bg-gray-300'}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow-sm transform transition-transform duration-200 flex items-center justify-center ${lockScene ? 'translate-x-5' : 'translate-x-0'}`}>
+                    {lockScene ? (
+                      <svg className="w-2.5 h-2.5 text-purple-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd"></path></svg>
+                    ) : (
+                      <svg className="w-2.5 h-2.5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2V7a5 5 0 00-5-5zM7 7a3 3 0 116 0v2H7V7z"></path></svg>
+                    )}
+                  </div>
+                </div>
+             </div>
         </div>
         
         <div className="space-y-4">

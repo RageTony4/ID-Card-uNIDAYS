@@ -37,6 +37,13 @@ const FEMALE_HEADSHOTS = [
 const SCHOOL_DATA = {
     'United Kingdom': [
         'Community-Ed Academy',
+        'Birmingham City FC Community Trust',
+        'Communicate School',
+        'Manchester Communication Academy',
+        'Ysgol Comins Coch',
+        'Adanac Commercial College',
+        'Giggleswick School',
+        'Carlton Keighley',
         'CommunityNI',
         'University of Warwick',
         'Brookfield Community School',
