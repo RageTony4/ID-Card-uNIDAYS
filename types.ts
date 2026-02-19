@@ -6,6 +6,7 @@ export interface StudentInfo {
   studentId: string;
   phone: string;
   address: string;
+  location: string; // New field for "City, Country" display
   academicYear: string;
   photo: string | null;
   logo: string | null;

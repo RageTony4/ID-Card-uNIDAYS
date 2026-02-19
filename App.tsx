@@ -14,7 +14,8 @@ const App: React.FC = () => {
     dob: '14 May 2004',
     studentId: 'CEA-26-8219',
     phone: '+44 7700 900461',
-    address: '42 High Street, Kensington, London, SW7 2AZ',
+    address: '42 High Street, Kensington, London, SW7 2AZ, UK',
+    location: 'London, UK',
     academicYear: '2026/2027',
     photo: 'https://picsum.photos/seed/ukstudent/252/324',
     logo: null,
@@ -30,9 +31,16 @@ const App: React.FC = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setStudentInfo(prev => ({ ...prev, [name]: value }));
+    
+    // If the university is changed, we want to auto-populate the address and details
+    if (name === 'universityName') {
+      const newInfo = generateRandomStudentInfo(value);
+      setStudentInfo(prev => ({ ...newInfo, logo: prev.logo }));
+    } else {
+      setStudentInfo(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {

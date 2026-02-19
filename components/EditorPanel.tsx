@@ -59,6 +59,9 @@ const SCHOOL_DATA = {
     ],
     'Kenya': [
         'Kenya Medical Training College (Kakamega)'
+    ],
+    'Germany': [
+        'Salem Community School'
     ]
 };
 
@@ -76,9 +79,9 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onAutoGenerate,
   showToast
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya'>('United Kingdom');
+  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany'>('United Kingdom');
 
-  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya') => {
+  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany') => {
     setSelectedCountry(country);
     const firstSchool = SCHOOL_DATA[country][0];
     const event = {
@@ -245,6 +248,12 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                     className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Kenya' ? 'bg-red-600 border-red-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-red-300'}`}
                  >
                      Kenya Schools
+                 </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('Germany')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Germany' ? 'bg-yellow-600 border-yellow-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-yellow-300'}`}
+                 >
+                     Germany Schools
                  </button>
              </div>
 

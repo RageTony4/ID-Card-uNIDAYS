@@ -177,17 +177,11 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   // Elegant Template
   if (template === 'elegant') {
     const names = studentInfo.studentName.split(' ');
-    // Keep names in input order (First Last)
     const displayName = studentInfo.studentName;
     const lastNamePart = names.length > 1 ? names[names.length - 1] : names[0];
     
-    // Geographical Logic
-    let location = 'Great Yarmouth, GB';
-    if (studentInfo.universityName.includes('Kenya Medical Training College')) {
-      location = 'Kakamega, Kenya';
-    } else if (studentInfo.universityName === 'CommunityNI') {
-      location = 'Belfast';
-    }
+    // Geographical Logic - Now using dynamic field
+    const location = studentInfo.location || 'London, UK';
 
     // Header Font Scaling for long names like KMTC
     const isLongName = studentInfo.universityName.length > 25;
