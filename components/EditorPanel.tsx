@@ -61,7 +61,8 @@ const SCHOOL_DATA = {
         'Kenya Medical Training College (Kakamega)'
     ],
     'Germany': [
-        'Salem Community School'
+        'Salem Community School',
+        'Shepherd School'
     ]
 };
 

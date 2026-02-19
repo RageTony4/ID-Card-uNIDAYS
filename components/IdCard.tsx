@@ -113,9 +113,19 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                     </div>
                     <div className="flex flex-col justify-center">
                          {/* School Name: Bold */}
-                        <h1 className="text-[11px] font-black text-gray-900 leading-tight uppercase tracking-tight">
-                            {studentInfo.universityName}
-                        </h1>
+                        {studentInfo.universityName === 'HeRendschule Rendsburg' ? (
+                            <>
+                                <h1 className="text-[13px] font-bold text-blue-600 leading-tight">
+                                    Shepherd School
+                                </h1>
+                                <p className="text-[8px] font-medium text-gray-500 leading-none">HeRendschule Rendsburg</p>
+                                <p className="text-[8px] font-medium text-gray-500 leading-none">Rendsburg</p>
+                            </>
+                        ) : (
+                            <h1 className="text-[11px] font-black text-gray-900 leading-tight uppercase tracking-tight">
+                                {studentInfo.universityName}
+                            </h1>
+                        )}
                     </div>
                 </div>
 

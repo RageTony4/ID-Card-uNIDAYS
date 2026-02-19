@@ -38,6 +38,10 @@ const App: React.FC = () => {
     if (name === 'universityName') {
       const newInfo = generateRandomStudentInfo(value);
       setStudentInfo(prev => ({ ...newInfo, logo: prev.logo }));
+      
+      if (value === 'HeRendschule Rendsburg') {
+        setTemplate('official');
+      }
     } else {
       setStudentInfo(prev => ({ ...prev, [name]: value }));
     }

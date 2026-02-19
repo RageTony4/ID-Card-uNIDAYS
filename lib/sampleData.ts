@@ -50,7 +50,8 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Bournemouth University': { city: 'Bournemouth', address: 'Fern Barrow, Poole, Bournemouth', postcode: 'BH12 5BB', country: 'UK' },
   'Church Stretton School': { city: 'Shropshire', address: 'Shrewsbury Rd, Church Stretton', postcode: 'SY6 6EX', country: 'UK' },
   'Kenya Medical Training College (Kakamega)': { city: 'Kakamega', address: 'P.O. Box 535, Kakamega', postcode: '50100', country: 'Kenya' },
-  'Salem Community School': { city: 'Salem', address: 'Schlossbezirk 1, 88682 Salem', postcode: '88682', country: 'Germany' }
+  'Salem Community School': { city: 'Salem', address: 'Schlossbezirk 1, 88682 Salem', postcode: '88682', country: 'Germany' },
+  'Shepherd School': { city: 'Rendsburg', address: 'Am Stadtsee 1, 24768 Rendsburg', postcode: '24768', country: 'Germany' }
 };
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -81,6 +82,7 @@ const getRandomId = (university: string): string => {
   const randomNum = Math.floor(Math.random() * 9000) + 1000;
   if (university.includes('Kenya Medical Training College')) return `KMTC/KKM/20${year}/${randomNum}`;
   if (university === 'Salem Community School') return `SCS-DE-${year}-${randomNum}`;
+  if (university === 'Shepherd School') return `SS-DE-${year}-${randomNum}`;
   return `CEA-${year}-${randomNum}`;
 };
 
