@@ -22,7 +22,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 <div className="flex flex-col items-center mb-6">
                     <div className="w-12 h-12 mb-2 flex items-center justify-center">
                         {studentInfo.logo ? (
-                            <img src={studentInfo.logo} alt="Logo" className="w-full h-full object-contain" />
+                            <img src={studentInfo.logo} alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
                         ) : (
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-xs">LOGO</div>
                         )}
@@ -106,7 +106,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 <div className="flex items-center mb-3">
                     <div className="w-9 h-9 mr-2 flex-shrink-0 flex items-center justify-center bg-gray-50 border border-gray-100 rounded-sm overflow-hidden">
                         {studentInfo.logo ? (
-                            <img src={studentInfo.logo} alt="Logo" className="w-full h-full object-contain" />
+                            <img src={studentInfo.logo} alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
                         ) : (
                             <span className="text-[8px] font-bold text-gray-300">LOGO</span>
                         )}
@@ -171,6 +171,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                         src={studentInfo.photo || 'https://picsum.photos/252/324'} 
                         alt="Student" 
                         className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
                     />
                 </div>
             </div>
@@ -246,6 +247,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                             src={studentInfo.photo || 'https://picsum.photos/252/324'} 
                             alt="Ghost" 
                             className="w-14 h-16 object-cover border border-gray-300 bg-orange-50 opacity-90" 
+                            referrerPolicy="no-referrer"
                         />
                         <p className="text-[7px] font-bold text-black text-center uppercase leading-none mt-0.5 w-full overflow-hidden text-ellipsis">{lastNamePart}</p>
                     </div>
@@ -282,6 +284,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                         src={studentInfo.photo || 'https://picsum.photos/252/324'} 
                         alt="Main"
                         className="w-full h-full object-cover shadow-sm" 
+                        referrerPolicy="no-referrer"
                     />
                     <div className="absolute bottom-0 left-0 right-0 bg-orange-500 py-1 text-center">
                         <p className="font-serif font-black text-white text-[9px] uppercase tracking-wider">STUDENT</p>
@@ -335,6 +338,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                         src={studentInfo.photo || 'https://picsum.photos/252/324'} 
                         alt="Student"
                         className="w-full h-full object-cover object-top" 
+                        referrerPolicy="no-referrer"
                     />
                 </div>
                 <p className="mt-auto text-[8px] font-bold text-center text-blue-900">200 LEVEL</p>
@@ -395,6 +399,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           src={studentInfo.photo || 'https://picsum.photos/252/324'} 
           alt="Student"
           className="w-full h-full object-cover" 
+          referrerPolicy="no-referrer"
         />
       </div>
       <div className="info-section">

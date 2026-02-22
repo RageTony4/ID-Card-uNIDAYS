@@ -400,6 +400,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
                                 src={scene.url} 
                                 alt={scene.label} 
                                 className="w-16 h-12 object-cover rounded shadow-sm opacity-80 group-hover:opacity-100" 
+                                referrerPolicy="no-referrer"
                              />
                              <span className={`text-[9px] font-bold group-hover:text-purple-600 transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>
                                 {scene.label}
@@ -458,7 +459,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
                     Preview & Edit Mockup
                 </button>
                 <div className={`rounded-lg overflow-hidden shadow-lg border transition-colors duration-300 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
-                    <img src={mockupImage} alt="AI Mockup" className="w-full h-auto" />
+                    <img src={mockupImage} alt="AI Mockup" className="w-full h-auto" referrerPolicy="no-referrer" />
                 </div>
             </div>
         )}
@@ -478,7 +479,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
                 </div>
                 
                 <div className="flex-1 bg-black overflow-hidden relative flex items-center justify-center">
-                    <img ref={editorImageRef} src={mockupImage} alt="Edit" className="max-w-full max-h-full" />
+                    <img ref={editorImageRef} src={mockupImage} alt="Edit" className="max-w-full max-h-full" referrerPolicy="no-referrer" />
                 </div>
 
                 <div className={`p-4 border-t flex justify-between items-center transition-colors duration-300 ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-gray-50'}`}>

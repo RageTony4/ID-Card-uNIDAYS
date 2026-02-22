@@ -7,7 +7,7 @@ import Toast from './components/Toast';
 import { generateRandomStudentInfo } from './lib/sampleData';
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [studentInfo, setStudentInfo] = useState<StudentInfo>({
     universityName: 'Community-Ed Academy',
     studentName: 'EMILY WATSON',
@@ -27,6 +27,32 @@ const App: React.FC = () => {
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [autoTrigger, setAutoTrigger] = useState(0);
 
+  useEffect(() => {
+    const CATBOX_URLS = [
+      "https://files.catbox.moe/m7lj8u.png",
+      "https://files.catbox.moe/u1skwz.png",
+      "https://files.catbox.moe/z2ersq.png",
+      "https://files.catbox.moe/3kliif.png",
+      "https://files.catbox.moe/a4f1ct.png",
+      "https://files.catbox.moe/8eq6dp.png",
+      "https://files.catbox.moe/bx9f18.png",
+      "https://files.catbox.moe/w22pf1.png",
+      "https://files.catbox.moe/4w42hk.png",
+      "https://files.catbox.moe/c0ot8t.png",
+      "https://files.catbox.moe/021b0u.png",
+      "https://files.catbox.moe/6rjppv.jfif",
+      "https://files.catbox.moe/j9s890.png",
+      "https://files.catbox.moe/0nk6tf.png",
+      "https://files.catbox.moe/jkxmsd.png",
+      "https://files.catbox.moe/mdd3ye.png"
+    ];
+
+    CATBOX_URLS.forEach(url => {
+      const img = new Image();
+      img.src = url;
+    });
+  }, []);
+
   const toggleTheme = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
@@ -39,7 +65,7 @@ const App: React.FC = () => {
       const newInfo = generateRandomStudentInfo(value);
       setStudentInfo(prev => ({ ...newInfo, logo: prev.logo }));
       
-      if (value === 'HeRendschule Rendsburg') {
+      if (value === 'Shepherd School') {
         setTemplate('official');
       }
     } else {

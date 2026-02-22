@@ -179,7 +179,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                         onClick={() => onPhotoSelect(url)}
                         className={`relative w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 transition-all ${studentInfo.photo === url ? 'border-purple-600 ring-2 ring-purple-100 scale-110' : isDark ? 'border-zinc-800 hover:border-zinc-600' : 'border-gray-200 hover:border-purple-400'}`}
                     >
-                        <img src={url} alt={`Male Avatar ${index + 1}`} className="w-full h-full object-cover" />
+                        <img src={url} alt={`Male Avatar ${index + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     </button>
                 ))}
             </div>
@@ -192,7 +192,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                         onClick={() => onPhotoSelect(url)}
                         className={`relative w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 transition-all ${studentInfo.photo === url ? 'border-purple-600 ring-2 ring-purple-100 scale-110' : isDark ? 'border-zinc-800 hover:border-zinc-600' : 'border-gray-200 hover:border-purple-400'}`}
                     >
-                        <img src={url} alt={`Female Avatar ${index + 1}`} className="w-full h-full object-cover" />
+                        <img src={url} alt={`Female Avatar ${index + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     </button>
                 ))}
             </div>
