@@ -91,6 +91,10 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   const expiryDay = String(today.getDate()).padStart(2, '0');
   const expiryDateString = `${expiryDay}-${expiryMonth}-${expiryYear}`;
 
+    // Official Template Scaling
+    const officialUniFontSize = studentInfo.universityName.length > 30 ? 'text-[9px]' : 'text-[11px]';
+    const officialNameFontSize = studentInfo.studentName.length > 25 ? 'text-[10px]' : studentInfo.studentName.length > 18 ? 'text-[12px]' : 'text-[14px]';
+
   // Official Template (Based on provided image)
   if (template === 'official') {
     return (
@@ -122,7 +126,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                                 <p className="text-[8px] font-medium text-gray-500 leading-none">Rendsburg</p>
                             </>
                         ) : (
-                            <h1 className="text-[11px] font-black text-gray-900 leading-tight uppercase tracking-tight">
+                            <h1 className={`font-black text-gray-900 leading-tight uppercase tracking-tight ${officialUniFontSize}`}>
                                 {studentInfo.universityName}
                             </h1>
                         )}
@@ -155,7 +159,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
                 {/* Student Name Section - Pushed down to just above padding */}
                 <div className="mt-auto">
-                    <p className="text-[14px] font-black text-black leading-none uppercase tracking-wide mb-0.5">
+                    <p className={`${officialNameFontSize} font-black text-black leading-none uppercase tracking-wide mb-0.5`}>
                         {studentInfo.studentName}
                     </p>
                     <p className="text-[10px] font-bold text-gray-600 uppercase">
@@ -194,8 +198,27 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     // Geographical Logic - Now using dynamic field
     const location = studentInfo.location || 'London, UK';
 
-    // Header Font Scaling for long names like KMTC
-    const isLongName = studentInfo.universityName.length > 25;
+    // Header Font Scaling for long names
+    const uniNameLength = studentInfo.universityName.length;
+    let uniFontSize = 'text-[18px]';
+    let uniMarginBottom = 'mb-4';
+    
+    if (uniNameLength > 35) {
+        uniFontSize = 'text-[12px]';
+        uniMarginBottom = 'mb-1';
+    } else if (uniNameLength > 25) {
+        uniFontSize = 'text-[14px]';
+        uniMarginBottom = 'mb-2';
+    } else if (uniNameLength > 18) {
+        uniFontSize = 'text-[16px]';
+        uniMarginBottom = 'mb-3';
+    }
+
+    // Student Name Font Scaling
+    const nameLength = displayName.length;
+    let nameFontSize = 'text-sm';
+    if (nameLength > 25) nameFontSize = 'text-[10px]';
+    else if (nameLength > 20) nameFontSize = 'text-[12px]';
 
     return (
       <div ref={ref} className="id-card-container shadow-lg relative bg-white overflow-hidden flex flex-row">
@@ -222,8 +245,8 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             {/* Left Column */}
             <div className="flex-1 flex flex-col pt-1 pl-2">
                 {/* Header */}
-                <div className="text-center mb-4">
-                    <h1 className={`font-sans ${isLongName ? 'text-[14px]' : 'text-[18px]'} font-black tracking-tight leading-tight text-gray-900 uppercase`}>
+                <div className={`text-center ${uniMarginBottom} overflow-hidden max-h-[60px]`}>
+                    <h1 className={`font-sans ${uniFontSize} font-black tracking-tight leading-tight text-gray-900 uppercase`}>
                         {studentInfo.universityName}
                     </h1>
                     <p className="text-[11px] text-gray-900 font-bold mt-0.5">
@@ -234,7 +257,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 {/* Name */}
                 <div className="mb-2">
                     <p className="font-playfair font-bold text-[9px] text-black leading-none mb-0.5 opacity-80">Name</p>
-                    <p className="font-playfair font-black text-sm text-black leading-none uppercase">
+                    <p className={`font-playfair font-black ${nameFontSize} text-black leading-none uppercase`}>
                         {displayName}
                     </p>
                 </div>
@@ -351,10 +374,10 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 </div>
                 
                 <div className="mt-1">
-                    <h1 className="text-lg font-black text-gray-800 uppercase leading-none tracking-tight">
-                        {studentInfo.studentName.split(' ')[1]}
+                    <h1 className={`${studentInfo.studentName.split(' ').slice(1).join(' ').length > 12 ? 'text-sm' : 'text-lg'} font-black text-gray-800 uppercase leading-none tracking-tight`}>
+                        {studentInfo.studentName.split(' ').slice(1).join(' ')}
                     </h1>
-                    <h2 className="text-sm font-semibold text-gray-600 uppercase leading-tight">
+                    <h2 className={`${studentInfo.studentName.split(' ')[0].length > 12 ? 'text-xs' : 'text-sm'} font-semibold text-gray-600 uppercase leading-tight`}>
                         {studentInfo.studentName.split(' ')[0]}
                     </h2>
                 </div>
