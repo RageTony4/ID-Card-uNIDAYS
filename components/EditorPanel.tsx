@@ -62,7 +62,27 @@ const SCHOOL_DATA = {
     ],
     'Germany': [
         'Salem Community School',
-        'Shepherd School'
+        'Shepherd School',
+        'Fichteschule',
+        'JurGrad gGmbH',
+        'oeoemrang-Skuul'
+    ],
+    'Australia': [
+        'Cornerstone Community'
+    ],
+    'USA': [
+        'Cole Co. R-I Middle',
+        'Commack Middle School',
+        'Cohagen School',
+        'Coalfield School',
+        'Mona School',
+        'Deary School'
+    ],
+    'Canada': [
+        'DelMar College',
+        'Cargair, St-Hubert',
+        'Kikino School',
+        'Cegep Limoilou'
     ]
 };
 
@@ -80,9 +100,9 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onAutoGenerate,
   showToast
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany'>('United Kingdom');
+  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada'>('United Kingdom');
 
-  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany') => {
+  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada') => {
     setSelectedCountry(country);
     const firstSchool = SCHOOL_DATA[country][0];
     const event = {
@@ -256,6 +276,24 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                  >
                      Germany Schools
                  </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('Australia')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Australia' ? 'bg-emerald-600 border-emerald-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-emerald-300'}`}
+                 >
+                     Australia Schools
+                 </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('USA')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'USA' ? 'bg-indigo-600 border-indigo-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-indigo-300'}`}
+                 >
+                     USA Schools
+                 </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('Canada')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Canada' ? 'bg-red-600 border-red-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-red-300'}`}
+                 >
+                     Canada Schools
+                 </button>
              </div>
 
              <label htmlFor="universitySelect" className={`block text-sm font-medium mb-1 ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Select School</label>
@@ -338,6 +376,13 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           label="Emergency Contact:" 
           name="emergencyContact" 
           value={studentInfo.emergencyContact} 
+          onChange={onInputChange}
+          isDark={isDark}
+        />
+        <InputField 
+          label="Location (City, Country):" 
+          name="location" 
+          value={studentInfo.location} 
           onChange={onInputChange}
           isDark={isDark}
         />

@@ -202,16 +202,22 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     const uniNameLength = studentInfo.universityName.length;
     let uniFontSize = 'text-[18px]';
     let uniMarginBottom = 'mb-4';
+    let locationFontSize = 'text-[11px]';
     
     if (uniNameLength > 35) {
-        uniFontSize = 'text-[12px]';
+        uniFontSize = 'text-[11px]';
         uniMarginBottom = 'mb-1';
+        locationFontSize = 'text-[9px]';
     } else if (uniNameLength > 25) {
-        uniFontSize = 'text-[14px]';
+        uniFontSize = 'text-[13px]';
+        uniMarginBottom = 'mb-1.5';
+        locationFontSize = 'text-[10px]';
+    } else if (uniNameLength >= 20) {
+        uniFontSize = 'text-[15px]';
+        uniMarginBottom = 'mb-1.5';
+    } else if (uniNameLength > 15) {
+        uniFontSize = 'text-[17px]';
         uniMarginBottom = 'mb-2';
-    } else if (uniNameLength > 18) {
-        uniFontSize = 'text-[16px]';
-        uniMarginBottom = 'mb-3';
     }
 
     // Student Name Font Scaling
@@ -243,13 +249,13 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         <div className="z-10 w-full h-full flex p-3 relative">
             
             {/* Left Column */}
-            <div className="flex-1 flex flex-col pt-1 pl-2">
+            <div className="flex-1 flex flex-col pt-2 pl-2">
                 {/* Header */}
-                <div className={`text-center ${uniMarginBottom} overflow-hidden max-h-[60px]`}>
+                <div className={`text-center ${uniMarginBottom}`}>
                     <h1 className={`font-sans ${uniFontSize} font-black tracking-tight leading-tight text-gray-900 uppercase`}>
                         {studentInfo.universityName}
                     </h1>
-                    <p className="text-[11px] text-gray-900 font-bold mt-0.5">
+                    <p className={`${locationFontSize} text-gray-900 font-bold mt-0.5`}>
                         {location}
                     </p>
                 </div>
@@ -275,7 +281,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                         <p className="text-[7px] font-bold text-black text-center uppercase leading-none mt-0.5 w-full overflow-hidden text-ellipsis">{lastNamePart}</p>
                     </div>
 
-                    <div className="flex flex-col space-y-2 pt-0.5">
+                    <div className="flex flex-col space-y-1.5 pt-0.5">
                         {/* Student ID */}
                         <div>
                              <p className="text-[7px] text-gray-600 font-bold leading-none mb-0.5 uppercase">Student ID</p>
@@ -284,7 +290,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                             </p>
                         </div>
                         
-                        <div className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-1">
                             <div>
                                 <p className="text-[8px] text-black font-bold leading-none mb-0.5 uppercase">Date of Birth</p>
                                 <p className="text-[10px] text-black font-black leading-none">{studentInfo.dob}</p>
