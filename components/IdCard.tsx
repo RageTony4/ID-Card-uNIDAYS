@@ -30,7 +30,11 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                     <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{studentInfo.universityName}</h3>
                 </div>
 
-                <div className="text-[9px] text-gray-600 space-y-3 w-4/5">
+                <div className="text-[9px] text-gray-600 space-y-2 w-4/5">
+                    <div className="border-t border-b border-gray-100 py-2 mb-2">
+                        <p className="font-bold text-black uppercase">{studentInfo.studentName}</p>
+                        <p className="font-medium text-gray-500">{studentInfo.academicYear}</p>
+                    </div>
                     <p>Loss of this card should be reported as soon as possible to the Student Administration Centre.</p>
                     <p>If this card is found, please contact the Student Administration Centre, {studentInfo.universityName} or return to {studentInfo.address}.</p>
                 </div>
@@ -65,13 +69,10 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-2 text-[9px]">
-                <div>
-                    <p className="font-bold text-gray-700 uppercase text-[8px] tracking-wider">Emergency Contact</p>
-                    <p className="font-medium text-black">{studentInfo.emergencyContact}</p>
-                </div>
-                <div>
-                    <p className="font-bold text-gray-700 uppercase text-[8px] tracking-wider">Blood Group</p>
-                    <p className="text-red-600 font-extrabold">{studentInfo.bloodGroup}</p>
+                <div className="col-span-2 border-b border-gray-100 pb-2 mb-1">
+                    <p className="font-bold text-black uppercase">{studentInfo.studentName}</p>
+                    <p className="text-gray-600">{studentInfo.universityName}</p>
+                    <p className="text-gray-500 font-medium">Academic Year: {studentInfo.academicYear}</p>
                 </div>
             </div>
 

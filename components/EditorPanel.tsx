@@ -82,7 +82,20 @@ const SCHOOL_DATA = {
         'DelMar College',
         'Cargair, St-Hubert',
         'Kikino School',
-        'Cegep Limoilou'
+        'Cegep Limoilou',
+        'Dental Dynamic Institute',
+        'Kikkawa College',
+        'Kootenay Columbia College',
+        'Cegep Gerald-Godin',
+        'École Mathieu-Martin'
+    ],
+    'India': [
+        'Degloor College Degloor',
+        'FEEDS College',
+        'Tihu College',
+        'Tikrikilla College',
+        'DIET Dibrugarh',
+        'Dibru College'
     ]
 };
 
@@ -100,9 +113,9 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onAutoGenerate,
   showToast
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada'>('United Kingdom');
+  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India'>('United Kingdom');
 
-  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada') => {
+  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India') => {
     setSelectedCountry(country);
     const firstSchool = SCHOOL_DATA[country][0];
     const event = {
@@ -293,6 +306,12 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                     className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Canada' ? 'bg-red-600 border-red-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-red-300'}`}
                  >
                      Canada Schools
+                 </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('India')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'India' ? 'bg-orange-600 border-orange-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-orange-300'}`}
+                 >
+                     India Schools
                  </button>
              </div>
 
