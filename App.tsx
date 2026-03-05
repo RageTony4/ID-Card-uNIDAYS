@@ -7,25 +7,56 @@ import Toast from './components/Toast';
 import { generateRandomStudentInfo } from './lib/sampleData';
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-  const [studentInfo, setStudentInfo] = useState<StudentInfo>({
-    universityName: 'Community-Ed Academy',
-    studentName: 'EMILY WATSON',
-    dob: '14 May 2004',
-    studentId: 'CEA-26-8219',
-    phone: '+44 7700 900461',
-    address: '42 High Street, Kensington, London, SW7 2AZ, UK',
-    location: 'London, UK',
-    academicYear: '2026/2027',
-    photo: 'https://picsum.photos/seed/ukstudent/252/324',
-    logo: null,
-    bloodGroup: 'O+',
-    emergencyContact: '+44 7700 900999'
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('id_gen_theme');
+    return (saved as 'light' | 'dark') || 'dark';
   });
 
-  const [template, setTemplate] = useState<IdCardTemplate>('elegant');
+  const [studentInfo, setStudentInfo] = useState<StudentInfo>(() => {
+    const saved = localStorage.getItem('id_gen_student_info');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse saved student info', e);
+      }
+    }
+    return {
+      universityName: 'Community-Ed Academy',
+      studentName: 'EMILY WATSON',
+      dob: '14 May 2004',
+      studentId: 'CEA-26-8219',
+      phone: '+44 7700 900461',
+      address: '42 High Street, Kensington, London, SW7 2AZ, UK',
+      location: 'London, UK',
+      academicYear: '2026/2027',
+      photo: 'https://picsum.photos/seed/ukstudent/252/324',
+      logo: null,
+      bloodGroup: 'O+',
+      emergencyContact: '+44 7700 900999'
+    };
+  });
+
+  const [template, setTemplate] = useState<IdCardTemplate>(() => {
+    const saved = localStorage.getItem('id_gen_template');
+    return (saved as IdCardTemplate) || 'elegant';
+  });
+
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [autoTrigger, setAutoTrigger] = useState(0);
+
+  // Persistence effects
+  useEffect(() => {
+    localStorage.setItem('id_gen_theme', theme);
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem('id_gen_student_info', JSON.stringify(studentInfo));
+  }, [studentInfo]);
+
+  useEffect(() => {
+    localStorage.setItem('id_gen_template', template);
+  }, [template]);
 
   useEffect(() => {
     const CATBOX_URLS = [
