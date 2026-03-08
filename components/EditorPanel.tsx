@@ -11,7 +11,6 @@ interface EditorPanelProps {
   onTemplateChange: (template: IdCardTemplate) => void;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   onPhotoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onLogoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onPhotoSelect: (url: string) => void;
   onGenerateSample: () => void;
   onAutoGenerate?: () => void;
@@ -107,7 +106,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onTemplateChange, 
   onInputChange, 
   onPhotoChange, 
-  onLogoChange,
   onPhotoSelect,
   onGenerateSample,
   onAutoGenerate,
@@ -250,17 +248,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                 accept="image/*" 
                 className="hidden" 
                 onChange={onPhotoChange} 
-              />
-            </div>
-
-            <div>
-              <label htmlFor="logoUpload" className="modern-button-purple">Upload Logo</label>
-              <input 
-                type="file" 
-                id="logoUpload" 
-                accept="image/*" 
-                className="hidden" 
-                onChange={onLogoChange} 
               />
             </div>
           </div>

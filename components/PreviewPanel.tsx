@@ -131,11 +131,14 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
         return;
       }
 
-      const studentName = studentInfo.studentName.replace(/ /g, '_') || 'student';
+      const safeStudentName = studentInfo.studentName.trim().replace(/\s+/g, '_') || 'Student';
+      const firstSchoolWord = studentInfo.universityName.trim().split(/\s+/)[0] || 'School';
+      const fileName = `${safeStudentName}_${firstSchoolWord}.png`;
+      
       const pngUrl = canvas.toDataURL('image/png');
       const pngLink = document.createElement('a');
       pngLink.href = pngUrl;
-      pngLink.download = `${studentName}_id_${side}.png`;
+      pngLink.download = fileName;
       document.body.appendChild(pngLink);
       pngLink.click();
       document.body.removeChild(pngLink);
@@ -176,8 +179,10 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       pdf.addPage();
       pdf.addImage(backCanvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
 
-      const studentName = studentInfo.studentName.replace(/ /g, '_') || 'student';
-      pdf.save(`${studentName}_id_card.pdf`);
+      const safeStudentName = studentInfo.studentName.trim().replace(/\s+/g, '_') || 'Student';
+      const firstSchoolWord = studentInfo.universityName.trim().split(/\s+/)[0] || 'School';
+      const fileName = `${safeStudentName}_${firstSchoolWord}.pdf`;
+      pdf.save(fileName);
 
       showToast("PDF downloaded!", "success");
     } catch (error) {
@@ -193,8 +198,10 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
             const url = canvas.toDataURL('image/png');
             const link = document.createElement('a');
             link.href = url;
-            const safeName = studentInfo.studentName.trim().replace(/ /g, '_') || 'student';
-            link.download = `${safeName}.png`;
+            const safeStudentName = studentInfo.studentName.trim().replace(/\s+/g, '_') || 'Student';
+            const firstSchoolWord = studentInfo.universityName.trim().split(/\s+/)[0] || 'School';
+            const fileName = `${safeStudentName}_${firstSchoolWord}.png`;
+            link.download = fileName;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

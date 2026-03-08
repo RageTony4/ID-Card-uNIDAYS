@@ -20,13 +20,6 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
              
              <div className="p-6 flex flex-col h-full items-center text-center justify-center">
                 <div className="flex flex-col items-center mb-6">
-                    <div className="w-12 h-12 mb-2 flex items-center justify-center">
-                        {studentInfo.logo ? (
-                            <img src={studentInfo.logo} alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
-                        ) : (
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 font-bold text-xs">LOGO</div>
-                        )}
-                    </div>
                     <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{studentInfo.universityName}</h3>
                 </div>
 
@@ -96,95 +89,91 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     const officialUniFontSize = studentInfo.universityName.length > 30 ? 'text-[9px]' : 'text-[11px]';
     const officialNameFontSize = studentInfo.studentName.length > 25 ? 'text-[10px]' : studentInfo.studentName.length > 18 ? 'text-[12px]' : 'text-[14px]';
 
-  // Official Template (Based on provided image)
+  // Official Template (Redesigned for Authenticity)
   if (template === 'official') {
     return (
-      <div ref={ref} className="id-card-container shadow-lg bg-white overflow-hidden flex flex-col relative rounded-xl border border-gray-100">
+      <div ref={ref} className="id-card-container shadow-xl bg-white overflow-hidden flex flex-col relative rounded-xl border border-gray-300">
+        {/* Top Security Strip */}
+        <div className="h-2 bg-blue-800 w-full"></div>
         
-        {/* Main Layout: Top to bottom of content area leaving space (pb-12) for footer barcode */}
-        <div className="flex flex-row h-full p-4 pb-12"> 
-            
-            {/* Left Content Column */}
-            <div className="flex flex-col w-[65%] pr-2 h-full">
-                
-                {/* Header Section */}
-                <div className="flex items-center mb-3">
-                    <div className="w-9 h-9 mr-2 flex-shrink-0 flex items-center justify-center bg-gray-50 border border-gray-100 rounded-sm overflow-hidden">
-                        {studentInfo.logo ? (
-                            <img src={studentInfo.logo} alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
-                        ) : (
-                            <span className="text-[8px] font-bold text-gray-300">LOGO</span>
-                        )}
-                    </div>
-                    <div className="flex flex-col justify-center">
-                         {/* School Name: Bold */}
-                        {studentInfo.universityName === 'HeRendschule Rendsburg' ? (
-                            <>
-                                <h1 className="text-[13px] font-bold text-blue-600 leading-tight">
-                                    Shepherd School
-                                </h1>
-                                <p className="text-[8px] font-medium text-gray-500 leading-none">HeRendschule Rendsburg</p>
-                                <p className="text-[8px] font-medium text-gray-500 leading-none">Rendsburg</p>
-                            </>
-                        ) : (
-                            <h1 className={`font-black text-gray-900 leading-tight uppercase tracking-tight ${officialUniFontSize}`}>
-                                {studentInfo.universityName}
-                            </h1>
-                        )}
-                    </div>
-                </div>
+        <div className="flex flex-col h-full">
+          {/* Header Section */}
+          <div className="px-4 pt-1 pb-0 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white border border-gray-200 rounded shadow-sm p-1">
+                <svg className="w-full h-full text-blue-800" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" />
+                </svg>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-[11px] font-black text-gray-900 uppercase tracking-tight leading-tight">
+                  {studentInfo.universityName}
+                </h1>
+                <p className="text-[7px] font-bold text-blue-700 uppercase tracking-widest">Official Student Identity</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-[8px] font-bold text-gray-400 uppercase">Academic Year</p>
+              <p className="text-[10px] font-black text-blue-800">{studentInfo.academicYear}</p>
+            </div>
+          </div>
 
-                {/* Title */}
-                <h2 className="text-lg font-black text-gray-800 mb-2 tracking-tight">Student Card</h2>
-                
-                {/* Key Details */}
-                <div className="space-y-1 mb-2">
-                    {/* Expiry Date */}
-                    <div className="flex items-baseline text-[10px]">
-                         <span className="text-gray-500 font-medium w-14">Expires</span>
-                         <span className="font-black text-black">{expiryDateString}</span>
-                    </div>
-                    
-                    {/* ID */}
-                    <div className="flex items-baseline text-[10px]">
-                         <span className="text-gray-500 font-medium w-14">ID No</span>
-                         <span className="font-black text-black">{studentInfo.studentId}</span>
-                    </div>
-                    
-                     {/* Enrolled - Updated to 2026 */}
-                    <div className="flex items-baseline text-[10px]">
-                         <span className="text-gray-500 font-medium w-14">Enrolled</span>
-                         <span className="font-black text-black">2026</span>
-                    </div>
+          {/* Main Content Area */}
+          <div className="flex flex-row flex-1 px-4 pt-0 pb-0 gap-4">
+            {/* Left: Photo */}
+            <div className="w-[38%]">
+              <div className="relative">
+                <div className="w-full aspect-[3/4] bg-gray-100 rounded border-2 border-gray-200 overflow-hidden shadow-inner">
+                  <img 
+                    src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                    alt="Student" 
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
                 </div>
-
-                {/* Student Name Section - Pushed down to just above padding */}
-                <div className="mt-auto">
-                    <p className={`${officialNameFontSize} font-black text-black leading-none uppercase tracking-wide mb-0.5`}>
-                        {studentInfo.studentName}
-                    </p>
-                    <p className="text-[10px] font-bold text-gray-600 uppercase">
-                        {studentInfo.academicYear}
-                    </p>
+                {/* Holographic-style Seal Overlay */}
+                <div className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-blue-50/90 backdrop-blur-[1px] border border-blue-200 flex items-center justify-center shadow-sm opacity-90 z-20">
+                   <svg className="w-5 h-5 text-blue-500/40" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.1,7 14,7.9 14,9C14,10.1 13.1,11 12,11C10.9,11 10,10.1 10,9C10,7.9 10.9,7 12,7M12,13C14.67,13 20,14.33 20,17V18H4V17C4,14.33 9.33,13 12,13Z" />
+                   </svg>
                 </div>
+              </div>
             </div>
 
-            {/* Right Photo Column */}
-            <div className="w-[35%] h-full flex flex-col items-end pt-1">
-                <div className="w-full aspect-[3/4] bg-gray-100 rounded-sm overflow-hidden shadow-sm border border-gray-200">
-                    <img 
-                        src={studentInfo.photo || 'https://picsum.photos/252/324'} 
-                        alt="Student" 
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                    />
+            {/* Right: Details */}
+            <div className="flex-1 flex flex-col justify-center py-0 gap-y-1">
+              <div className="space-y-1">
+                <div>
+                  <label className="text-[7px] font-bold text-gray-400 uppercase tracking-wider block">Full Name</label>
+                  <h2 className="text-[13px] font-black text-gray-900 uppercase leading-tight tracking-wide">
+                    {studentInfo.studentName}
+                  </h2>
                 </div>
+
+                <div className="grid grid-cols-1 gap-y-1">
+                  <div>
+                    <label className="text-[7px] font-bold text-gray-400 uppercase tracking-wider block">Student ID Number</label>
+                    <p className="text-[10px] font-bold text-gray-800 font-mono tracking-tighter">{studentInfo.studentId}</p>
+                  </div>
+                  <div>
+                    <label className="text-[7px] font-bold text-gray-400 uppercase tracking-wider block">Date of Birth</label>
+                    <p className="text-[9px] font-bold text-gray-800">{studentInfo.dob}</p>
+                  </div>
+                  <div className="pt-1 border-t border-gray-100">
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <label className="text-[7px] font-bold text-gray-400 uppercase tracking-wider block">Valid Until</label>
+                        <p className="text-[9px] font-black text-red-600">{expiryDateString}</p>
+                      </div>
+                      <div className="bg-blue-800 text-white px-2 py-0.5 rounded-sm">
+                        <p className="text-[8px] font-black uppercase tracking-widest">STUDENT</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-        </div>
-        
-        {/* Footer Barcode - Absolute positioned in the reserved padding area */}
-        <div className="absolute bottom-3 left-4 right-4 h-8 flex flex-col justify-center">
-            <div className="barcode w-full h-full opacity-90"></div>
+          </div>
         </div>
       </div>
     );

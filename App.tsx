@@ -5,6 +5,7 @@ import EditorPanel from './components/EditorPanel';
 import PreviewPanel from './components/PreviewPanel';
 import Toast from './components/Toast';
 import { generateRandomStudentInfo } from './lib/sampleData';
+import { GoogleGenAI } from "@google/genai";
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -156,7 +157,6 @@ const App: React.FC = () => {
           onTemplateChange={setTemplate}
           onInputChange={handleInputChange}
           onPhotoChange={handlePhotoChange}
-          onLogoChange={handleLogoChange}
           onPhotoSelect={handlePhotoSelect}
           onGenerateSample={handleGenerateSample}
           onAutoGenerate={handleAutoTrigger}
