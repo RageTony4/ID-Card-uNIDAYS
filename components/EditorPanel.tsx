@@ -75,7 +75,8 @@ const SCHOOL_DATA = {
         'Cohagen School',
         'Coalfield School',
         'Mona School',
-        'Deary School'
+        'Deary School',
+        'Park University'
     ],
     'Canada': [
         'DelMar College',
@@ -94,7 +95,22 @@ const SCHOOL_DATA = {
         'Tihu College',
         'Tikrikilla College',
         'DIET Dibrugarh',
-        'Dibru College'
+        'Dibru College',
+        'Beant College of Engineering & Technology',
+        'SRM TRP Engineering College',
+        'St. Stephen\'s College',
+        'Stella Maris College',
+        'Stella Mary\'s College of Engineering',
+        'Amrita Vishwa Vidyapeetham',
+        'Atal Bihari Vajpayee Vishwavidyalaya'
+    ],
+    'France': [
+        'Lycée Delamare-Deboutteville',
+        'Terre & Feu',
+        'Hiloza',
+        'Ecole Kienz',
+        'MFR Vernines',
+        'Next Advance'
     ]
 };
 
@@ -111,9 +127,9 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onAutoGenerate,
   showToast
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India'>('United Kingdom');
+  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France'>('United Kingdom');
 
-  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India') => {
+  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France') => {
     setSelectedCountry(country);
     const firstSchool = SCHOOL_DATA[country][0];
     const event = {
@@ -154,7 +170,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-6 mb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-bold mb-3 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Design Template</label>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-5 gap-2">
            <button 
             onClick={() => onTemplateChange('elegant')}
             className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
@@ -194,6 +210,16 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             }`}
           >
             Classic
+          </button>
+          <button 
+            onClick={() => onTemplateChange('training')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'training' 
+                ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            UoN
           </button>
         </div>
       </div>
@@ -257,7 +283,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="md:col-span-2">
              <label className={`block text-sm font-bold mb-2 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Select Country</label>
-             <div className="flex gap-2 mb-3">
+             <div className="flex flex-wrap gap-2 mb-3">
                  <button 
                     onClick={() => handleCountrySwitch('United Kingdom')}
                     className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'United Kingdom' ? 'bg-blue-600 border-blue-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-blue-300'}`}
@@ -299,6 +325,12 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                     className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'India' ? 'bg-orange-600 border-orange-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-orange-300'}`}
                  >
                      India Schools
+                 </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('France')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'France' ? 'bg-blue-700 border-blue-700 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-blue-300'}`}
+                 >
+                     France Schools
                  </button>
              </div>
 

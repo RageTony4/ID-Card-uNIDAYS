@@ -38,10 +38,61 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
     const isModern = template === 'modern';
     const isElegant = template === 'elegant';
+    const isTraining = template === 'training';
     
+    if (isTraining) {
+      return (
+        <div ref={ref} className="id-card-container id-card-back shadow-lg bg-white overflow-hidden relative rounded-lg border border-gray-400 font-sans">
+          {/* Background Image */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/University_of_Nairobi_Main_Campus.jpg/800px-University_of_Nairobi_Main_Campus.jpg" 
+              alt="Campus" 
+              className="w-full h-full object-cover opacity-60"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <div className="relative z-10 flex flex-col h-full p-3">
+            {/* Top Info */}
+            <div className="flex justify-center gap-6 text-black font-black text-[11px] bg-white/80 py-1 px-4 rounded shadow-sm self-center mt-1">
+              <p>Issued :</p>
+              <p>Expires :</p>
+            </div>
+            
+            <div className="text-center mt-1.5">
+              <p className="text-black font-black text-[11px] bg-white/80 inline-block px-4 py-0.5 rounded shadow-sm">{studentInfo.studentId}</p>
+            </div>
+
+            {/* Barcode Area */}
+            <div className="mt-3 bg-white p-2 w-[85%] mx-auto shadow-md rounded-sm">
+              <div className="h-14 w-full opacity-100" style={{ backgroundImage: 'repeating-linear-gradient(to right, black 0, black 2px, transparent 2px, transparent 4px, black 4px, black 5px, transparent 5px, transparent 7px, black 7px, black 10px, transparent 10px, transparent 12px)', backgroundSize: '100% 100%' }}></div>
+              <div className="flex justify-between px-2 mt-1 text-[11px] text-black font-mono font-bold tracking-[0.2em]">
+                <span>9</span>
+                <span>8</span>
+                <span>4</span>
+                <span>0</span>
+                <span>2</span>
+                <span>2</span>
+                <span>0</span>
+                <span>7</span>
+              </div>
+            </div>
+
+            {/* Bottom Text */}
+            <div className="mt-auto text-center text-white text-[9px] font-bold px-2 pb-1">
+              <p className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">This card is the property of the University of Nairobi and should be</p>
+              <p className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">surrendered on request or expiry.</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     let stripeColor = 'bg-gray-800';
     if (isModern) stripeColor = 'bg-blue-900';
     if (isElegant) stripeColor = 'bg-purple-900';
+    if (isTraining) stripeColor = 'bg-[#2d2d2d]';
 
     return (
       <div ref={ref} className="id-card-container id-card-back shadow-lg bg-white overflow-hidden">
@@ -84,6 +135,82 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   const expiryMonth = String(today.getMonth() + 1).padStart(2, '0');
   const expiryDay = String(today.getDate()).padStart(2, '0');
   const expiryDateString = `${expiryDay}-${expiryMonth}-${expiryYear}`;
+
+  // Training Template (Now University of Nairobi)
+  if (template === 'training') {
+    // Extract parts of the name
+    const names = studentInfo.studentName.split(' ');
+    const lastName = names.length > 0 ? names[names.length - 1].toUpperCase() : '';
+    const firstNames = names.slice(0, names.length - 1).join(' ').toUpperCase();
+    const formattedName = `${lastName} ${firstNames}`.trim();
+
+    return (
+      <div ref={ref} className="id-card-container shadow-xl bg-[#85cbf4] overflow-hidden relative rounded-lg border border-gray-400 flex-col font-sans select-none">
+        
+        {/* Header Section */}
+        <div className="w-full pt-1.5 px-3 flex flex-col items-center relative z-10">
+            <h1 className="text-[#003366] font-serif text-[17px] font-bold tracking-tight leading-tight text-center w-full">
+                UNIVERSITY OF NAIROBI
+            </h1>
+            <p className="text-white italic font-serif text-[9px] leading-tight mt-0.5 text-center">
+                Towards World Class Excellence
+            </p>
+            <div className="text-[#003366] text-[7px] text-center mt-0.5 leading-tight font-bold">
+                <p>P.O.BOX 30197-00100 NAIROBI TEL:318262</p>
+                <p>Website: www.uonbi.ac.ke</p>
+            </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="relative z-10 flex px-3 mt-1.5 gap-3 items-start">
+            {/* Left: Photo */}
+            <div className="w-[80px] h-[100px] bg-white border border-gray-400 p-0.5 shadow-sm flex-shrink-0">
+                <img 
+                    src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                    alt="Student" 
+                    className="w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                />
+            </div>
+
+            {/* Right: Details */}
+            <div className="flex-1 flex flex-col pt-0">
+                <h2 className="text-black font-extrabold text-[9px] mb-1.5 tracking-tight">UNDERGRADUATE STUDENT ID CARD</h2>
+                
+                <div className="space-y-0.5 text-[9px] text-black font-bold leading-tight">
+                    <p className="text-[10px] mb-1">{formattedName || 'MUNGAI ELIZABETH WANJIRU'}</p>
+                    <p>Reg. No: {studentInfo.studentId}</p>
+                    <p>ID/PP NO: {studentInfo.studentId.replace(/\D/g, '').substring(0, 8) || '27870562'}</p>
+                    <p className="mt-2 text-[8px] leading-none">BACHELOR OF MEDICINE AND BACHELOR OF SURGERY</p>
+                    <p className="text-[8px] leading-none">FACULTY OF HEALTH SCIENCES</p>
+                </div>
+            </div>
+        </div>
+
+        {/* Bottom Section: Signatures & Validity */}
+        <div className="absolute bottom-1.5 left-0 right-0 px-3 z-10">
+            <div className="flex justify-between items-end mb-1">
+                {/* Holder Sign */}
+                <div className="flex flex-col items-center">
+                    <div className="h-4 w-16 border-b border-black/30"></div>
+                    <p className="text-black font-bold text-[8px] mt-0.5">Holder's Sign</p>
+                </div>
+
+                {/* Registrar Sign */}
+                <div className="flex flex-col items-center">
+                    <div className="h-4 w-24 border-b border-black/30"></div>
+                    <p className="text-black font-bold text-[8px] mt-0.5">Academic Registrar Sign</p>
+                </div>
+            </div>
+
+            <div className="flex justify-between items-center border-t border-black/10 pt-1">
+                <p className="text-black font-bold text-[8px]">This ID/Card is valid up to</p>
+                <p className="text-black font-serif text-[8px] italic">ISO 9001:2008 Certified</p>
+            </div>
+        </div>
+      </div>
+    );
+  }
 
     // Official Template Scaling
     const officialUniFontSize = studentInfo.universityName.length > 30 ? 'text-[9px]' : 'text-[11px]';
