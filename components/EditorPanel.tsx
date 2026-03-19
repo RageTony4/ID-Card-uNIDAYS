@@ -15,6 +15,8 @@ interface EditorPanelProps {
   onGenerateSample: () => void;
   onAutoGenerate?: () => void;
   showToast: (message: string, type: ToastType) => void;
+  setActiveTab: (tab: 'edit' | 'preview') => void;
+  activeTab: 'edit' | 'preview';
 }
 
 const MALE_HEADSHOTS = [
@@ -64,7 +66,10 @@ const SCHOOL_DATA = {
         'Shepherd School',
         'Fichteschule',
         'JurGrad gGmbH',
-        'oeoemrang-Skuul'
+        'oeoemrang-Skuul',
+        'Fritz-Henßler-Berufskolleg*',
+        'Luise-Henriette-Gymnasium*',
+        'Städtisches Gymnasium Hennef*'
     ],
     'Australia': [
         'Cornerstone Community'
@@ -125,13 +130,22 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onPhotoSelect,
   onGenerateSample,
   onAutoGenerate,
-  showToast
+  showToast,
+  setActiveTab,
+  activeTab
 }) => {
   const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France'>('United Kingdom');
+  const panelRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (activeTab === 'edit' && panelRef.current) {
+      panelRef.current.scrollTo({ top: 0 });
+    }
+  }, [activeTab]);
 
   const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France') => {
     setSelectedCountry(country);
-    const firstSchool = SCHOOL_DATA[country][0];
+    const firstSchool = SCHOOL_DATA[country][0].replace(/\*$/, '');
     const event = {
         target: {
             name: 'universityName',
@@ -149,10 +163,20 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     }
   };
 
+  const handleAutoGenerate = () => {
+    if (onAutoGenerate) {
+      onAutoGenerate();
+    }
+  };
+
+  const handleRandomize = () => {
+    onGenerateSample();
+  };
+
   const isDark = theme === 'dark';
 
   return (
-    <div className={`w-full lg:w-1/2 p-6 md:p-8 space-y-4 border-r overflow-y-auto transition-colors duration-300 ${isDark ? 'border-zinc-800 text-zinc-100' : 'border-gray-200 text-gray-800'}`} style={{ maxHeight: '90vh' }}>
+    <div ref={panelRef} className={`w-full p-6 md:p-8 space-y-4 border-r overflow-y-auto transition-colors duration-300 ${isDark ? 'border-zinc-800 text-zinc-100' : 'border-gray-200 text-gray-800'} lg:max-h-[90vh] pb-24 lg:pb-8`}>
       <div className="flex justify-between items-center mb-4">
         <h2 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>ID Card Editor</h2>
         <button 
@@ -257,10 +281,10 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-wrap gap-2 w-full mb-2">
-            <button onClick={onAutoGenerate} className="modern-button-blue">
+            <button onClick={handleAutoGenerate} className="modern-button-blue">
                 Auto
             </button>
-            <button onClick={onGenerateSample} className="modern-button-green">
+            <button onClick={handleRandomize} className="modern-button-green">
                 Randomize Data
             </button>
           </div>
@@ -343,7 +367,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                 className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors duration-300 ${isDark ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-white border-gray-300 text-black'} font-medium`}
              >
                 {SCHOOL_DATA[selectedCountry].map((school) => (
-                    <option key={school} value={school}>
+                    <option key={school} value={school.replace(/\*$/, '')}>
                         {school}
                     </option>
                 ))}

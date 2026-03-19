@@ -10,6 +10,9 @@ interface IdCardProps {
 
 const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant' }, ref) => {
   
+  // Clean university name for display (remove trailing star if present)
+  const displayUniversityName = studentInfo.universityName.replace(/\*$/, '');
+
   // Common Back Side for Classic/Elegant/Modern
   if (side === 'back') {
     if (template === 'official') {
@@ -20,7 +23,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
              
              <div className="p-6 flex flex-col h-full items-center text-center justify-center">
                 <div className="flex flex-col items-center mb-6">
-                    <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{studentInfo.universityName}</h3>
+                    <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{displayUniversityName}</h3>
                 </div>
 
                 <div className="text-[9px] text-gray-600 space-y-2 w-4/5">
@@ -29,7 +32,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                         <p className="font-medium text-gray-500">{studentInfo.academicYear}</p>
                     </div>
                     <p>Loss of this card should be reported as soon as possible to the Student Administration Centre.</p>
-                    <p>If this card is found, please contact the Student Administration Centre, {studentInfo.universityName} or return to {studentInfo.address}.</p>
+                    <p>If this card is found, please contact the Student Administration Centre, {displayUniversityName} or return to {studentInfo.address}.</p>
                 </div>
              </div>
           </div>
@@ -102,7 +105,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
          <div className="p-4 flex flex-col h-full">
             <div className="flex justify-between items-start">
                 <div className="text-[10px] text-gray-600 w-2/3 leading-tight">
-                    <p>This card is the property of <span className="font-bold text-black">{studentInfo.universityName}</span>.</p>
+                    <p>This card is the property of <span className="font-bold text-black">{displayUniversityName}</span>.</p>
                     <p className="mt-1">If found, please return to the address below:</p>
                     <p className="italic text-[9px] mt-0.5">{studentInfo.address}</p>
                 </div>
@@ -115,7 +118,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             <div className="mt-4 grid grid-cols-2 gap-2 text-[9px]">
                 <div className="col-span-2 border-b border-gray-100 pb-2 mb-1">
                     <p className="font-bold text-black uppercase">{studentInfo.studentName}</p>
-                    <p className="text-gray-600">{studentInfo.universityName}</p>
+                    <p className="text-gray-600">{displayUniversityName}</p>
                     <p className="text-gray-500 font-medium">Academic Year: {studentInfo.academicYear}</p>
                 </div>
             </div>
@@ -213,7 +216,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   }
 
     // Official Template Scaling
-    const officialUniFontSize = studentInfo.universityName.length > 30 ? 'text-[9px]' : 'text-[11px]';
+    const officialUniFontSize = displayUniversityName.length > 30 ? 'text-[9px]' : 'text-[11px]';
     const officialNameFontSize = studentInfo.studentName.length > 25 ? 'text-[10px]' : studentInfo.studentName.length > 18 ? 'text-[12px]' : 'text-[14px]';
 
   // Official Template (Redesigned for Authenticity)
@@ -233,8 +236,8 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 </svg>
               </div>
               <div className="flex flex-col">
-                <h1 className="text-[11px] font-black text-gray-900 uppercase tracking-tight leading-tight">
-                  {studentInfo.universityName}
+                <h1 className={`${officialUniFontSize} font-black text-gray-900 uppercase tracking-tight leading-tight`}>
+                  {displayUniversityName}
                 </h1>
                 <p className="text-[7px] font-bold text-blue-700 uppercase tracking-widest">Official Student Identity</p>
               </div>
@@ -316,7 +319,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     const location = studentInfo.location || 'London, UK';
 
     // Header Font Scaling for long names
-    const uniNameLength = studentInfo.universityName.length;
+    const uniNameLength = displayUniversityName.length;
     let uniFontSize = 'text-[18px]';
     let uniMarginBottom = 'mb-4';
     let locationFontSize = 'text-[11px]';
@@ -370,7 +373,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 {/* Header */}
                 <div className={`text-center ${uniMarginBottom}`}>
                     <h1 className={`font-sans ${uniFontSize} font-black tracking-tight leading-tight text-gray-900 uppercase`}>
-                        {studentInfo.universityName}
+                        {displayUniversityName}
                     </h1>
                     <p className={`${locationFontSize} text-gray-900 font-bold mt-0.5`}>
                         {location}
@@ -460,10 +463,10 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 </div>
                 <div className="flex flex-col">
                     <span className="text-white text-[9px] font-bold leading-none tracking-widest uppercase">
-                        {studentInfo.universityName.split(' ')[0]}
+                        {displayUniversityName.split(' ')[0]}
                     </span>
                     <span className="text-blue-200 text-[6px] font-medium leading-none tracking-wider uppercase">
-                        {studentInfo.universityName.split(' ').slice(1).join(' ')}
+                        {displayUniversityName.split(' ').slice(1).join(' ')}
                     </span>
                 </div>
              </div>
@@ -553,7 +556,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           <svg className="w-8 h-8 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2L1 7.5V13.75C1 18.31 4.21 22.5 12 24C19.79 22.5 23 18.31 23 13.75V7.5L12 2ZM12 4.3L19.92 8.5L12 12.7L4.08 8.5L12 4.3ZM5 14.5C5 15.8 5.75 16.95 7 17.65V15.5H9V19.5C6.2 18.88 5 16.81 5 14.5Z" />
           </svg>
-          <p className="font-semibold text-gray-700 text-[10px] leading-tight">{studentInfo.universityName}</p>
+          <p className="font-semibold text-gray-700 text-[10px] leading-tight">{displayUniversityName}</p>
         </div>
         
         <p className="text-[14px] font-bold text-orange-600 mt-2 tracking-wider">STUDENT ID CARD</p>

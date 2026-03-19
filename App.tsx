@@ -45,6 +45,7 @@ const App: React.FC = () => {
 
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [autoTrigger, setAutoTrigger] = useState(0);
+  const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
 
   // Persistence effects
   useEffect(() => {
@@ -138,8 +139,16 @@ const App: React.FC = () => {
   };
 
   const handleAutoTrigger = () => {
-    handleGenerateSample();
+    const newInfo = generateRandomStudentInfo(studentInfo.universityName);
+    setStudentInfo(prev => ({ ...newInfo, logo: prev.logo }));
     setAutoTrigger(prev => prev + 1);
+    
+    // Copy the new name to clipboard
+    if (newInfo.studentName) {
+      navigator.clipboard.writeText(newInfo.studentName)
+        .then(() => showToast(`Name "${newInfo.studentName}" copied to clipboard!`, 'success'))
+        .catch(() => showToast('Failed to copy name to clipboard', 'error'));
+    }
   };
 
   const showToast = (message: string, type: ToastType) => {
@@ -147,28 +156,52 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-300 ${theme === 'dark' ? 'bg-zinc-950' : 'bg-gray-100'}`}>
-      <div className={`flex flex-col lg:flex-row rounded-xl shadow-2xl overflow-hidden w-full max-w-7xl border transition-colors duration-300 ${theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-white'}`}>
-        <EditorPanel
-          studentInfo={studentInfo}
-          template={template}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-          onTemplateChange={setTemplate}
-          onInputChange={handleInputChange}
-          onPhotoChange={handlePhotoChange}
-          onPhotoSelect={handlePhotoSelect}
-          onGenerateSample={handleGenerateSample}
-          onAutoGenerate={handleAutoTrigger}
-          showToast={showToast}
-        />
-        <PreviewPanel 
-          studentInfo={studentInfo} 
-          template={template}
-          theme={theme}
-          showToast={showToast} 
-          autoTrigger={autoTrigger}
-        />
+    <div className={`min-h-screen flex flex-col items-center justify-center p-0 md:p-4 transition-colors duration-300 ${theme === 'dark' ? 'bg-zinc-950' : 'bg-gray-100'}`}>
+      {/* Mobile Tab Switcher */}
+      <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-full p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+        <button 
+          onClick={() => setActiveTab('edit')}
+          className={`px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${activeTab === 'edit' ? 'bg-white text-black shadow-lg scale-105' : 'text-zinc-500 hover:text-zinc-300'}`}
+        >
+          Edit
+        </button>
+        <button 
+          onClick={() => setActiveTab('preview')}
+          className={`px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 ${activeTab === 'preview' ? 'bg-white text-black shadow-lg scale-105' : 'text-zinc-500 hover:text-zinc-300'}`}
+        >
+          Preview
+        </button>
+      </div>
+
+      <div className={`flex flex-col lg:flex-row rounded-none md:rounded-xl shadow-2xl overflow-hidden w-full max-w-[1600px] border transition-colors duration-300 ${theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-white'}`}>
+        <div className={`${activeTab === 'edit' ? 'block' : 'hidden'} lg:block w-full lg:w-1/2`}>
+          <EditorPanel
+            studentInfo={studentInfo}
+            template={template}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            onTemplateChange={setTemplate}
+            onInputChange={handleInputChange}
+            onPhotoChange={handlePhotoChange}
+            onPhotoSelect={handlePhotoSelect}
+            onGenerateSample={handleGenerateSample}
+            onAutoGenerate={handleAutoTrigger}
+            showToast={showToast}
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+          />
+        </div>
+        <div className={`${activeTab === 'preview' ? 'block' : 'hidden'} lg:block w-full lg:w-1/2`}>
+          <PreviewPanel 
+            studentInfo={studentInfo} 
+            template={template}
+            theme={theme}
+            showToast={showToast} 
+            autoTrigger={autoTrigger}
+            setActiveTab={setActiveTab}
+            activeTab={activeTab}
+          />
+        </div>
       </div>
       {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}
     </div>

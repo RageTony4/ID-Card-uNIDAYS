@@ -72,6 +72,9 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Fichteschule': { city: 'Weida, Germany', address: 'Schloßberg 1, 07570 Weida', postcode: '07570', country: 'Germany' },
   'JurGrad gGmbH': { city: 'Munster, Germany', address: 'Königsstraße 47, 48143 Münster', postcode: '48143', country: 'Germany' },
   'oeoemrang-Skuul': { city: 'Nebel, Germany', address: 'Uasterstigh 43, 25946 Nebel', postcode: '25946', country: 'Germany' },
+  'Fritz-Henßler-Berufskolleg': { city: 'Dortmund, Germany', address: 'Brügmannstraße 21', postcode: '44135', country: 'Germany' },
+  'Luise-Henriette-Gymnasium': { city: 'Berlin, Germany', address: 'Germaniastraße 4-6', postcode: '12099', country: 'Germany' },
+  'Städtisches Gymnasium Hennef': { city: 'Hennef, Germany', address: 'Fritz-Jacobi-Straße 10', postcode: '53773', country: 'Germany' },
   'Cornerstone Community': { city: 'Dubbo, Australia', address: '123 Macquarie St, Dubbo', postcode: '2830', country: 'Australia' },
   'Cole Co. R-I Middle': { city: 'Russellville, MO, USA', address: '13600 Route C, Russellville, MO', postcode: '65074', country: 'USA' },
   'Commack Middle School': { city: 'Commack, NY, USA', address: '700 Townline Rd, Commack, NY', postcode: '11725', country: 'USA' },
@@ -154,6 +157,9 @@ const getRandomId = (university: string): string => {
   if (university === 'Fichteschule') return `FS-DE-${year}-${randomNum}`;
   if (university === 'JurGrad gGmbH') return `JG-DE-${year}-${randomNum}`;
   if (university === 'oeoemrang-Skuul') return `OS-DE-${year}-${randomNum}`;
+  if (university === 'Fritz-Henßler-Berufskolleg') return `FHB-DE-${year}-${randomNum}`;
+  if (university === 'Luise-Henriette-Gymnasium') return `LHG-DE-${year}-${randomNum}`;
+  if (university === 'Städtisches Gymnasium Hennef') return `SGH-DE-${year}-${randomNum}`;
   if (university === 'Cornerstone Community') return `CC-AU-${year}-${randomNum}`;
   if (university === 'Cole Co. R-I Middle') return `CCR-US-${year}-${randomNum}`;
   if (university === 'Commack Middle School') return `CMS-US-${year}-${randomNum}`;

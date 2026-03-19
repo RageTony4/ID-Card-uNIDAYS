@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { StudentInfo, ToastType, IdCardTemplate } from '../types';
 import IdCard from './IdCard';
 import { GoogleGenAI } from "@google/genai";
+import * as htmlToImage from 'html-to-image';
 
 // Defining the missing props interface for PreviewPanel
 interface PreviewPanelProps {
@@ -11,6 +12,8 @@ interface PreviewPanelProps {
   theme: 'light' | 'dark';
   showToast: (message: string, type: ToastType) => void;
   autoTrigger?: number;
+  setActiveTab: (tab: 'edit' | 'preview') => void;
+  activeTab: 'edit' | 'preview';
 }
 
 const MOCKUP_SCENES = [
@@ -22,9 +25,16 @@ const MOCKUP_SCENES = [
   { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" }
 ];
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0 }) => {
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0, setActiveTab, activeTab }) => {
   const frontCardRef = useRef<HTMLDivElement>(null);
   const backCardRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (activeTab === 'preview' && panelRef.current) {
+      panelRef.current.scrollTo({ top: panelRef.current.scrollHeight });
+    }
+  }, [activeTab]);
   
   // AI Mockup State
   const [referenceImage, setReferenceImage] = useState<string | null>(null);
@@ -92,18 +102,40 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
   }, [isEditModalOpen, mockupImage]);
 
   const captureCard = async (ref: React.RefObject<HTMLDivElement>, scaleFactor: number = 4) => {
-    const card = ref.current;
-    if (!card) return null;
-    const { html2canvas } = window as any;
-    if (!html2canvas) return null;
+    const originalCard = ref.current;
+    if (!originalCard) return null;
 
-    return await html2canvas(card, {
-      scale: scaleFactor,
-      useCORS: true,
-      logging: false,
-      width: card.offsetWidth,
-      height: card.offsetHeight
-    });
+    try {
+      // Clear any active selections which can interfere with text measurement
+      window.getSelection()?.removeAllRanges();
+
+      // Using html-to-image as it's more stable than html2canvas for complex text/layout
+      // and avoids the "setEnd on Range" error.
+      const canvas = await htmlToImage.toCanvas(originalCard, {
+        pixelRatio: scaleFactor,
+        backgroundColor: null,
+        style: {
+          transform: 'none',
+          margin: '0',
+          display: 'flex',
+        },
+        // Filter out problematic external stylesheets that cause CORS errors when reading rules
+        filter: (node: any) => {
+          if (node.tagName === 'LINK' && node.getAttribute('rel') === 'stylesheet') {
+            const href = node.getAttribute('href');
+            if (href && (href.includes('cdnjs.cloudflare.com') || href.includes('fonts.googleapis.com'))) {
+              return false;
+            }
+          }
+          return true;
+        }
+      });
+      
+      return canvas;
+    } catch (err) {
+      console.error("html-to-image capture failed:", err);
+      throw err;
+    }
   };
 
   const handleCopyName = () => {
@@ -268,30 +300,54 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       const refToCapture = mockupSide === 'front' ? frontCardRef : backCardRef;
       const cardCanvas = await captureCard(refToCapture, 2);
       if (!cardCanvas) {
-         throw new Error("Failed to capture ID card.");
+         throw new Error("Failed to capture ID card image.");
       }
       
-      const cardBase64 = cardCanvas.toDataURL('image/png').split(',')[1];
+      const cardBase64 = cardCanvas.toDataURL('image/jpeg', 0.9).split(',')[1];
       
       let referenceBase64 = '';
+      let referenceMimeType = 'image/jpeg';
+      
       if (activeReference.startsWith('data:')) {
-        referenceBase64 = activeReference.split(',')[1];
+        const match = activeReference.match(/^data:([^;]+);base64,(.+)$/);
+        if (match) {
+          referenceMimeType = match[1];
+          referenceBase64 = match[2];
+        } else {
+          referenceBase64 = activeReference.split(',')[1];
+        }
       } else {
         showToast("Preparing reference scene...", "info");
-        referenceBase64 = await imageUrlToBase64(activeReference);
+        try {
+          referenceBase64 = await imageUrlToBase64(activeReference);
+          // imageUrlToBase64 currently forces jpeg
+          referenceMimeType = 'image/jpeg';
+        } catch (err) {
+          console.error("CORS/Load Error:", err);
+          throw new Error("Could not load the scene image. This is usually due to security restrictions (CORS) on the image source. Try uploading your own photo instead.");
+        }
       }
 
       showToast("AI processing... this may take a few seconds.", "info");
 
-      // Initializing GoogleGenAI client according to updated guidelines
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      // Initializing GoogleGenAI client with the free Gemini 2.5 Flash Image model
+      const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
+      if (!apiKey) {
+        throw new Error("Gemini API Key is missing. Please check your environment variables.");
+      }
+
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
+        config: {
+          temperature: 0.4,
+          topP: 0.9,
+        },
         contents: {
           parts: [
-            { inlineData: { mimeType: 'image/jpeg', data: referenceBase64 } },
-            { inlineData: { mimeType: 'image/png', data: cardBase64 } },
-            { text: "The first image is a real photo of an ID card in a scene with a phone camera aesthetic, featuring natural lighting and realistic reflections. The second image is a flat digital ID card design. Replace the visual content of the ID card in the first image with the design from the second image. Meticulously preserve the phone camera lens characteristics, natural lighting, soft shadows, realistic glares/reflections on the card surface, color temperature, and any physical obstructions (like lanyards, clips, or plastic holders). The result must look like a realistic smartphone snapshot of the new ID card in the original scene." }
+            { inlineData: { mimeType: referenceMimeType, data: referenceBase64 } },
+            { inlineData: { mimeType: 'image/jpeg', data: cardBase64 } },
+            { text: "The first image is a real photo of an ID card in a scene with a phone camera aesthetic. The second image is a flat digital ID card design. Meticulously replace the visual content of the ID card in the first image with the design from the second image. Meticulously preserve the phone camera lens characteristics, natural lighting, soft shadows, realistic glares/reflections on the card surface, color temperature, and any physical obstructions (like lanyards, clips, or plastic holders). The result must look like a realistic smartphone snapshot of the new ID card in the original scene." }
           ]
         }
       });
@@ -311,18 +367,19 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
         showToast("Mockup generated successfully!", "success");
         setIsEditModalOpen(true);
       } else {
-        showToast("AI returned no image. Try a different scene.", "error");
+        throw new Error("AI returned no image. The model might have filtered the content or failed to generate a result. Try a different scene.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Mockup Error:", error);
-      showToast("Failed to process scene. Ensure image is accessible.", "error");
+      const errorMessage = error?.message || "An unexpected error occurred during generation.";
+      showToast(errorMessage, "error");
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <div className={`w-full lg:w-1/2 p-6 md:p-8 flex flex-col items-center overflow-y-auto transition-colors duration-300 ${isDark ? 'bg-zinc-950' : 'bg-gray-200'}`} style={{ maxHeight: '90vh' }}>
+    <div ref={panelRef} className={`w-full p-6 md:p-8 flex flex-col items-center overflow-y-auto transition-colors duration-300 ${isDark ? 'bg-zinc-950' : 'bg-gray-200'} lg:max-h-[90vh] pb-24 lg:pb-8`}>
       <h2 className={`text-3xl font-bold mb-6 text-center transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-800'}`}>Live ID Card Preview</h2>
       
       <div className="space-y-6 w-full flex flex-col items-center">
