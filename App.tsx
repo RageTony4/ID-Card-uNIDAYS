@@ -191,7 +191,7 @@ const App: React.FC = () => {
             activeTab={activeTab}
           />
         </div>
-        <div className={`${activeTab === 'preview' ? 'block' : 'hidden'} lg:block w-full lg:w-1/2`}>
+        <div className={`${activeTab === 'preview' ? 'block' : 'absolute top-0 left-0 opacity-0 pointer-events-none lg:static lg:block lg:opacity-100 lg:pointer-events-auto'} w-full lg:w-1/2`}>
           <PreviewPanel 
             studentInfo={studentInfo} 
             template={template}

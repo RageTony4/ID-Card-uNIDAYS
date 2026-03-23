@@ -102,8 +102,34 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
   }, [isEditModalOpen, mockupImage]);
 
   const captureCard = async (ref: React.RefObject<HTMLDivElement>, scaleFactor: number = 4) => {
-    const originalCard = ref.current;
-    if (!originalCard) return null;
+    let originalCard = ref.current;
+    
+    // If ref is null, wait a bit and try again (can happen during tab transitions)
+    if (!originalCard) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      originalCard = ref.current;
+    }
+
+    if (!originalCard) {
+      console.warn("Capture failed: Ref is null after retry");
+      return null;
+    }
+
+    // Check if the element has dimensions
+    if (originalCard.offsetWidth === 0 || originalCard.offsetHeight === 0) {
+      // Wait a bit for layout if dimensions are 0
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      if (originalCard.offsetWidth === 0 || originalCard.offsetHeight === 0) {
+        console.warn("Capture failed: Element has 0 dimensions after retry", {
+          width: originalCard.offsetWidth,
+          height: originalCard.offsetHeight,
+          display: window.getComputedStyle(originalCard).display,
+          visibility: window.getComputedStyle(originalCard).visibility
+        });
+        return null;
+      }
+    }
 
     try {
       // Clear any active selections which can interfere with text measurement
@@ -147,6 +173,19 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
         .catch((err) => {
           console.error('Could not copy text: ', err);
           showToast("Failed to copy name.", "error");
+        });
+    }
+  };
+
+  const handleCopySchool = () => {
+    if (studentInfo.universityName) {
+      navigator.clipboard.writeText(studentInfo.universityName)
+        .then(() => {
+          showToast("School name copied to clipboard!", "success");
+        })
+        .catch((err) => {
+          console.error('Could not copy text: ', err);
+          showToast("Failed to copy school name.", "error");
         });
     }
   };
@@ -260,25 +299,63 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
     showToast("Default scene selected!", "success");
   };
 
-  const imageUrlToBase64 = async (url: string): Promise<string> => {
+  const processImage = async (source: string | HTMLCanvasElement, maxWidth: number = 768, mimeType: string = 'image/jpeg'): Promise<{ base64: string, mimeType: string }> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      img.onload = () => {
+      const isCanvas = source instanceof HTMLCanvasElement;
+      
+      const onImageReady = () => {
         const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
+        let width = isCanvas ? (source as HTMLCanvasElement).width : img.width;
+        let height = isCanvas ? (source as HTMLCanvasElement).height : img.height;
+
+        if (width === 0 || height === 0) {
+          reject(new Error('Image has no dimensions'));
+          return;
+        }
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxWidth) {
+            width *= maxWidth / height;
+            height = maxWidth;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
         const ctx = canvas.getContext('2d');
         if (ctx) {
-          ctx.drawImage(img, 0, 0);
-          const dataURL = canvas.toDataURL('image/jpeg', 0.8);
-          resolve(dataURL.split(',')[1]);
+          if (isCanvas) {
+            ctx.drawImage(source as HTMLCanvasElement, 0, 0, width, height);
+          } else {
+            ctx.drawImage(img, 0, 0, width, height);
+          }
+          const dataURL = canvas.toDataURL(mimeType, mimeType === 'image/png' ? undefined : 0.7);
+          const parts = dataURL.split(',');
+          if (parts.length < 2 || !parts[1]) {
+            reject(new Error('Generated image data is empty'));
+            return;
+          }
+          resolve({ base64: parts[1], mimeType });
         } else {
           reject(new Error('Canvas context failed'));
         }
       };
-      img.onerror = () => reject(new Error('Image load failed (CORS or network issue)'));
-      img.src = url;
+
+      if (isCanvas) {
+        onImageReady();
+      } else {
+        const url = source as string;
+        img.crossOrigin = 'Anonymous';
+        img.onload = onImageReady;
+        img.onerror = () => reject(new Error('Image load failed (CORS or network issue)'));
+        img.src = url;
+      }
     });
   };
 
@@ -289,7 +366,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       return;
     }
 
-    if (!process.env.API_KEY) {
+    if (!process.env.API_KEY && !process.env.GEMINI_API_KEY) {
        showToast("API Key not found.", "error");
        return;
     }
@@ -298,56 +375,42 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
     try {
       showToast(`Capturing ${mockupSide} of ID card...`, "info");
       const refToCapture = mockupSide === 'front' ? frontCardRef : backCardRef;
-      const cardCanvas = await captureCard(refToCapture, 2);
-      if (!cardCanvas) {
-         throw new Error("Failed to capture ID card image.");
+      const cardCanvas = await captureCard(refToCapture, 1.5);
+      if (!cardCanvas || cardCanvas.width === 0 || cardCanvas.height === 0) {
+         throw new Error("Failed to capture ID card image. Please ensure the card is visible.");
       }
       
-      const cardBase64 = cardCanvas.toDataURL('image/jpeg', 0.9).split(',')[1];
+      showToast("Processing images...", "info");
       
-      let referenceBase64 = '';
-      let referenceMimeType = 'image/jpeg';
+      // Process ID card design (PNG for quality)
+      const { base64: cardBase64 } = await processImage(cardCanvas, 768, 'image/png');
       
-      if (activeReference.startsWith('data:')) {
-        const match = activeReference.match(/^data:([^;]+);base64,(.+)$/);
-        if (match) {
-          referenceMimeType = match[1];
-          referenceBase64 = match[2];
-        } else {
-          referenceBase64 = activeReference.split(',')[1];
-        }
-      } else {
-        showToast("Preparing reference scene...", "info");
-        try {
-          referenceBase64 = await imageUrlToBase64(activeReference);
-          // imageUrlToBase64 currently forces jpeg
-          referenceMimeType = 'image/jpeg';
-        } catch (err) {
-          console.error("CORS/Load Error:", err);
-          throw new Error("Could not load the scene image. This is usually due to security restrictions (CORS) on the image source. Try uploading your own photo instead.");
-        }
+      // Process reference scene (JPEG for speed/size)
+      const { base64: referenceBase64, mimeType: referenceMimeType } = await processImage(activeReference, 768, 'image/jpeg');
+
+      if (!referenceBase64 || referenceBase64.length < 100) {
+        throw new Error("Reference image data is incomplete. Please try a different scene.");
+      }
+      if (!cardBase64 || cardBase64.length < 100) {
+        throw new Error("ID card design data is incomplete. Please try again.");
       }
 
       showToast("AI processing... this may take a few seconds.", "info");
 
-      // Initializing GoogleGenAI client with the free Gemini 2.5 Flash Image model
       const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
-      if (!apiKey) {
-        throw new Error("Gemini API Key is missing. Please check your environment variables.");
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = new GoogleGenAI({ apiKey: apiKey! });
+      
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
         config: {
-          temperature: 0.4,
+          temperature: 0.5,
           topP: 0.9,
         },
         contents: {
           parts: [
             { inlineData: { mimeType: referenceMimeType, data: referenceBase64 } },
-            { inlineData: { mimeType: 'image/jpeg', data: cardBase64 } },
-            { text: "The first image is a real photo of an ID card in a scene with a phone camera aesthetic. The second image is a flat digital ID card design. Meticulously replace the visual content of the ID card in the first image with the design from the second image. Meticulously preserve the phone camera lens characteristics, natural lighting, soft shadows, realistic glares/reflections on the card surface, color temperature, and any physical obstructions (like lanyards, clips, or plastic holders). The result must look like a realistic smartphone snapshot of the new ID card in the original scene." }
+            { inlineData: { mimeType: 'image/png', data: cardBase64 } },
+            { text: "The first image is a real photo of an ID card in a scene. The second image is a flat digital ID card design. Meticulously replace the visual content of the ID card in the first image with the design from the second image. Preserve the lighting, shadows, and perspective of the original scene. The result must be a realistic photo." }
           ]
         }
       });
@@ -396,6 +459,9 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       <div className={`mt-8 flex flex-wrap justify-center gap-3 border-b pb-8 w-full transition-colors duration-300 ${isDark ? 'border-zinc-800' : 'border-gray-300'}`}>
         <button onClick={handleCopyName} className="modern-button text-xs">
           Copy Name
+        </button>
+        <button onClick={handleCopySchool} className="modern-button text-xs">
+          Copy School
         </button>
         <button onClick={() => handleDownloadImage('front')} className="modern-button text-xs">
           Download Front PNG

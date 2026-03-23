@@ -31,6 +31,8 @@ const CANADA_MALE_FIRST_NAMES = ['Liam', 'Noah', 'Oliver', 'Lucas', 'William', '
 const CANADA_FEMALE_FIRST_NAMES = ['Olivia', 'Emma', 'Charlotte', 'Amelia', 'Sophia', 'Mia', 'Isabella', 'Ava', 'Evelyn', 'Luna', 'Harper', 'Chloe', 'Mila', 'Abigail', 'Emily', 'Elizabeth', 'Eleanor', 'Sofia', 'Scarlett', 'Aria'];
 const FRANCE_MALE_FIRST_NAMES = ['Thomas', 'Lucas', 'Léo', 'Gabriel', 'Timéo', 'Hugo', 'Arthur', 'Louis', 'Nathan', 'Raphaël', 'Maël', 'Enzo', 'Adam', 'Liam', 'Ethan', 'Noah', 'Jules', 'Paul', 'Mohamed', 'Gabin', 'Sacha', 'Marius', 'Axel', 'Victor', 'Jules', 'Clément', 'Baptiste', 'Maxime', 'Antoine', 'Valentin'];
 const FRANCE_FEMALE_FIRST_NAMES = ['Emma', 'Jade', 'Louise', 'Alice', 'Chloé', 'Lina', 'Léa', 'Rose', 'Anna', 'Mila', 'Inès', 'Mia', 'Manon', 'Julia', 'Lou', 'Zoé', 'Camille', 'Agathe', 'Léna', 'Sarah', 'Eva', 'Louna', 'Clara', 'Manon', 'Adèle', 'Charlotte', 'Margaux', 'Inès', 'Lola', 'Lucie'];
+const ITALY_MALE_FIRST_NAMES = ['Leonardo', 'Francesco', 'Alessandro', 'Lorenzo', 'Mattia', 'Andrea', 'Gabriele', 'Riccardo', 'Tommaso', 'Edoardo', 'Giuseppe', 'Antonio', 'Giovanni', 'Luigi', 'Vincenzo', 'Pietro', 'Salvatore', 'Carlo', 'Filippo', 'Federico'];
+const ITALY_FEMALE_FIRST_NAMES = ['Sofia', 'Giulia', 'Aurora', 'Alice', 'Ginevra', 'Emma', 'Giorgia', 'Greta', 'Beatrice', 'Anna', 'Maria', 'Francesca', 'Elena', 'Lucia', 'Giovanna', 'Rosa', 'Caterina', 'Angela', 'Teresa', 'Paola'];
 const INDIA_MALE_FIRST_NAMES = ['Aarav', 'Vihaan', 'Vivaan', 'Ananya', 'Arjun', 'Sai', 'Ishan', 'Krishna', 'Aryan', 'Shaurya', 'Atharv', 'Advik', 'Pranav', 'Ayush', 'Kabir', 'Rehaan', 'Reyansh', 'Mohammed', 'Rudra', 'Aaryan', 'Devansh', 'Kushagra', 'Ishaan', 'Arnav', 'Aavush', 'Aayush', 'Abhimanyu', 'Aditya', 'Advait', 'Agastya', 'Akshaj', 'Anay', 'Aniruddh', 'Arhaan', 'Ayaan', 'Darsh', 'Daksh', 'Dhruv', 'Hridaan', 'Idhant', 'Ivaan', 'Jivaj', 'Kanav', 'Laksh', 'Madhav', 'Naksh', 'Ojas', 'Parth', 'Pranay', 'Rishaan'];
 const INDIA_FEMALE_FIRST_NAMES = ['Aadya', 'Ananya', 'Shanaya', 'Myra', 'Saanvi', 'Pari', 'Anaya', 'Aadhya', 'Diya', 'Anvi', 'Isha', 'Avni', 'Navya', 'Sara', 'Siya', 'Kavya', 'Aavya', 'Aayushi', 'Aditi', 'Ahana', 'Akshara', 'Amaya', 'Amrita', 'Anika', 'Anisha', 'Anushka', 'Aradhya', 'Bhavya', 'Chhavi', 'Drishti', 'Esha', 'Gia', 'Hia', 'Inaya', 'Ishani', 'Jiya', 'Kaira', 'Kiara', 'Kyra', 'Lipi', 'Mahi', 'Meher', 'Mishka', 'Naisha', 'Navya', 'Nitya', 'Ovi', 'Prisha', 'Riya', 'Sana'];
 
@@ -41,11 +43,12 @@ const AUSTRALIA_LAST_NAMES = ['Smith', 'Jones', 'Williams', 'Brown', 'Wilson', '
 const US_LAST_NAMES = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores', 'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts'];
 const CANADA_LAST_NAMES = ['Smith', 'Brown', 'Wilson', 'Taylor', 'Campbell', 'Anderson', 'Thompson', 'Johnson', 'MacDonald', 'White', 'Martin', 'Miller', 'Davis', 'Jones', 'Williams', 'Tremblay', 'Gagnon', 'Roy', 'Cote', 'Bouchard'];
 const FRANCE_LAST_NAMES = ['Martin', 'Bernard', 'Thomas', 'Petit', 'Robert', 'Richard', 'Durand', 'Dubois', 'Moreau', 'Laurent', 'Simon', 'Michel', 'Lefebvre', 'Leroy', 'Roux', 'David', 'Bertrand', 'Morel', 'Fournier', 'Girard', 'Bonnet', 'Dupont', 'Lambert', 'Fontaine', 'Rousseau', 'Vincent', 'Muller', 'Lefevre', 'Faure', 'Andre'];
+const ITALY_LAST_NAMES = ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo', 'Conti', 'De Luca', 'Mancini', 'Costa', 'Giordano', 'Rizzo', 'Lombardi', 'Moretti'];
 const INDIA_LAST_NAMES = ['Sharma', 'Verma', 'Gupta', 'Malhotra', 'Khanna', 'Iyer', 'Nair', 'Reddy', 'Singh', 'Khan', 'Patel', 'Joshi', 'Kulkarni', 'Deshmukh', 'Chauhan', 'Mishra', 'Pandey', 'Yadav', 'Bose', 'Chatterjee', 'Mukherjee', 'Dutta', 'Das', 'Sen', 'Banerjee', 'Ghosh', 'Sarkar', 'Roy', 'Pillai', 'Menon', 'Rao', 'Naidu', 'Hegde', 'Shetty', 'Bhat', 'Prabhu', 'Agarwal', 'Bansal', 'Goel', 'Mittal', 'Shah', 'Mehta', 'Trivedi', 'Pathak', 'Dubey', 'Tiwari', 'Shukla', 'Kapoor', 'Chopra', 'Anand'];
 
 const usedNames = new Set<string>();
 
-const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postcode: string, country: 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' }> = {
+const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postcode: string, country: 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' }> = {
   'Birmingham City FC Community Trust': { city: 'Birmingham, UK', address: 'St. Andrew\'s Stadium, Birmingham', postcode: 'B9 4RL', country: 'UK' },
   'Communicate School': { city: 'Manchester, UK', address: '24 Nicholas St, Manchester', postcode: 'M1 4EJ', country: 'UK' },
   'Manchester Communication Academy': { city: 'Manchester, UK', address: 'Silchester Drive, Manchester', postcode: 'M40 8NT', country: 'UK' },
@@ -67,6 +70,8 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Bournemouth University': { city: 'Bournemouth, UK', address: 'Fern Barrow, Poole, Bournemouth', postcode: 'BH12 5BB', country: 'UK' },
   'Church Stretton School': { city: 'Shropshire, UK', address: 'Shrewsbury Rd, Church Stretton', postcode: 'SY6 6EX', country: 'UK' },
   'Kenya Medical Training College (Kakamega)': { city: 'Kakamega, Kenya', address: 'P.O. Box 535, Kakamega', postcode: '50100', country: 'Kenya' },
+  'Alliance High School': { city: 'Kikuyu, Kenya', address: 'P.O. Box 7-00602, Kikuyu', postcode: '00602', country: 'Kenya' },
+  'Maseno University': { city: 'Maseno, Kenya', address: 'Private Bag, Maseno', postcode: '40105', country: 'Kenya' },
   'Salem Community School': { city: 'Salem, Germany', address: 'Schlossbezirk 1, 88682 Salem', postcode: '88682', country: 'Germany' },
   'Shepherd School': { city: 'Rendsburg, Germany', address: 'Am Stadtsee 1, 24768 Rendsburg', postcode: '24768', country: 'Germany' },
   'Fichteschule': { city: 'Weida, Germany', address: 'Schloßberg 1, 07570 Weida', postcode: '07570', country: 'Germany' },
@@ -82,6 +87,7 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Coalfield School': { city: 'Coalfield, TN, USA', address: '1720 Coalfield Rd, Coalfield, TN', postcode: '37719', country: 'USA' },
   'Mona School': { city: 'Mona, UT, USA', address: '150 S 100 E, Mona, UT', postcode: '84645', country: 'USA' },
   'Deary School': { city: 'Deary, ID, USA', address: '502 1st Ave, Deary, ID', postcode: '83823', country: 'USA' },
+  'Park University': { city: 'Parkville, MO', address: '8700 NW River Park Dr', postcode: '64152', country: 'USA' },
   'DelMar College': { city: 'Red Deer, AB, Canada', address: '4813 50 St, Red Deer, AB', postcode: 'T4N 1X4', country: 'Canada' },
   'Cargair, St-Hubert': { city: 'Saint-Hubert, QC, Canada', address: '4800 Route de l\'Aéroport, Saint-Hubert, QC', postcode: 'J3Y 8Y9', country: 'Canada' },
   'Kikino School': { city: 'Kikino, AB, Canada', address: 'General Delivery, Kikino, AB', postcode: 'T0A 2B0', country: 'Canada' },
@@ -102,7 +108,12 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Hiloza': { city: 'Andrézieux-Bouthéon, France', address: '5 Rue de la Loire, Andrézieux-Bouthéon', postcode: '42160', country: 'France' },
   'Ecole Kienz': { city: 'Marcq-en-Baroeul, France', address: '8 Rue de Marcq, Marcq-en-Baroeul', postcode: '59700', country: 'France' },
   'MFR Vernines': { city: 'Vernines, France', address: 'Le Bourg, Vernines', postcode: '63210', country: 'France' },
-  'Next Advance': { city: 'Paris, France', address: '15 Rue de Paris, Paris', postcode: '75000', country: 'France' }
+  'Next Advance': { city: 'Paris, France', address: '15 Rue de Paris, Paris', postcode: '75000', country: 'France' },
+  'Farmacia Bologna Unibo': { city: 'Bologna, Italy', address: 'Via Irnerio, 48', postcode: '40126', country: 'Italy' },
+  'LICEO MINGHETTI Bologna': { city: 'Bologna, Italy', address: 'Via Nazario Sauro, 18', postcode: '40121', country: 'Italy' },
+  'Università di Bologna': { city: 'Bologna, Italy', address: 'Via Zamboni, 33', postcode: '40126', country: 'Italy' },
+  'Accademia Belle Arti Bologna': { city: 'Bologna, Italy', address: 'Via delle Belle Arti, 54', postcode: '40126', country: 'Italy' },
+  'University of Bologna - Unibo': { city: 'Bologna, Italy', address: 'Via Zamboni, 33', postcode: '40126', country: 'Italy' }
 };
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -116,7 +127,7 @@ const getRandomDate = (): string => {
   return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 };
 
-const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France'): string => {
+const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy'): string => {
   if (country === 'Kenya') {
     const number = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
     return `+254 7${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`;
@@ -143,6 +154,9 @@ const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' 
   } else if (country === 'France') {
     const number = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
     return `+33 6 ${number.slice(0, 2)} ${number.slice(2, 4)} ${number.slice(4, 6)} ${number.slice(6)}`;
+  } else if (country === 'Italy') {
+    const number = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');
+    return `+39 3${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)} ${number.slice(0, 3)} ${number.slice(3)}`;
   }
   const number = Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
   return `+44 7${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
@@ -152,6 +166,8 @@ const getRandomId = (university: string): string => {
   const year = "26"; 
   const randomNum = Math.floor(Math.random() * 9000) + 1000;
   if (university.includes('Kenya Medical Training College')) return `KMTC/KKM/20${year}/${randomNum}`;
+  if (university === 'Alliance High School') return `AHS-KE-${year}-${randomNum}`;
+  if (university === 'Maseno University') return `MSU-KE-${year}-${randomNum}`;
   if (university === 'Salem Community School') return `SCS-DE-${year}-${randomNum}`;
   if (university === 'Shepherd School') return `SS-DE-${year}-${randomNum}`;
   if (university === 'Fichteschule') return `FS-DE-${year}-${randomNum}`;
@@ -167,6 +183,7 @@ const getRandomId = (university: string): string => {
   if (university === 'Coalfield School') return `CFS-US-${year}-${randomNum}`;
   if (university === 'Mona School') return `MS-US-${year}-${randomNum}`;
   if (university === 'Deary School') return `DS-US-${year}-${randomNum}`;
+  if (university === 'Park University') return `PU-US-${year}-${randomNum}`;
   if (university === 'DelMar College') return `DMC-CA-${year}-${randomNum}`;
   if (university === 'Cargair, St-Hubert') return `CSH-CA-${year}-${randomNum}`;
   if (university === 'Kikino School') return `KS-CA-${year}-${randomNum}`;
@@ -188,6 +205,11 @@ const getRandomId = (university: string): string => {
   if (university === 'Ecole Kienz') return `EK-FR-${year}-${randomNum}`;
   if (university === 'MFR Vernines') return `MFR-FR-${year}-${randomNum}`;
   if (university === 'Next Advance') return `NA-FR-${year}-${randomNum}`;
+  if (university === 'Farmacia Bologna Unibo') return `FBU-IT-${year}-${randomNum}`;
+  if (university === 'LICEO MINGHETTI Bologna') return `LMB-IT-${year}-${randomNum}`;
+  if (university === 'Università di Bologna') return `UNIBO-IT-${year}-${randomNum}`;
+  if (university === 'Accademia Belle Arti Bologna') return `ABAB-IT-${year}-${randomNum}`;
+  if (university === 'University of Bologna - Unibo') return `UNIBO-IT-${year}-${randomNum}`;
   return `CEA-${year}-${randomNum}`;
 };
 
@@ -198,7 +220,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   const countryType = details.country;
   const gender = Math.random() > 0.5 ? 'male' : 'female';
   
-  const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : UK_LAST_NAMES;
+  const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : countryType === 'Italy' ? ITALY_LAST_NAMES : UK_LAST_NAMES;
   
   let fullName = '';
   let photo = '';
@@ -208,10 +230,10 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   do {
     let firstName: string;
     if (gender === 'male') {
-      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_MALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_MALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_MALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_MALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_MALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_MALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
+      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_MALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_MALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_MALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_MALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_MALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_MALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_MALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
       photo = getRandomElement(MALE_AVATARS);
     } else {
-      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_FEMALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_FEMALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_FEMALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_FEMALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_FEMALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
+      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_FEMALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_FEMALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_FEMALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_FEMALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_FEMALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_FEMALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
       photo = getRandomElement(FEMALE_AVATARS);
     }
     const lastName = getRandomElement(lastNamePool);
@@ -229,7 +251,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     dob: getRandomDate(),
     studentId: getRandomId(university),
     phone: phone,
-    address: `${details.address}, ${details.postcode}, ${countryType === 'UK' ? 'UK' : countryType === 'USA' ? 'USA' : countryType === 'Canada' ? 'Canada' : countryType === 'India' ? 'India' : countryType === 'France' ? 'France' : countryType}`,
+    address: `${details.address}, ${details.postcode}, ${countryType === 'UK' ? 'UK' : countryType === 'USA' ? 'USA' : countryType === 'Canada' ? 'Canada' : countryType === 'India' ? 'India' : countryType === 'France' ? 'France' : countryType === 'Italy' ? 'Italy' : countryType}`,
     location: details.city,
     academicYear: '2026/2027',
     photo: photo,
