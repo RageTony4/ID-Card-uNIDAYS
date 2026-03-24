@@ -151,23 +151,23 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
       <div ref={ref} className="id-card-container shadow-xl bg-[#85cbf4] overflow-hidden relative rounded-lg border border-gray-400 flex-col font-sans select-none">
         
         {/* Header Section */}
-        <div className="w-full pt-1.5 px-3 flex flex-col items-center relative z-10">
-            <h1 className="text-[#003366] font-serif text-[17px] font-bold tracking-tight leading-tight text-center w-full">
+        <div className="w-full pt-1 px-3 flex flex-col items-center relative z-10">
+            <h1 className="text-[#003366] font-serif text-[16px] font-bold tracking-tight leading-tight text-center w-full">
                 UNIVERSITY OF NAIROBI
             </h1>
-            <p className="text-white italic font-serif text-[9px] leading-tight mt-0.5 text-center">
+            <p className="text-white italic font-serif text-[8px] leading-tight mt-0.5 text-center">
                 Towards World Class Excellence
             </p>
-            <div className="text-[#003366] text-[7px] text-center mt-0.5 leading-tight font-bold">
+            <div className="text-[#003366] text-[6px] text-center mt-0.5 leading-tight font-bold">
                 <p>P.O.BOX 30197-00100 NAIROBI TEL:318262</p>
                 <p>Website: www.uonbi.ac.ke</p>
             </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="relative z-10 flex px-3 mt-1.5 gap-3 items-start">
+        <div className="relative z-10 flex px-3 mt-1 gap-3 items-start">
             {/* Left: Photo */}
-            <div className="w-[80px] h-[100px] bg-white border border-gray-400 p-0.5 shadow-sm flex-shrink-0">
+            <div className="w-[75px] h-[95px] bg-white border border-gray-400 p-0.5 shadow-sm flex-shrink-0">
                 <img 
                     src={studentInfo.photo || 'https://picsum.photos/252/324'} 
                     alt="Student" 
@@ -178,37 +178,37 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
             {/* Right: Details */}
             <div className="flex-1 flex flex-col pt-0">
-                <h2 className="text-black font-extrabold text-[9px] mb-1.5 tracking-tight">UNDERGRADUATE STUDENT ID CARD</h2>
+                <h2 className="text-black font-extrabold text-[8px] mb-1 tracking-tight">UNDERGRADUATE STUDENT ID CARD</h2>
                 
-                <div className="space-y-0.5 text-[9px] text-black font-bold leading-tight">
-                    <p className="text-[10px] mb-1">{formattedName || 'MUNGAI ELIZABETH WANJIRU'}</p>
+                <div className="space-y-0.5 text-[8px] text-black font-bold leading-tight">
+                    <p className="text-[9px] mb-0.5">{formattedName || 'MUNGAI ELIZABETH WANJIRU'}</p>
                     <p>Reg. No: {studentInfo.studentId}</p>
                     <p>ID/PP NO: {studentInfo.studentId.replace(/\D/g, '').substring(0, 8) || '27870562'}</p>
-                    <p className="mt-2 text-[8px] leading-none">BACHELOR OF MEDICINE AND BACHELOR OF SURGERY</p>
-                    <p className="text-[8px] leading-none">FACULTY OF HEALTH SCIENCES</p>
+                    <p className="mt-1 text-[7px] leading-none uppercase">{studentInfo.course}</p>
+                    <p className="text-[7px] leading-none">FACULTY OF HEALTH SCIENCES</p>
                 </div>
             </div>
         </div>
 
         {/* Bottom Section: Signatures & Validity */}
-        <div className="absolute bottom-1.5 left-0 right-0 px-3 z-10">
-            <div className="flex justify-between items-end mb-1">
+        <div className="absolute bottom-1 left-0 right-0 px-3 z-10">
+            <div className="flex justify-between items-end mb-0.5">
                 {/* Holder Sign */}
                 <div className="flex flex-col items-center">
-                    <div className="h-4 w-16 border-b border-black/30"></div>
-                    <p className="text-black font-bold text-[8px] mt-0.5">Holder's Sign</p>
+                    <div className="h-3 w-14 border-b border-black/30"></div>
+                    <p className="text-black font-bold text-[7px] mt-0.5">Holder's Sign</p>
                 </div>
 
                 {/* Registrar Sign */}
                 <div className="flex flex-col items-center">
-                    <div className="h-4 w-24 border-b border-black/30"></div>
-                    <p className="text-black font-bold text-[8px] mt-0.5">Academic Registrar Sign</p>
+                    <div className="h-3 w-20 border-b border-black/30"></div>
+                    <p className="text-black font-bold text-[7px] mt-0.5">Academic Registrar Sign</p>
                 </div>
             </div>
 
-            <div className="flex justify-between items-center border-t border-black/10 pt-1">
-                <p className="text-black font-bold text-[8px]">This ID/Card is valid up to</p>
-                <p className="text-black font-serif text-[8px] italic">ISO 9001:2008 Certified</p>
+            <div className="flex justify-between items-center border-t border-black/10 pt-0.5">
+                <p className="text-black font-bold text-[7px]">This ID/Card is valid up to</p>
+                <p className="text-black font-serif text-[7px] italic">ISO 9001:2008 Certified</p>
             </div>
         </div>
       </div>
@@ -228,75 +228,79 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         
         <div className="flex flex-col h-full">
           {/* Header Section */}
-          <div className="px-4 pt-1 pb-0 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white border border-gray-200 rounded shadow-sm p-1">
+          <div className="px-3 pt-0.5 pb-0 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <div className="flex items-center gap-2 flex-1">
+              <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white border border-gray-200 rounded shadow-sm p-1">
                 <svg className="w-full h-full text-blue-800" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" />
                 </svg>
               </div>
               <div className="flex flex-col">
-                <h1 className={`${officialUniFontSize} font-black text-gray-900 uppercase tracking-tight leading-tight`}>
-                  {displayUniversityName}
-                </h1>
-                <p className="text-[7px] font-bold text-blue-700 uppercase tracking-widest">Official Student Identity</p>
+                <div className="flex flex-col">
+                  <h1 className={`${officialUniFontSize} font-black text-gray-900 uppercase tracking-tight leading-tight`}>
+                    {displayUniversityName}
+                  </h1>
+                  <p className="text-[7px] font-black text-blue-800 uppercase tracking-tight">Undergraduate Student ID Card</p>
+                  <p className="text-[6px] font-bold text-blue-700 uppercase tracking-widest">Official Student Identity</p>
+                </div>
               </div>
-            </div>
-            <div className="text-right">
-              <p className="text-[8px] font-bold text-gray-400 uppercase">Academic Year</p>
-              <p className="text-[10px] font-black text-blue-800">{studentInfo.academicYear}</p>
+              <div className="text-right ml-auto">
+                <p className="text-[7px] font-bold text-gray-400 uppercase">Year</p>
+                <p className="text-[9px] font-black text-blue-800">{studentInfo.academicYear}</p>
+              </div>
             </div>
           </div>
-
+  
           {/* Main Content Area */}
-          <div className="flex flex-row flex-1 px-4 pt-0 pb-0 gap-4">
-            {/* Left: Photo */}
-            <div className="w-[38%]">
-              <div className="relative">
-                <div className="w-full aspect-[3/4] bg-gray-100 rounded border-2 border-gray-200 overflow-hidden shadow-inner">
-                  <img 
-                    src={studentInfo.photo || 'https://picsum.photos/252/324'} 
-                    alt="Student" 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                {/* Holographic-style Seal Overlay */}
-                <div className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-blue-50/90 backdrop-blur-[1px] border border-blue-200 flex items-center justify-center shadow-sm opacity-90 z-20">
-                   <svg className="w-5 h-5 text-blue-500/40" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.1,7 14,7.9 14,9C14,10.1 13.1,11 12,11C10.9,11 10,10.1 10,9C10,7.9 10.9,7 12,7M12,13C14.67,13 20,14.33 20,17V18H4V17C4,14.33 9.33,13 12,13Z" />
-                   </svg>
+          <div className="flex flex-row flex-1 px-3 pt-0.5 pb-0 gap-3">
+              {/* Left: Photo */}
+              <div className="w-[38%]">
+                <div className="relative">
+                  <div className="w-full aspect-[3/4] bg-gray-100 rounded border-2 border-gray-200 overflow-hidden shadow-inner">
+                    <img 
+                      src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                      alt="Student" 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                  {/* Holographic-style Seal Overlay */}
+                  <div className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-blue-50/90 backdrop-blur-[1px] border border-blue-200 flex items-center justify-center shadow-sm opacity-90 z-20">
+                     <svg className="w-5 h-5 text-blue-500/40" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.1,7 14,7.9 14,9C14,10.1 13.1,11 12,11C10.9,11 10,10.1 10,9C10,7.9 10.9,7 12,7M12,13C14.67,13 20,14.33 20,17V18H4V17C4,14.33 9.33,13 12,13Z" />
+                     </svg>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Right: Details */}
-            <div className="flex-1 flex flex-col justify-center py-0 gap-y-1">
-              <div className="space-y-1">
-                <div>
-                  <label className="text-[7px] font-bold text-gray-400 uppercase tracking-wider block">Full Name</label>
-                  <h2 className="text-[13px] font-black text-gray-900 uppercase leading-tight tracking-wide">
-                    {studentInfo.studentName}
-                  </h2>
-                </div>
-
-                <div className="grid grid-cols-1 gap-y-1">
+  
+              {/* Right: Details */}
+              <div className="flex-1 flex flex-col justify-center py-0 gap-y-0.5">
+                <div className="space-y-0.5">
                   <div>
-                    <label className="text-[7px] font-bold text-gray-400 uppercase tracking-wider block">Student ID Number</label>
-                    <p className="text-[10px] font-bold text-gray-800 font-mono tracking-tighter">{studentInfo.studentId}</p>
+                    <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Full Name</label>
+                    <h2 className="text-[12px] font-black text-gray-900 uppercase leading-tight tracking-wide">
+                      {studentInfo.studentName}
+                    </h2>
                   </div>
-                  <div>
-                    <label className="text-[7px] font-bold text-gray-400 uppercase tracking-wider block">Date of Birth</label>
-                    <p className="text-[9px] font-bold text-gray-800">{studentInfo.dob}</p>
-                  </div>
-                  <div className="pt-1 border-t border-gray-100">
-                    <div className="flex justify-between items-end">
-                      <div>
-                        <label className="text-[7px] font-bold text-gray-400 uppercase tracking-wider block">Valid Until</label>
-                        <p className="text-[9px] font-black text-red-600">{expiryDateString}</p>
-                      </div>
-                      <div className="bg-blue-800 text-white px-2 py-0.5 rounded-sm">
-                        <p className="text-[8px] font-black uppercase tracking-widest">STUDENT</p>
+  
+                  <div className="grid grid-cols-1 gap-y-0.5">
+                    <div>
+                      <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Course / Enrollment</label>
+                      <p className="text-[8px] font-black text-gray-800 uppercase leading-none">{studentInfo.course}</p>
+                    </div>
+                    <div>
+                      <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Student ID Number</label>
+                      <p className="text-[9px] font-bold text-gray-800 font-mono tracking-tighter">{studentInfo.studentId}</p>
+                    </div>
+                    <div className="pt-0.5 border-t border-gray-100">
+                      <div className="flex justify-between items-end">
+                        <div>
+                          <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Valid Until</label>
+                          <p className="text-[9px] font-black text-red-700 bg-red-50 px-1 rounded">{expiryDateString}</p>
+                        </div>
+                        <div className="bg-blue-800 text-white px-1.5 py-0.5 rounded-sm">
+                          <p className="text-[7px] font-black uppercase tracking-widest">STUDENT</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -305,7 +309,6 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             </div>
           </div>
         </div>
-      </div>
     );
   }
 
@@ -321,23 +324,23 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     // Header Font Scaling for long names
     const uniNameLength = displayUniversityName.length;
     let uniFontSize = 'text-[18px]';
-    let uniMarginBottom = 'mb-4';
+    let uniMarginBottom = 'mb-2';
     let locationFontSize = 'text-[11px]';
     
     if (uniNameLength > 35) {
         uniFontSize = 'text-[11px]';
-        uniMarginBottom = 'mb-1';
+        uniMarginBottom = 'mb-0.5';
         locationFontSize = 'text-[9px]';
     } else if (uniNameLength > 25) {
         uniFontSize = 'text-[13px]';
-        uniMarginBottom = 'mb-1.5';
+        uniMarginBottom = 'mb-1';
         locationFontSize = 'text-[10px]';
     } else if (uniNameLength >= 20) {
         uniFontSize = 'text-[15px]';
-        uniMarginBottom = 'mb-1.5';
+        uniMarginBottom = 'mb-1';
     } else if (uniNameLength > 15) {
         uniFontSize = 'text-[17px]';
-        uniMarginBottom = 'mb-2';
+        uniMarginBottom = 'mb-1.5';
     }
 
     // Student Name Font Scaling
@@ -366,25 +369,34 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         </div>
 
         {/* Content */}
-        <div className="z-10 w-full h-full flex p-3 relative">
+        <div className="z-10 w-full h-full flex p-2.5 relative">
             
             {/* Left Column */}
-            <div className="flex-1 flex flex-col pt-2 pl-2">
+            <div className="flex-1 flex flex-col pt-1 pl-1">
                 {/* Header */}
                 <div className={`text-center ${uniMarginBottom}`}>
                     <h1 className={`font-sans ${uniFontSize} font-black tracking-tight leading-tight text-gray-900 uppercase`}>
                         {displayUniversityName}
                     </h1>
+                    <p className="text-[7px] font-black text-gray-800 uppercase tracking-tight leading-none mb-0.5">Undergraduate Student ID Card</p>
                     <p className={`${locationFontSize} text-gray-900 font-bold mt-0.5`}>
                         {location}
                     </p>
                 </div>
 
                 {/* Name */}
-                <div className="mb-2">
-                    <p className="font-playfair font-bold text-[9px] text-black leading-none mb-0.5 opacity-80">Name</p>
+                <div className="mb-0.5">
+                    <p className="font-playfair font-bold text-[8px] text-black leading-none mb-0.5 opacity-80">Name</p>
                     <p className={`font-playfair font-black ${nameFontSize} text-black leading-none uppercase`}>
                         {displayName}
+                    </p>
+                </div>
+
+                {/* Course */}
+                <div className="mb-1.5">
+                    <p className="font-playfair font-bold text-[7px] text-black leading-none mb-0.5 opacity-80 uppercase">Course</p>
+                    <p className="font-playfair font-black text-[9px] text-black leading-none uppercase">
+                        {studentInfo.course}
                     </p>
                 </div>
 
@@ -395,31 +407,26 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                         <img 
                             src={studentInfo.photo || 'https://picsum.photos/252/324'} 
                             alt="Ghost" 
-                            className="w-14 h-16 object-cover border border-gray-300 bg-orange-50 opacity-90" 
+                            className="w-12 h-14 object-cover border border-gray-300 bg-orange-50 opacity-90" 
                             referrerPolicy="no-referrer"
                         />
-                        <p className="text-[7px] font-bold text-black text-center uppercase leading-none mt-0.5 w-full overflow-hidden text-ellipsis">{lastNamePart}</p>
+                        <p className="text-[6px] font-bold text-black text-center uppercase leading-none mt-0.5 w-full overflow-hidden text-ellipsis">{lastNamePart}</p>
                     </div>
 
-                    <div className="flex flex-col space-y-1.5 pt-0.5">
+                    <div className="flex flex-col space-y-1 pt-0">
                         {/* Student ID */}
                         <div>
-                             <p className="text-[7px] text-gray-600 font-bold leading-none mb-0.5 uppercase">Student ID</p>
-                             <p className="font-playfair text-sm font-black text-black tracking-widest leading-none">
+                             <p className="text-[6px] text-gray-600 font-bold leading-none mb-0.5 uppercase">Student ID</p>
+                             <p className="font-playfair text-[12px] font-black text-black tracking-widest leading-none">
                                 {studentInfo.studentId.replace(/-/g, '.')}
                             </p>
                         </div>
                         
-                        <div className="flex flex-col gap-1">
-                            <div>
-                                <p className="text-[8px] text-black font-bold leading-none mb-0.5 uppercase">Date of Birth</p>
-                                <p className="text-[10px] text-black font-black leading-none">{studentInfo.dob}</p>
-                            </div>
-                            
+                        <div className="flex flex-col gap-0.5">
                             {/* Date Enrolled Box - Updated to 2026 */}
-                            <div className="bg-yellow-50 border-l-2 border-black pl-2 pr-1 py-1 -ml-2">
-                                <p className="text-[8px] text-black font-bold leading-none mb-0.5 uppercase">Date Enrolled</p>
-                                <p className="text-[12px] text-black font-black leading-none">2026</p>
+                            <div className="bg-yellow-50 border-l-2 border-black pl-2 pr-1 py-0.5 -ml-2">
+                                <p className="text-[7px] text-black font-bold leading-none mb-0.5 uppercase">Date Enrolled</p>
+                                <p className="text-[10px] text-black font-black leading-none">2026</p>
                             </div>
                         </div>
                     </div>
@@ -428,19 +435,19 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
             {/* Right Column: Main Photo */}
             <div className="w-[34%] h-full flex flex-col items-center ml-2 relative">
-                <div className="w-full h-[78%] relative mt-1">
+                <div className="w-full h-[74%] relative mt-0.5">
                     <img 
                         src={studentInfo.photo || 'https://picsum.photos/252/324'} 
                         alt="Main"
                         className="w-full h-full object-cover shadow-sm" 
                         referrerPolicy="no-referrer"
                     />
-                    <div className="absolute bottom-0 left-0 right-0 bg-orange-500 py-1 text-center">
-                        <p className="font-serif font-black text-white text-[9px] uppercase tracking-wider">STUDENT</p>
+                    <div className="absolute bottom-0 left-0 right-0 bg-orange-500 py-0.5 text-center">
+                        <p className="font-serif font-black text-white text-[8px] uppercase tracking-wider">STUDENT</p>
                     </div>
                 </div>
-                <div className="mt-auto pb-1 text-center">
-                    <p className="text-red-600 font-extrabold text-[10px] font-playfair">EXPIRES: {expiryDateString}</p>
+                <div className="mt-auto pb-0.5 text-center">
+                    <p className="text-red-700 font-black text-[10px] font-sans bg-red-50 px-1.5 py-0.5 rounded inline-block">EXPIRES: {expiryDateString}</p>
                 </div>
             </div>
 
@@ -454,18 +461,18 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     return (
       <div ref={ref} className="id-card-container shadow-lg relative bg-white overflow-hidden flex flex-col">
         {/* Modern Header */}
-        <div className="h-[25%] bg-blue-900 w-full flex items-center px-4 relative z-10">
+        <div className="h-[22%] bg-blue-900 w-full flex items-center px-3 relative z-10">
              <div className="flex items-center gap-2">
-                <div className="bg-white p-1 rounded-full">
-                    <svg className="w-5 h-5 text-blue-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L1 7.5V13.75C1 18.31 4.21 22.5 12 24C19.79 22.5 23 18.31 23 13.75V7.5L12 2ZM12 4.3L19.92 8.5L12 12.7L4.08 8.5L12 4.3ZM5 14.5C5 15.8 5.75 16.95 7 17.65V15.5H9V19.5C6.2 18.88 5 16.81 5 14.5Z" />
+                <div className="bg-white p-0.5 rounded-full">
+                    <svg className="w-4 h-4 text-blue-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L1 7.5V13.75C1 18.31 4.21 22.5 12 24C19.79 22.5 23 18.31 23 13.75V7.5L12 2ZM12 4.3L19.92 8.5L12 12.7L4.08 8.5L12 12.7L4.08 8.5L12 4.3ZM5 14.5C5 15.8 5.75 16.95 7 17.65V15.5H9V19.5C6.2 18.88 5 16.81 5 14.5Z" />
                     </svg>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-white text-[9px] font-bold leading-none tracking-widest uppercase">
+                    <span className="text-white text-[8px] font-bold leading-none tracking-widest uppercase">
                         {displayUniversityName.split(' ')[0]}
                     </span>
-                    <span className="text-blue-200 text-[6px] font-medium leading-none tracking-wider uppercase">
+                    <span className="text-blue-200 text-[5px] font-medium leading-none tracking-wider uppercase">
                         {displayUniversityName.split(' ').slice(1).join(' ')}
                     </span>
                 </div>
@@ -473,10 +480,10 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         </div>
         
         {/* Sub Header Strip */}
-        <div className="h-[5%] bg-blue-400 w-full z-10"></div>
+        <div className="h-[4%] bg-blue-400 w-full z-10"></div>
 
         {/* Body Content */}
-        <div className="flex flex-1 p-3 relative">
+        <div className="flex flex-1 p-2 relative">
             {/* Background Pattern */}
             <div className="absolute inset-0 z-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent"></div>
             
@@ -490,42 +497,47 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                         referrerPolicy="no-referrer"
                     />
                 </div>
-                <p className="mt-auto text-[8px] font-bold text-center text-blue-900">200 LEVEL</p>
+                <p className="mt-auto text-[7px] font-bold text-center text-blue-900">200 LEVEL</p>
             </div>
 
             {/* Right: Info */}
-            <div className="w-[70%] pl-4 z-10 flex flex-col justify-center">
-                <div className="text-right mb-1">
-                     <h3 className="text-[9px] font-bold text-blue-600 uppercase tracking-widest">Student Identity Card</h3>
+            <div className="w-[70%] pl-3 z-10 flex flex-col justify-center">
+                <div className="text-right mb-0.5">
+                     <h3 className="text-[8px] font-bold text-blue-600 uppercase tracking-widest">Student Identity Card</h3>
                 </div>
                 
-                <div className="mt-1">
-                    <h1 className={`${studentInfo.studentName.split(' ').slice(1).join(' ').length > 12 ? 'text-sm' : 'text-lg'} font-black text-gray-800 uppercase leading-none tracking-tight`}>
+                <div className="mt-0.5">
+                    <h1 className={`${studentInfo.studentName.split(' ').slice(1).join(' ').length > 12 ? 'text-xs' : 'text-sm'} font-black text-gray-800 uppercase leading-none tracking-tight`}>
                         {studentInfo.studentName.split(' ').slice(1).join(' ')}
                     </h1>
-                    <h2 className={`${studentInfo.studentName.split(' ')[0].length > 12 ? 'text-xs' : 'text-sm'} font-semibold text-gray-600 uppercase leading-tight`}>
+                    <h2 className={`${studentInfo.studentName.split(' ')[0].length > 12 ? 'text-[10px]' : 'text-xs'} font-semibold text-gray-600 uppercase leading-tight`}>
                         {studentInfo.studentName.split(' ')[0]}
                     </h2>
+                    <p className="text-[7px] font-black text-blue-900 uppercase mt-0.5">Undergraduate Student ID Card</p>
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-1">
-                     <div>
-                        <p className="text-[6px] text-gray-400 uppercase font-bold tracking-wider">Department</p>
-                        <p className="text-[8px] font-bold text-gray-800 uppercase">Science & Tech</p>
+                <div className="mt-1 grid grid-cols-2 gap-0.5">
+                     <div className="col-span-2">
+                        <p className="text-[5px] text-gray-400 uppercase font-bold tracking-wider">Course / Enrollment</p>
+                        <p className="text-[8px] font-black text-gray-800 uppercase leading-none">{studentInfo.course}</p>
                      </div>
                      <div>
-                        <p className="text-[6px] text-gray-400 uppercase font-bold tracking-wider">Matric No.</p>
-                        <p className="text-[8px] font-bold text-gray-800 font-mono">{studentInfo.studentId.split('-').slice(2).join('')}</p>
+                        <p className="text-[5px] text-gray-400 uppercase font-bold tracking-wider">Department</p>
+                        <p className="text-[7px] font-bold text-gray-800 uppercase">Science & Tech</p>
+                     </div>
+                     <div>
+                        <p className="text-[5px] text-gray-400 uppercase font-bold tracking-wider">Matric No.</p>
+                        <p className="text-[7px] font-bold text-gray-800 font-mono">{studentInfo.studentId.split('-').slice(2).join('')}</p>
                      </div>
                 </div>
 
                 <div className="mt-auto flex justify-between items-end">
                      <div>
-                         <p className="text-[6px] text-gray-400 uppercase font-bold tracking-wider">Expires</p>
-                         <p className="text-[8px] font-bold text-gray-800">AUG 2029</p>
+                         <p className="text-[5px] text-gray-400 uppercase font-bold tracking-wider">Expires</p>
+                         <p className="text-[9px] font-black text-red-700 bg-red-50 px-1 rounded">{expiryDateString}</p>
                      </div>
                      {/* QR Code Placeholder */}
-                     <div className="w-10 h-10 bg-white border border-gray-200 p-0.5">
+                     <div className="w-8 h-8 bg-white border border-gray-200 p-0.5">
                          <div className="w-full h-full bg-black flex items-center justify-center text-[3px] text-white">QR</div>
                      </div>
                 </div>
@@ -533,8 +545,8 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         </div>
 
         {/* Footer */}
-        <div className="h-[12%] bg-blue-400 w-full flex items-center justify-end px-3">
-             <span className="text-white font-bold text-[10px] tracking-widest">{studentInfo.academicYear}</span>
+        <div className="h-[10%] bg-blue-400 w-full flex items-center justify-end px-3">
+             <span className="text-white font-bold text-[9px] tracking-widest">{studentInfo.academicYear}</span>
         </div>
       </div>
     );
@@ -551,39 +563,44 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           referrerPolicy="no-referrer"
         />
       </div>
-      <div className="info-section">
-        <div className="flex items-center gap-2">
-          <svg className="w-8 h-8 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L1 7.5V13.75C1 18.31 4.21 22.5 12 24C19.79 22.5 23 18.31 23 13.75V7.5L12 2ZM12 4.3L19.92 8.5L12 12.7L4.08 8.5L12 4.3ZM5 14.5C5 15.8 5.75 16.95 7 17.65V15.5H9V19.5C6.2 18.88 5 16.81 5 14.5Z" />
+      <div className="info-section !p-2">
+        <div className="flex items-center gap-1.5">
+          <svg className="w-6 h-6 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L1 7.5V13.75C1 18.31 4.21 22.5 12 24C19.79 22.5 23 18.31 23 13.75V7.5L12 2ZM12 4.3L19.92 8.5L12 12.7L4.08 8.5L12 12.7L4.08 8.5L12 4.3ZM5 14.5C5 15.8 5.75 16.95 7 17.65V15.5H9V19.5C6.2 18.88 5 16.81 5 14.5Z" />
           </svg>
-          <p className="font-semibold text-gray-700 text-[10px] leading-tight">{displayUniversityName}</p>
+          <p className="font-semibold text-gray-700 text-[9px] leading-tight">{displayUniversityName}</p>
         </div>
         
-        <p className="text-[14px] font-bold text-orange-600 mt-2 tracking-wider">STUDENT ID CARD</p>
-        <p className="text-[16px] font-extrabold text-black mt-1">{studentInfo.studentName}</p>
+        <p className="text-[10px] font-bold text-orange-600 mt-0.5 tracking-wider">UNDERGRADUATE STUDENT ID CARD</p>
+        <p className="text-[14px] font-extrabold text-black mt-0.5 leading-tight">{studentInfo.studentName}</p>
         
-        <hr className="my-2 border-gray-300" />
+        <div className="mt-0.5">
+          <p className="text-[6px] text-gray-500 font-semibold tracking-wider uppercase">Course / Enrollment</p>
+          <p className="text-[9px] text-black font-bold uppercase leading-none">{studentInfo.course}</p>
+        </div>
+
+        <hr className="my-1 border-gray-300" />
         
-        <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-[8px] flex-grow">
-          <div>
-            <p className="text-gray-500 font-semibold tracking-wider">DATE OF BIRTH</p>
-            <p className="text-black font-medium">{studentInfo.dob}</p>
-          </div>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[7px] flex-grow">
           <div>
             <p className="text-gray-500 font-semibold tracking-wider">STUDENT ID</p>
             <p className="text-black font-medium">{studentInfo.studentId}</p>
           </div>
           <div>
+            <p className="text-gray-500 font-semibold tracking-wider">EXPIRES</p>
+            <p className="text-red-700 font-black bg-red-50 px-1 rounded inline-block">{expiryDateString}</p>
+          </div>
+          <div>
             <p className="text-gray-500 font-semibold tracking-wider">PHONE</p>
             <p className="text-black font-medium">{studentInfo.phone}</p>
           </div>
-          <div>
+          <div className="col-span-2">
             <p className="text-gray-500 font-semibold tracking-wider">ADDRESS</p>
-            <p className="text-black font-medium leading-tight">{studentInfo.address}</p>
+            <p className="text-black font-medium leading-tight line-clamp-1">{studentInfo.address}</p>
           </div>
         </div>
         
-        <div className="text-[8px] mt-auto">
+        <div className="text-[7px] mt-0.5">
           <p className="text-gray-500 font-semibold tracking-wider">CURRENT ACADEMIC YEAR</p>
           <p className="text-black font-medium">{studentInfo.academicYear}</p>
         </div>

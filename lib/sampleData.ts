@@ -117,15 +117,20 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
 };
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const COURSES = [
+  'Bachelor of Computer Science',
+  'Bachelor of Medicine',
+  'Bachelor of Engineering',
+  'Bachelor of Business Administration',
+  'Bachelor of Arts in Economics',
+  'Bachelor of Science in Nursing',
+  'Bachelor of Laws (LLB)',
+  'Bachelor of Pharmacy',
+  'Bachelor of Architecture',
+  'Bachelor of Education'
+];
 
 const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
-
-const getRandomDate = (): string => {
-  const start = new Date(2000, 0, 1);
-  const end = new Date(2007, 11, 31);
-  const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-};
 
 const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy'): string => {
   if (country === 'Kenya') {
@@ -248,12 +253,12 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   return {
     universityName: university,
     studentName: fullName,
-    dob: getRandomDate(),
     studentId: getRandomId(university),
     phone: phone,
     address: `${details.address}, ${details.postcode}, ${countryType === 'UK' ? 'UK' : countryType === 'USA' ? 'USA' : countryType === 'Canada' ? 'Canada' : countryType === 'India' ? 'India' : countryType === 'France' ? 'France' : countryType === 'Italy' ? 'Italy' : countryType}`,
     location: details.city,
     academicYear: '2026/2027',
+    course: getRandomElement(COURSES),
     photo: photo,
     logo: null,
     bloodGroup: getRandomElement(bloodGroups),

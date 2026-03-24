@@ -25,12 +25,12 @@ const App: React.FC = () => {
     return {
       universityName: 'Community-Ed Academy',
       studentName: 'EMILY WATSON',
-      dob: '14 May 2004',
       studentId: 'CEA-26-8219',
       phone: '+44 7700 900461',
       address: '42 High Street, Kensington, London, SW7 2AZ, UK',
       location: 'London, UK',
       academicYear: '2026/2027',
+      course: 'Bachelor of Computer Science',
       photo: 'https://picsum.photos/seed/ukstudent/252/324',
       logo: null,
       bloodGroup: 'O+',

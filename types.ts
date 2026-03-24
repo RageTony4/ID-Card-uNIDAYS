@@ -2,12 +2,12 @@
 export interface StudentInfo {
   universityName: string;
   studentName: string;
-  dob: string;
   studentId: string;
   phone: string;
   address: string;
   location: string; // New field for "City, Country" display
   academicYear: string;
+  course: string;
   photo: string | null;
   logo: string | null;
   bloodGroup: string;

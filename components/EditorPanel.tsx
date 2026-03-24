@@ -437,13 +437,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             />
         </div>
         <InputField 
-          label="Date of Birth:" 
-          name="dob" 
-          value={studentInfo.dob} 
-          onChange={onInputChange}
-          isDark={isDark}
-        />
-        <InputField 
           label="Student ID:" 
           name="studentId" 
           value={studentInfo.studentId} 
@@ -463,6 +456,14 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           value={studentInfo.academicYear} 
           onChange={onInputChange}
           isDark={isDark}
+        />
+        <InputField 
+          label="Course / Enrollment:" 
+          name="course" 
+          value={studentInfo.course} 
+          onChange={onInputChange}
+          isDark={isDark}
+          placeholder="e.g. Bachelor of Computer Science"
         />
         <InputField 
           label="Blood Group:" 
