@@ -25,12 +25,17 @@ const App: React.FC = () => {
     return {
       universityName: 'Community-Ed Academy',
       studentName: 'EMILY WATSON',
+      dob: '12 May 2005',
       studentId: 'CEA-26-8219',
       phone: '+44 7700 900461',
       address: '42 High Street, Kensington, London, SW7 2AZ, UK',
       location: 'London, UK',
       academicYear: '2026/2027',
       course: 'Bachelor of Computer Science',
+      status: 'Currently Enrolled',
+      issueDate: '01 Sep 2026',
+      validUntil: '31 Aug 2027',
+      website: 'www.cea-academy.ac.uk',
       photo: 'https://picsum.photos/seed/ukstudent/252/324',
       logo: null,
       bloodGroup: 'O+',
@@ -40,6 +45,7 @@ const App: React.FC = () => {
 
   const [template, setTemplate] = useState<IdCardTemplate>(() => {
     const saved = localStorage.getItem('id_gen_template');
+    if (saved === 'training') return 'northfield';
     return (saved as IdCardTemplate) || 'elegant';
   });
 

@@ -47,6 +47,11 @@ const SCHOOL_DATA = {
         'Carlton Keighley',
         'CommunityNI',
         'University of Warwick',
+        'University of Leeds',
+        'Roo University',
+        'Arden University',
+        'University of Buckingham',
+        'University of Surrey',
         'Brookfield Community School',
         'Cranford Community College',
         'Delgado Community College',
@@ -77,13 +82,15 @@ const SCHOOL_DATA = {
         'Cornerstone Community'
     ],
     'USA': [
+        'Northfield University',
         'Cole Co. R-I Middle',
         'Commack Middle School',
         'Cohagen School',
         'Coalfield School',
         'Mona School',
         'Deary School',
-        'Park University'
+        'Park University',
+        'Hudson County Community College'
     ],
     'Canada': [
         'DelMar College',
@@ -254,14 +261,14 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             Classic
           </button>
           <button 
-            onClick={() => onTemplateChange('training')}
+            onClick={() => onTemplateChange('northfield')}
             className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
-              template === 'training' 
-                ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-md' 
+              template === 'northfield' 
+                ? 'border-[#002B49] bg-[#E2EAF4] text-[#002B49] shadow-md' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
             }`}
           >
-            UoN
+            Northfield
           </button>
         </div>
       </div>
@@ -437,6 +444,14 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             />
         </div>
         <InputField 
+          label="Date of Birth:" 
+          name="dob" 
+          value={studentInfo.dob} 
+          onChange={onInputChange}
+          isDark={isDark}
+          placeholder="e.g. 12 May 2005"
+        />
+        <InputField 
           label="Student ID:" 
           name="studentId" 
           value={studentInfo.studentId} 
@@ -464,6 +479,35 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           onChange={onInputChange}
           isDark={isDark}
           placeholder="e.g. Bachelor of Computer Science"
+        />
+        <InputField 
+          label="Current Status:" 
+          name="status" 
+          value={studentInfo.status} 
+          onChange={onInputChange}
+          isDark={isDark}
+          placeholder="e.g. Currently Enrolled"
+        />
+        <InputField 
+          label="Issue Date:" 
+          name="issueDate" 
+          value={studentInfo.issueDate} 
+          onChange={onInputChange}
+          isDark={isDark}
+        />
+        <InputField 
+          label="Valid Until:" 
+          name="validUntil" 
+          value={studentInfo.validUntil} 
+          onChange={onInputChange}
+          isDark={isDark}
+        />
+        <InputField 
+          label="Institution Website:" 
+          name="website" 
+          value={studentInfo.website} 
+          onChange={onInputChange}
+          isDark={isDark}
         />
         <InputField 
           label="Blood Group:" 

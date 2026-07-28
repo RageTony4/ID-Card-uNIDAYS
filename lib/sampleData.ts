@@ -59,6 +59,11 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Community-Ed Academy': { city: 'London, UK', address: '42 High Street, Kensington, London', postcode: 'SW7 2AZ', country: 'UK' },
   'CommunityNI': { city: 'Belfast, UK', address: '35 Donegall St, Belfast', postcode: 'BT1 2FG', country: 'UK' },
   'University of Warwick': { city: 'Coventry, UK', address: 'University Road, Coventry', postcode: 'CV4 7AL', country: 'UK' },
+  'University of Leeds': { city: 'Leeds, UK', address: 'Woodhouse Lane, Leeds', postcode: 'LS2 9JT', country: 'UK' },
+  'Roo University': { city: 'London, UK', address: 'Roehampton Lane, London', postcode: 'SW15 5PU', country: 'UK' },
+  'Arden University': { city: 'Coventry, UK', address: 'Arden House, Middlemarch Park, Coventry', postcode: 'CV3 4FJ', country: 'UK' },
+  'University of Buckingham': { city: 'Buckingham, UK', address: 'Hunter Street, Buckingham', postcode: 'MK18 1EG', country: 'UK' },
+  'University of Surrey': { city: 'Guildford, UK', address: 'Stag Hill, Guildford', postcode: 'GU2 7XH', country: 'UK' },
   'Brookfield Community School': { city: 'Chesterfield, UK', address: 'Chatsworth Rd, Chesterfield', postcode: 'S40 3NR', country: 'UK' },
   'Cranford Community College': { city: 'Hounslow, UK', address: 'High St, Hounslow', postcode: 'TW5 9PD', country: 'UK' },
   'Delgado Community College': { city: 'London, UK', address: '12-14 New Fetter Ln, London', postcode: 'EC4A 1AN', country: 'UK' },
@@ -81,6 +86,7 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Luise-Henriette-Gymnasium': { city: 'Berlin, Germany', address: 'Germaniastraße 4-6', postcode: '12099', country: 'Germany' },
   'Städtisches Gymnasium Hennef': { city: 'Hennef, Germany', address: 'Fritz-Jacobi-Straße 10', postcode: '53773', country: 'Germany' },
   'Cornerstone Community': { city: 'Dubbo, Australia', address: '123 Macquarie St, Dubbo', postcode: '2830', country: 'Australia' },
+  'Northfield University': { city: 'Boston, MA, USA', address: '750 University Avenue, Boston, MA', postcode: '02115', country: 'USA' },
   'Cole Co. R-I Middle': { city: 'Russellville, MO, USA', address: '13600 Route C, Russellville, MO', postcode: '65074', country: 'USA' },
   'Commack Middle School': { city: 'Commack, NY, USA', address: '700 Townline Rd, Commack, NY', postcode: '11725', country: 'USA' },
   'Cohagen School': { city: 'Cohagen, MT, USA', address: '100 School St, Cohagen, MT', postcode: '59322', country: 'USA' },
@@ -88,6 +94,7 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Mona School': { city: 'Mona, UT, USA', address: '150 S 100 E, Mona, UT', postcode: '84645', country: 'USA' },
   'Deary School': { city: 'Deary, ID, USA', address: '502 1st Ave, Deary, ID', postcode: '83823', country: 'USA' },
   'Park University': { city: 'Parkville, MO', address: '8700 NW River Park Dr', postcode: '64152', country: 'USA' },
+  'Hudson County Community College': { city: 'Jersey City, NJ', address: '70 Sip Ave', postcode: '07306', country: 'USA' },
   'DelMar College': { city: 'Red Deer, AB, Canada', address: '4813 50 St, Red Deer, AB', postcode: 'T4N 1X4', country: 'Canada' },
   'Cargair, St-Hubert': { city: 'Saint-Hubert, QC, Canada', address: '4800 Route de l\'Aéroport, Saint-Hubert, QC', postcode: 'J3Y 8Y9', country: 'Canada' },
   'Kikino School': { city: 'Kikino, AB, Canada', address: 'General Delivery, Kikino, AB', postcode: 'T0A 2B0', country: 'Canada' },
@@ -182,6 +189,7 @@ const getRandomId = (university: string): string => {
   if (university === 'Luise-Henriette-Gymnasium') return `LHG-DE-${year}-${randomNum}`;
   if (university === 'Städtisches Gymnasium Hennef') return `SGH-DE-${year}-${randomNum}`;
   if (university === 'Cornerstone Community') return `CC-AU-${year}-${randomNum}`;
+  if (university === 'Northfield University') return `NU-${year}-${randomNum}`;
   if (university === 'Cole Co. R-I Middle') return `CCR-US-${year}-${randomNum}`;
   if (university === 'Commack Middle School') return `CMS-US-${year}-${randomNum}`;
   if (university === 'Cohagen School') return `CS-US-${year}-${randomNum}`;
@@ -189,6 +197,7 @@ const getRandomId = (university: string): string => {
   if (university === 'Mona School') return `MS-US-${year}-${randomNum}`;
   if (university === 'Deary School') return `DS-US-${year}-${randomNum}`;
   if (university === 'Park University') return `PU-US-${year}-${randomNum}`;
+  if (university === 'Hudson County Community College') return `HCCC-US-${year}-${randomNum}`;
   if (university === 'DelMar College') return `DMC-CA-${year}-${randomNum}`;
   if (university === 'Cargair, St-Hubert') return `CSH-CA-${year}-${randomNum}`;
   if (university === 'Kikino School') return `KS-CA-${year}-${randomNum}`;
@@ -215,6 +224,12 @@ const getRandomId = (university: string): string => {
   if (university === 'Università di Bologna') return `UNIBO-IT-${year}-${randomNum}`;
   if (university === 'Accademia Belle Arti Bologna') return `ABAB-IT-${year}-${randomNum}`;
   if (university === 'University of Bologna - Unibo') return `UNIBO-IT-${year}-${randomNum}`;
+  if (university === 'University of Warwick') return `UOW-UK-${year}-${randomNum}`;
+  if (university === 'University of Leeds') return `UOL-UK-${year}-${randomNum}`;
+  if (university === 'Roo University') return `ROO-UK-${year}-${randomNum}`;
+  if (university === 'Arden University') return `ARD-UK-${year}-${randomNum}`;
+  if (university === 'University of Buckingham') return `UOB-UK-${year}-${randomNum}`;
+  if (university === 'University of Surrey') return `UOS-UK-${year}-${randomNum}`;
   return `CEA-${year}-${randomNum}`;
 };
 
@@ -253,12 +268,17 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   return {
     universityName: university,
     studentName: fullName,
+    dob: '12 May 2005', // Default or random
     studentId: getRandomId(university),
     phone: phone,
     address: `${details.address}, ${details.postcode}, ${countryType === 'UK' ? 'UK' : countryType === 'USA' ? 'USA' : countryType === 'Canada' ? 'Canada' : countryType === 'India' ? 'India' : countryType === 'France' ? 'France' : countryType === 'Italy' ? 'Italy' : countryType}`,
     location: details.city,
     academicYear: '2026/2027',
     course: getRandomElement(COURSES),
+    status: 'Currently Enrolled',
+    issueDate: '01 Sep 2026',
+    validUntil: '31 Aug 2027',
+    website: `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
     photo: photo,
     logo: null,
     bloodGroup: getRandomElement(bloodGroups),
