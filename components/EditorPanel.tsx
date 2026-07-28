@@ -82,6 +82,8 @@ const SCHOOL_DATA = {
         'Cornerstone Community'
     ],
     'USA': [
+        'University of Houston',
+        'University of Guam',
         'Northfield University',
         'Cole Co. R-I Middle',
         'Commack Middle School',
@@ -93,6 +95,11 @@ const SCHOOL_DATA = {
         'Hudson County Community College'
     ],
     'Canada': [
+        'Brandon University',
+        'York University',
+        'Assumption University',
+        'McMaster University',
+        'Huntington University',
         'DelMar College',
         'Cargair, St-Hubert',
         'Kikino School',
@@ -133,6 +140,21 @@ const SCHOOL_DATA = {
         'Università di Padova',
         'Università di Firenze',
         'Università di Napoli Federico II'
+    ],
+    'Ireland': [
+        'University of Limerick',
+        'University of Galway',
+        'National University of Ireland',
+        'Trinity University'
+    ],
+    'Austria': [
+        'Deutsche Pop Wien',
+        'Borg Murau',
+        'BRG-Viktring',
+        'University of Innsbruck',
+        'University of Vienna',
+        'University of Leoben',
+        'University of Klagenfurt'
     ]
 };
 
@@ -151,7 +173,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   setActiveTab,
   activeTab
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy'>('United Kingdom');
+  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria'>('United Kingdom');
   const panelRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -160,7 +182,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     }
   }, [activeTab]);
 
-  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy') => {
+  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria') => {
     setSelectedCountry(country);
     const firstSchool = SCHOOL_DATA[country][0].replace(/\*$/, '');
     const event = {
@@ -386,6 +408,18 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                     className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Italy' ? 'bg-green-700 border-green-700 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-green-300'}`}
                  >
                      Italy Schools
+                 </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('Ireland')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Ireland' ? 'bg-emerald-700 border-emerald-700 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-emerald-300'}`}
+                 >
+                     Ireland Schools
+                 </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('Austria')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Austria' ? 'bg-red-700 border-red-700 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-red-300'}`}
+                 >
+                     Austria Schools
                  </button>
              </div>
 

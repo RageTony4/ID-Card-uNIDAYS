@@ -45,10 +45,16 @@ const CANADA_LAST_NAMES = ['Smith', 'Brown', 'Wilson', 'Taylor', 'Campbell', 'An
 const FRANCE_LAST_NAMES = ['Martin', 'Bernard', 'Thomas', 'Petit', 'Robert', 'Richard', 'Durand', 'Dubois', 'Moreau', 'Laurent', 'Simon', 'Michel', 'Lefebvre', 'Leroy', 'Roux', 'David', 'Bertrand', 'Morel', 'Fournier', 'Girard', 'Bonnet', 'Dupont', 'Lambert', 'Fontaine', 'Rousseau', 'Vincent', 'Muller', 'Lefevre', 'Faure', 'Andre'];
 const ITALY_LAST_NAMES = ['Rossi', 'Russo', 'Ferrari', 'Esposito', 'Bianchi', 'Romano', 'Colombo', 'Ricci', 'Marino', 'Greco', 'Bruno', 'Gallo', 'Conti', 'De Luca', 'Mancini', 'Costa', 'Giordano', 'Rizzo', 'Lombardi', 'Moretti'];
 const INDIA_LAST_NAMES = ['Sharma', 'Verma', 'Gupta', 'Malhotra', 'Khanna', 'Iyer', 'Nair', 'Reddy', 'Singh', 'Khan', 'Patel', 'Joshi', 'Kulkarni', 'Deshmukh', 'Chauhan', 'Mishra', 'Pandey', 'Yadav', 'Bose', 'Chatterjee', 'Mukherjee', 'Dutta', 'Das', 'Sen', 'Banerjee', 'Ghosh', 'Sarkar', 'Roy', 'Pillai', 'Menon', 'Rao', 'Naidu', 'Hegde', 'Shetty', 'Bhat', 'Prabhu', 'Agarwal', 'Bansal', 'Goel', 'Mittal', 'Shah', 'Mehta', 'Trivedi', 'Pathak', 'Dubey', 'Tiwari', 'Shukla', 'Kapoor', 'Chopra', 'Anand'];
+const IRELAND_MALE_FIRST_NAMES = ['Liam', 'Sean', 'Conor', 'Patrick', 'Cillian', 'Oisin', 'Fionn', 'Daniel', 'Jack', 'James', 'Cian', 'Eoin', 'Rory', 'Darragh', 'Callum'];
+const IRELAND_FEMALE_FIRST_NAMES = ['Aoife', 'Saoirse', 'Ciara', 'Niamh', 'Roisin', 'Siobhan', 'Cara', 'Fiadh', 'Maeve', 'Orla', 'Sophie', 'Emily', 'Hannah', 'Mia', 'Grace'];
+const IRELAND_LAST_NAMES = ['Murphy', 'Kelly', 'Byrne', 'Ryan', 'O\'Brien', 'Walsh', 'O\'Sullivan', 'O\'Connor', 'Doyle', 'McCarthy', 'Gallagher', 'O\'Neill', 'Lynch', 'Murray', 'Quinn'];
+const AUSTRIA_MALE_FIRST_NAMES = ['Lukas', 'Florian', 'Maximilian', 'Tobias', 'Paul', 'David', 'Alexander', 'Felix', 'Jakob', 'Jonas', 'Elias', 'Sebastian', 'Moritz', 'Leon', 'Philipp'];
+const AUSTRIA_FEMALE_FIRST_NAMES = ['Anna', 'Sophie', 'Lena', 'Emma', 'Marie', 'Mia', 'Laura', 'Hannah', 'Katharina', 'Julia', 'Sarah', 'Lara', 'Elena', 'Johanna', 'Valentina'];
+const AUSTRIA_LAST_NAMES = ['Gruber', 'Brunner', 'Pichler', 'Steiner', 'Moser', 'Mayer', 'Hofer', 'Leitner', 'Berger', 'Fuchs', 'Eder', 'Fischer', 'Schmid', 'Winkler', 'Weber'];
 
 const usedNames = new Set<string>();
 
-const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postcode: string, country: 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' }> = {
+const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postcode: string, country: 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' }> = {
   'Birmingham City FC Community Trust': { city: 'Birmingham, UK', address: 'St. Andrew\'s Stadium, Birmingham', postcode: 'B9 4RL', country: 'UK' },
   'Communicate School': { city: 'Manchester, UK', address: '24 Nicholas St, Manchester', postcode: 'M1 4EJ', country: 'UK' },
   'Manchester Communication Academy': { city: 'Manchester, UK', address: 'Silchester Drive, Manchester', postcode: 'M40 8NT', country: 'UK' },
@@ -74,6 +80,17 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Laurelhill Community College': { city: 'Lisburn, UK', address: '22 Laurelhill Rd, Lisburn', postcode: 'BT28 2UH', country: 'UK' },
   'Bournemouth University': { city: 'Bournemouth, UK', address: 'Fern Barrow, Poole, Bournemouth', postcode: 'BH12 5BB', country: 'UK' },
   'Church Stretton School': { city: 'Shropshire, UK', address: 'Shrewsbury Rd, Church Stretton', postcode: 'SY6 6EX', country: 'UK' },
+  'University of Limerick': { city: 'Limerick, Ireland', address: 'Castletroy, Limerick', postcode: 'V94 T9PX', country: 'Ireland' },
+  'University of Galway': { city: 'Galway, Ireland', address: 'University Rd, Galway', postcode: 'H91 TK33', country: 'Ireland' },
+  'National University of Ireland': { city: 'Dublin, Ireland', address: '49 Merrion Square E, Dublin 2', postcode: 'D02 V632', country: 'Ireland' },
+  'Trinity University': { city: 'Dublin, Ireland', address: 'College Green, Dublin 2', postcode: 'D02 PN40', country: 'Ireland' },
+  'Deutsche Pop Wien': { city: 'Vienna, Austria', address: 'Gürtelstraße 27, 1150 Wien', postcode: '1150', country: 'Austria' },
+  'Borg Murau': { city: 'Murau, Austria', address: 'Bundesstraße 7, 8850 Murau', postcode: '8850', country: 'Austria' },
+  'BRG-Viktring': { city: 'Klagenfurt, Austria', address: 'Stiftsgebaeude 1, 9073 Klagenfurt-Viktring', postcode: '9073', country: 'Austria' },
+  'University of Innsbruck': { city: 'Innsbruck, Austria', address: 'Innrain 52, 6020 Innsbruck', postcode: '6020', country: 'Austria' },
+  'University of Vienna': { city: 'Vienna, Austria', address: 'Universitätsring 1, 1010 Wien', postcode: '1010', country: 'Austria' },
+  'University of Leoben': { city: 'Leoben, Austria', address: 'Franz-Josef-Straße 18, 8700 Leoben', postcode: '8700', country: 'Austria' },
+  'University of Klagenfurt': { city: 'Klagenfurt, Austria', address: 'Universitätsstraße 65-67, 9020 Klagenfurt', postcode: '9020', country: 'Austria' },
   'Kenya Medical Training College (Kakamega)': { city: 'Kakamega, Kenya', address: 'P.O. Box 535, Kakamega', postcode: '50100', country: 'Kenya' },
   'Alliance High School': { city: 'Kikuyu, Kenya', address: 'P.O. Box 7-00602, Kikuyu', postcode: '00602', country: 'Kenya' },
   'Maseno University': { city: 'Maseno, Kenya', address: 'Private Bag, Maseno', postcode: '40105', country: 'Kenya' },
@@ -95,6 +112,13 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Deary School': { city: 'Deary, ID, USA', address: '502 1st Ave, Deary, ID', postcode: '83823', country: 'USA' },
   'Park University': { city: 'Parkville, MO', address: '8700 NW River Park Dr', postcode: '64152', country: 'USA' },
   'Hudson County Community College': { city: 'Jersey City, NJ', address: '70 Sip Ave', postcode: '07306', country: 'USA' },
+  'University of Houston': { city: 'Houston, TX, USA', address: '4800 Calhoun Rd, Houston, TX', postcode: '77004', country: 'USA' },
+  'University of Guam': { city: 'Mangilao, GU, USA', address: '303 University Dr, Mangilao, GU', postcode: '96923', country: 'USA' },
+  'Brandon University': { city: 'Brandon, MB, Canada', address: '270 18th St, Brandon, MB', postcode: 'R7A 6A9', country: 'Canada' },
+  'York University': { city: 'Toronto, ON, Canada', address: '4700 Keele St, Toronto, ON', postcode: 'M3J 1P3', country: 'Canada' },
+  'Assumption University': { city: 'Windsor, ON, Canada', address: '400 Huron Church Rd, Windsor, ON', postcode: 'N9B 3P4', country: 'Canada' },
+  'McMaster University': { city: 'Hamilton, ON, Canada', address: '1280 Main St W, Hamilton, ON', postcode: 'L8S 4L8', country: 'Canada' },
+  'Huntington University': { city: 'Sudbury, ON, Canada', address: '935 Ramsey Lake Rd, Sudbury, ON', postcode: 'P3E 2C6', country: 'Canada' },
   'DelMar College': { city: 'Red Deer, AB, Canada', address: '4813 50 St, Red Deer, AB', postcode: 'T4N 1X4', country: 'Canada' },
   'Cargair, St-Hubert': { city: 'Saint-Hubert, QC, Canada', address: '4800 Route de l\'Aéroport, Saint-Hubert, QC', postcode: 'J3Y 8Y9', country: 'Canada' },
   'Kikino School': { city: 'Kikino, AB, Canada', address: 'General Delivery, Kikino, AB', postcode: 'T0A 2B0', country: 'Canada' },
@@ -139,7 +163,7 @@ const COURSES = [
 
 const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy'): string => {
+const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria'): string => {
   if (country === 'Kenya') {
     const number = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
     return `+254 7${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`;
@@ -169,6 +193,12 @@ const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' 
   } else if (country === 'Italy') {
     const number = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');
     return `+39 3${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 9)} ${number.slice(0, 3)} ${number.slice(3)}`;
+  } else if (country === 'Ireland') {
+    const number = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');
+    return `+353 8${Math.floor(Math.random() * 9)} ${number.slice(0, 3)} ${number.slice(3)}`;
+  } else if (country === 'Austria') {
+    const number = Math.floor(Math.random() * 10000000).toString().padStart(7, '0');
+    return `+43 6${Math.floor(Math.random() * 9)}0 ${number.slice(0, 3)} ${number.slice(3)}`;
   }
   const number = Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
   return `+44 7${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
@@ -198,6 +228,13 @@ const getRandomId = (university: string): string => {
   if (university === 'Deary School') return `DS-US-${year}-${randomNum}`;
   if (university === 'Park University') return `PU-US-${year}-${randomNum}`;
   if (university === 'Hudson County Community College') return `HCCC-US-${year}-${randomNum}`;
+  if (university === 'University of Houston') return `UH-US-${year}-${randomNum}`;
+  if (university === 'University of Guam') return `UOG-US-${year}-${randomNum}`;
+  if (university === 'Brandon University') return `BU-CA-${year}-${randomNum}`;
+  if (university === 'York University') return `YU-CA-${year}-${randomNum}`;
+  if (university === 'Assumption University') return `AU-CA-${year}-${randomNum}`;
+  if (university === 'McMaster University') return `MU-CA-${year}-${randomNum}`;
+  if (university === 'Huntington University') return `HU-CA-${year}-${randomNum}`;
   if (university === 'DelMar College') return `DMC-CA-${year}-${randomNum}`;
   if (university === 'Cargair, St-Hubert') return `CSH-CA-${year}-${randomNum}`;
   if (university === 'Kikino School') return `KS-CA-${year}-${randomNum}`;
@@ -230,6 +267,17 @@ const getRandomId = (university: string): string => {
   if (university === 'Arden University') return `ARD-UK-${year}-${randomNum}`;
   if (university === 'University of Buckingham') return `UOB-UK-${year}-${randomNum}`;
   if (university === 'University of Surrey') return `UOS-UK-${year}-${randomNum}`;
+  if (university === 'University of Limerick') return `UL-IE-${year}-${randomNum}`;
+  if (university === 'University of Galway') return `UOG-IE-${year}-${randomNum}`;
+  if (university === 'National University of Ireland') return `NUI-IE-${year}-${randomNum}`;
+  if (university === 'Trinity University') return `TU-IE-${year}-${randomNum}`;
+  if (university === 'Deutsche Pop Wien') return `DPW-AT-${year}-${randomNum}`;
+  if (university === 'Borg Murau') return `BM-AT-${year}-${randomNum}`;
+  if (university === 'BRG-Viktring') return `BRGV-AT-${year}-${randomNum}`;
+  if (university === 'University of Innsbruck') return `UII-AT-${year}-${randomNum}`;
+  if (university === 'University of Vienna') return `UNIVIE-AT-${year}-${randomNum}`;
+  if (university === 'University of Leoben') return `MUL-AT-${year}-${randomNum}`;
+  if (university === 'University of Klagenfurt') return `AAU-AT-${year}-${randomNum}`;
   return `CEA-${year}-${randomNum}`;
 };
 
@@ -240,7 +288,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   const countryType = details.country;
   const gender = Math.random() > 0.5 ? 'male' : 'female';
   
-  const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : countryType === 'Italy' ? ITALY_LAST_NAMES : UK_LAST_NAMES;
+  const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : countryType === 'Italy' ? ITALY_LAST_NAMES : countryType === 'Ireland' ? IRELAND_LAST_NAMES : countryType === 'Austria' ? AUSTRIA_LAST_NAMES : UK_LAST_NAMES;
   
   let fullName = '';
   let photo = '';
@@ -250,10 +298,10 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   do {
     let firstName: string;
     if (gender === 'male') {
-      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_MALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_MALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_MALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_MALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_MALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_MALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_MALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
+      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_MALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_MALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_MALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_MALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_MALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_MALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_MALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_MALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_MALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
       photo = getRandomElement(MALE_AVATARS);
     } else {
-      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_FEMALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_FEMALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_FEMALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_FEMALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_FEMALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_FEMALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
+      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_FEMALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_FEMALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_FEMALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_FEMALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_FEMALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_FEMALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_FEMALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_FEMALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
       photo = getRandomElement(FEMALE_AVATARS);
     }
     const lastName = getRandomElement(lastNamePool);
