@@ -79,6 +79,12 @@ const SCHOOL_DATA = {
         'Städtisches Gymnasium Hennef*'
     ],
     'Australia': [
+        'Bond University',
+        'University of Tasmania',
+        'University of Canberra',
+        'University of murdoch',
+        'University of Wollongong',
+        'Mini Bambini Early Learning Centre',
         'Cornerstone Community'
     ],
     'USA': [

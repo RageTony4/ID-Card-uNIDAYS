@@ -103,6 +103,12 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Luise-Henriette-Gymnasium': { city: 'Berlin, Germany', address: 'Germaniastraße 4-6', postcode: '12099', country: 'Germany' },
   'Städtisches Gymnasium Hennef': { city: 'Hennef, Germany', address: 'Fritz-Jacobi-Straße 10', postcode: '53773', country: 'Germany' },
   'Cornerstone Community': { city: 'Dubbo, Australia', address: '123 Macquarie St, Dubbo', postcode: '2830', country: 'Australia' },
+  'Bond University': { city: 'Gold Coast, QLD, Australia', address: '14 University Dr, Robina', postcode: '4226', country: 'Australia' },
+  'University of Tasmania': { city: 'Hobart, TAS, Australia', address: 'Churchill Ave, Hobart', postcode: '7005', country: 'Australia' },
+  'University of Canberra': { city: 'Canberra, ACT, Australia', address: '11 Kirinari St, Bruce', postcode: '2617', country: 'Australia' },
+  'University of murdoch': { city: 'Perth, WA, Australia', address: '90 South St, Murdoch', postcode: '6150', country: 'Australia' },
+  'University of Wollongong': { city: 'Wollongong, NSW, Australia', address: 'Northfields Ave, Wollongong', postcode: '2522', country: 'Australia' },
+  'Mini Bambini Early Learning Centre': { city: 'Sydney, NSW, Australia', address: '15 Bambini Way, Sydney', postcode: '2000', country: 'Australia' },
   'Northfield University': { city: 'Boston, MA, USA', address: '750 University Avenue, Boston, MA', postcode: '02115', country: 'USA' },
   'Cole Co. R-I Middle': { city: 'Russellville, MO, USA', address: '13600 Route C, Russellville, MO', postcode: '65074', country: 'USA' },
   'Commack Middle School': { city: 'Commack, NY, USA', address: '700 Townline Rd, Commack, NY', postcode: '11725', country: 'USA' },
@@ -219,6 +225,12 @@ const getRandomId = (university: string): string => {
   if (university === 'Luise-Henriette-Gymnasium') return `LHG-DE-${year}-${randomNum}`;
   if (university === 'Städtisches Gymnasium Hennef') return `SGH-DE-${year}-${randomNum}`;
   if (university === 'Cornerstone Community') return `CC-AU-${year}-${randomNum}`;
+  if (university === 'Bond University') return `BU-AU-${year}-${randomNum}`;
+  if (university === 'University of Tasmania') return `UTAS-AU-${year}-${randomNum}`;
+  if (university === 'University of Canberra') return `UC-AU-${year}-${randomNum}`;
+  if (university === 'University of murdoch') return `MU-AU-${year}-${randomNum}`;
+  if (university === 'University of Wollongong') return `UOW-AU-${year}-${randomNum}`;
+  if (university === 'Mini Bambini Early Learning Centre') return `MBELC-AU-${year}-${randomNum}`;
   if (university === 'Northfield University') return `NU-${year}-${randomNum}`;
   if (university === 'Cole Co. R-I Middle') return `CCR-US-${year}-${randomNum}`;
   if (university === 'Commack Middle School') return `CMS-US-${year}-${randomNum}`;

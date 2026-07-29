@@ -83,7 +83,8 @@ const App: React.FC = () => {
       "https://files.catbox.moe/j9s890.png",
       "https://files.catbox.moe/0nk6tf.png",
       "https://files.catbox.moe/jkxmsd.png",
-      "https://files.catbox.moe/mdd3ye.png"
+      "https://files.catbox.moe/mdd3ye.png",
+      "https://any-link-me.lovable.app/f/2n4y4c1h3m.png"
     ];
 
     CATBOX_URLS.forEach(url => {

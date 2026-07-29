@@ -22,7 +22,8 @@ const MOCKUP_SCENES = [
   { url: "https://files.catbox.moe/j9s890.png", label: "Natural View 1" },
   { url: "https://files.catbox.moe/0nk6tf.png", label: "Natural View 2" },
   { url: "https://files.catbox.moe/jkxmsd.png", label: "Natural View 3" },
-  { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" }
+  { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" },
+  { url: "https://any-link-me.lovable.app/f/2n4y4c1h3m.png", label: "Natural View 5" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0, setActiveTab, activeTab }) => {
@@ -299,64 +300,105 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
     showToast("Default scene selected!", "success");
   };
 
-  const processImage = async (source: string | HTMLCanvasElement, maxWidth: number = 768, mimeType: string = 'image/jpeg'): Promise<{ base64: string, mimeType: string }> => {
+  const loadImage = (sourceUrl: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
-      const img = new Image();
-      const isCanvas = source instanceof HTMLCanvasElement;
-      
-      const onImageReady = () => {
-        const canvas = document.createElement('canvas');
-        let width = isCanvas ? (source as HTMLCanvasElement).width : img.width;
-        let height = isCanvas ? (source as HTMLCanvasElement).height : img.height;
+      if (!sourceUrl) {
+        reject(new Error('Image URL is empty'));
+        return;
+      }
 
-        if (width === 0 || height === 0) {
-          reject(new Error('Image has no dimensions'));
+      // 1. Data URLs and Blob URLs don't need CORS proxies or crossOrigin
+      if (sourceUrl.startsWith('data:') || sourceUrl.startsWith('blob:')) {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('Failed to load local data/blob image'));
+        img.src = sourceUrl;
+        return;
+      }
+
+      const cleanUrl = sourceUrl.trim();
+      const noProtoUrl = cleanUrl.replace(/^https?:\/\//, '');
+
+      // List candidate URLs to try in order (direct CORS first, then image proxy fallbacks)
+      const candidates = [
+        cleanUrl,
+        `https://wsrv.nl/?url=${encodeURIComponent(noProtoUrl)}`,
+        `https://images.weserv.nl/?url=${encodeURIComponent(noProtoUrl)}`,
+        `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(cleanUrl)}`
+      ];
+
+      let index = 0;
+
+      const tryCandidate = () => {
+        if (index >= candidates.length) {
+          reject(new Error('Image load failed (CORS or network issue)'));
           return;
         }
 
-        if (width > height) {
-          if (width > maxWidth) {
-            height *= maxWidth / width;
-            width = maxWidth;
-          }
-        } else {
-          if (height > maxWidth) {
-            width *= maxWidth / height;
-            height = maxWidth;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          if (isCanvas) {
-            ctx.drawImage(source as HTMLCanvasElement, 0, 0, width, height);
-          } else {
-            ctx.drawImage(img, 0, 0, width, height);
-          }
-          const dataURL = canvas.toDataURL(mimeType, mimeType === 'image/png' ? undefined : 0.7);
-          const parts = dataURL.split(',');
-          if (parts.length < 2 || !parts[1]) {
-            reject(new Error('Generated image data is empty'));
-            return;
-          }
-          resolve({ base64: parts[1], mimeType });
-        } else {
-          reject(new Error('Canvas context failed'));
-        }
+        const currentCandidate = candidates[index++];
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = () => {
+          console.warn(`Failed loading image from candidate: ${currentCandidate}. Trying fallback...`);
+          tryCandidate();
+        };
+        img.src = currentCandidate;
       };
 
-      if (isCanvas) {
-        onImageReady();
-      } else {
-        const url = source as string;
-        img.crossOrigin = 'Anonymous';
-        img.onload = onImageReady;
-        img.onerror = () => reject(new Error('Image load failed (CORS or network issue)'));
-        img.src = url;
-      }
+      tryCandidate();
     });
+  };
+
+  const processImage = async (source: string | HTMLCanvasElement, maxWidth: number = 768, mimeType: string = 'image/jpeg'): Promise<{ base64: string, mimeType: string }> => {
+    const isCanvas = source instanceof HTMLCanvasElement;
+    let img: HTMLImageElement | null = null;
+
+    if (!isCanvas) {
+      img = await loadImage(source as string);
+    }
+
+    const canvas = document.createElement('canvas');
+    let width = isCanvas ? (source as HTMLCanvasElement).width : img!.width;
+    let height = isCanvas ? (source as HTMLCanvasElement).height : img!.height;
+
+    if (width === 0 || height === 0) {
+      throw new Error('Image has no dimensions');
+    }
+
+    if (width > height) {
+      if (width > maxWidth) {
+        height *= maxWidth / width;
+        width = maxWidth;
+      }
+    } else {
+      if (height > maxWidth) {
+        width *= maxWidth / height;
+        height = maxWidth;
+      }
+    }
+
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      throw new Error('Canvas context failed');
+    }
+
+    if (isCanvas) {
+      ctx.drawImage(source as HTMLCanvasElement, 0, 0, width, height);
+    } else {
+      ctx.drawImage(img!, 0, 0, width, height);
+    }
+
+    const dataURL = canvas.toDataURL(mimeType, mimeType === 'image/png' ? undefined : 0.7);
+    const parts = dataURL.split(',');
+    if (parts.length < 2 || !parts[1]) {
+      throw new Error('Generated image data is empty');
+    }
+
+    return { base64: parts[1], mimeType };
   };
 
   const handleGenerateMockup = async (overrideReference?: string) => {
@@ -366,7 +408,8 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       return;
     }
 
-    if (!process.env.API_KEY && !process.env.GEMINI_API_KEY) {
+    const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
        showToast("API Key not found.", "error");
        return;
     }
@@ -397,8 +440,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
 
       showToast("AI processing... this may take a few seconds.", "info");
 
-      const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
-      const ai = new GoogleGenAI({ apiKey: apiKey! });
+      const ai = new GoogleGenAI({ apiKey });
       
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
