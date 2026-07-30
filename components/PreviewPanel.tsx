@@ -2,7 +2,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { StudentInfo, ToastType, IdCardTemplate } from '../types';
 import IdCard from './IdCard';
-import { GoogleGenAI } from "@google/genai";
 import * as htmlToImage from 'html-to-image';
 
 // Defining the missing props interface for PreviewPanel
@@ -23,7 +22,8 @@ const MOCKUP_SCENES = [
   { url: "https://files.catbox.moe/0nk6tf.png", label: "Natural View 2" },
   { url: "https://files.catbox.moe/jkxmsd.png", label: "Natural View 3" },
   { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" },
-  { url: "https://any-link-me.lovable.app/f/2n4y4c1h3m.png", label: "Natural View 5" }
+  { url: "https://any-link-me.lovable.app/f/2n4y4c1h3m.png", label: "Natural View 5" },
+  { url: "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/7efa4891-04e6-4bca-98c6-6a5b30ebe45f/url", label: "Reve Scene" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0, setActiveTab, activeTab }) => {
@@ -102,12 +102,12 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
     }
   }, [isEditModalOpen, mockupImage]);
 
-  const captureCard = async (ref: React.RefObject<HTMLDivElement>, scaleFactor: number = 4) => {
+  const captureCard = async (ref: React.RefObject<HTMLDivElement>, scaleFactor: number = 3) => {
     let originalCard = ref.current;
     
     // If ref is null, wait a bit and try again (can happen during tab transitions)
     if (!originalCard) {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 150));
       originalCard = ref.current;
     }
 
@@ -118,35 +118,29 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
 
     // Check if the element has dimensions
     if (originalCard.offsetWidth === 0 || originalCard.offsetHeight === 0) {
-      // Wait a bit for layout if dimensions are 0
       await new Promise(resolve => setTimeout(resolve, 200));
-      
       if (originalCard.offsetWidth === 0 || originalCard.offsetHeight === 0) {
-        console.warn("Capture failed: Element has 0 dimensions after retry", {
-          width: originalCard.offsetWidth,
-          height: originalCard.offsetHeight,
-          display: window.getComputedStyle(originalCard).display,
-          visibility: window.getComputedStyle(originalCard).visibility
-        });
+        console.warn("Capture failed: Element has 0 dimensions after retry");
         return null;
       }
     }
 
+    const transparentPngPlaceholder = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+
     try {
-      // Clear any active selections which can interfere with text measurement
       window.getSelection()?.removeAllRanges();
 
-      // Using html-to-image as it's more stable than html2canvas for complex text/layout
-      // and avoids the "setEnd on Range" error.
       const canvas = await htmlToImage.toCanvas(originalCard, {
         pixelRatio: scaleFactor,
         backgroundColor: null,
+        cacheBust: false,
+        skipFonts: true,
+        imagePlaceholder: transparentPngPlaceholder,
         style: {
           transform: 'none',
           margin: '0',
           display: 'flex',
         },
-        // Filter out problematic external stylesheets that cause CORS errors when reading rules
         filter: (node: any) => {
           if (node.tagName === 'LINK' && node.getAttribute('rel') === 'stylesheet') {
             const href = node.getAttribute('href');
@@ -160,8 +154,19 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       
       return canvas;
     } catch (err) {
-      console.error("html-to-image capture failed:", err);
-      throw err;
+      console.warn("html-to-image capture primary attempt failed, trying fallback...", err);
+      try {
+        const fallbackCanvas = await htmlToImage.toCanvas(originalCard, {
+          pixelRatio: 1.5,
+          backgroundColor: '#ffffff',
+          skipFonts: true,
+          imagePlaceholder: transparentPngPlaceholder
+        });
+        return fallbackCanvas;
+      } catch (fallbackErr) {
+        console.error("html-to-image capture fallback failed:", fallbackErr);
+        return null;
+      }
     }
   };
 
@@ -319,9 +324,10 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       const cleanUrl = sourceUrl.trim();
       const noProtoUrl = cleanUrl.replace(/^https?:\/\//, '');
 
-      // List candidate URLs to try in order (direct CORS first, then image proxy fallbacks)
+      // List candidate URLs to try in order (direct CORS first, local server proxy, then fallback proxies)
       const candidates = [
         cleanUrl,
+        `/api/proxy-image?url=${encodeURIComponent(cleanUrl)}`,
         `https://wsrv.nl/?url=${encodeURIComponent(noProtoUrl)}`,
         `https://images.weserv.nl/?url=${encodeURIComponent(noProtoUrl)}`,
         `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
@@ -408,12 +414,6 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       return;
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
-    if (!apiKey) {
-       showToast("API Key not found.", "error");
-       return;
-    }
-
     setIsGenerating(true);
     try {
       showToast(`Capturing ${mockupSide} of ID card...`, "info");
@@ -438,41 +438,33 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
         throw new Error("ID card design data is incomplete. Please try again.");
       }
 
-      showToast("AI processing... this may take a few seconds.", "info");
+      showToast("AI processing... generating mockup via server.", "info");
 
-      const ai = new GoogleGenAI({ apiKey });
-      
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        config: {
-          temperature: 0.5,
-          topP: 0.9,
+      const response = await fetch('/api/generate-mockup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
         },
-        contents: {
-          parts: [
-            { inlineData: { mimeType: referenceMimeType, data: referenceBase64 } },
-            { inlineData: { mimeType: 'image/png', data: cardBase64 } },
-            { text: "The first image is a real photo of an ID card in a scene. The second image is a flat digital ID card design. Meticulously replace the visual content of the ID card in the first image with the design from the second image. Preserve the lighting, shadows, and perspective of the original scene. The result must be a realistic photo." }
-          ]
-        }
+        body: JSON.stringify({
+          cardBase64,
+          referenceBase64,
+          referenceMimeType,
+          mockupSide
+        })
       });
 
-      let generatedImageUrl = null;
-      if (response.candidates && response.candidates[0].content && response.candidates[0].content.parts) {
-        for (const part of response.candidates[0].content.parts) {
-          if (part.inlineData) {
-            generatedImageUrl = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-            break;
-          }
-        }
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Server failed to generate mockup.");
       }
 
-      if (generatedImageUrl) {
-        setMockupImage(generatedImageUrl);
+      if (data.imageUrl) {
+        setMockupImage(data.imageUrl);
         showToast("Mockup generated successfully!", "success");
         setIsEditModalOpen(true);
       } else {
-        throw new Error("AI returned no image. The model might have filtered the content or failed to generate a result. Try a different scene.");
+        throw new Error("AI returned no image output. Try a different scene.");
       }
     } catch (error: any) {
       console.error("AI Mockup Error:", error);

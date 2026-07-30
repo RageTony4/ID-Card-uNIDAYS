@@ -1,20 +1,49 @@
 
 import { StudentInfo } from '../types';
 
-const MALE_AVATARS = [
+export const REVE_FEMALE_AVATARS = [
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/ee942ff9-ee70-4776-9eee-45f966a129c3/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/a752fa6a-b31d-4558-814c-bba6d8218ac3/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/c65b7983-0b05-4473-80c3-d88c806c256b/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e3aded7f-613a-4f79-b798-392c2ff6c0f4/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/087248ad-d286-45c8-b7dd-550608c2c826/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/21e362c3-59ab-4bf5-937c-8b6f25f08df5/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/f1578fd4-0f3d-463b-9fec-d2baf41892bd/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/a424bafd-e310-46cd-998b-73cae06e7986/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/98d869d9-bb4c-498e-8f42-e3acd65d7a5b/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e1673c60-a9bc-48df-95ca-a28569790956/url"
+];
+
+export const REVE_MALE_AVATARS = [
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/3c403465-34a3-4606-bc33-69266ec0d922/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e350014c-2f58-4e8c-a162-1e137c31498e/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/a4be46cd-e277-4118-b603-66f226199a8e/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/b10bbae7-50c2-4f77-8807-6b22147e8ac7/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e3095f47-581a-4fb4-9c09-5f84309f850c/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/ac808c47-6fb5-4eaf-9f18-c1c5fcc6e2fe/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e3522bef-ad8d-4fe6-a434-5df904194215/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/d5287704-9f8a-4410-bb44-81895642c9b7/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/5073776f-00e4-43d1-86c2-7398209d2831/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/d4b6f09a-cdd9-47fe-bb93-6862a8c8c933/url",
+  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/57ba6bd9-2ac9-49eb-99ad-fb65aeac3c61/url"
+];
+
+export const MALE_AVATARS = [
   "https://files.catbox.moe/m7lj8u.png",
   "https://files.catbox.moe/u1skwz.png",
   "https://files.catbox.moe/z2ersq.png",
   "https://files.catbox.moe/3kliif.png",
   "https://files.catbox.moe/a4f1ct.png",
-  "https://files.catbox.moe/8eq6dp.png"
+  "https://files.catbox.moe/8eq6dp.png",
+  ...REVE_MALE_AVATARS
 ];
 
-const FEMALE_AVATARS = [
+export const FEMALE_AVATARS = [
   "https://files.catbox.moe/bx9f18.png",
   "https://files.catbox.moe/w22pf1.png",
   "https://files.catbox.moe/4w42hk.png",
-  "https://files.catbox.moe/c0ot8t.png"
+  "https://files.catbox.moe/c0ot8t.png",
+  ...REVE_FEMALE_AVATARS
 ];
 
 const UK_MALE_FIRST_NAMES = ['James', 'Jack', 'Harry', 'Charlie', 'George', 'Oscar', 'William', 'Noah', 'Alfie', 'Leo', 'Jacob', 'Archie', 'Henry', 'Joshua', 'Arthur', 'Theo', 'Freddie', 'Mason', 'Isaac', 'Lucas', 'Alexander', 'Ethan', 'Daniel', 'Joseph', 'Samuel', 'Sebastian', 'David', 'Adam', 'Mohammed', 'Benjamin', 'Max', 'Lucas', 'Harrison', 'Teddy', 'Finley', 'Arlo', 'Edward', 'Jude', 'Louie', 'Tommy', 'Rory', 'Arthur', 'Louis', 'Bobby', 'Elliott', 'Ronnie', 'Harvey', 'Hugo', 'Luca', 'Ollie'];
@@ -117,9 +146,15 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Mona School': { city: 'Mona, UT, USA', address: '150 S 100 E, Mona, UT', postcode: '84645', country: 'USA' },
   'Deary School': { city: 'Deary, ID, USA', address: '502 1st Ave, Deary, ID', postcode: '83823', country: 'USA' },
   'Park University': { city: 'Parkville, MO', address: '8700 NW River Park Dr', postcode: '64152', country: 'USA' },
-  'Hudson County Community College': { city: 'Jersey City, NJ', address: '70 Sip Ave', postcode: '07306', country: 'USA' },
+  'Hudson County Community College': { city: 'Jersey City, NJ, USA', address: '70 Sip Ave, Jersey City, NJ', postcode: '07306', country: 'USA' },
   'University of Houston': { city: 'Houston, TX, USA', address: '4800 Calhoun Rd, Houston, TX', postcode: '77004', country: 'USA' },
   'University of Guam': { city: 'Mangilao, GU, USA', address: '303 University Dr, Mangilao, GU', postcode: '96923', country: 'USA' },
+  'Lee University': { city: 'Cleveland, TN, USA', address: '1120 N Ocoee St, Cleveland, TN', postcode: '37311', country: 'USA' },
+  'Air University': { city: 'Montgomery, AL, USA', address: '55 LeMay Plaza, Montgomery, AL', postcode: '36112', country: 'USA' },
+  'Ross University': { city: 'North Brunswick, NJ, USA', address: '630 US-1, North Brunswick, NJ', postcode: '08902', country: 'USA' },
+  'ADEN University': { city: 'Miami, FL, USA', address: '2121 Ponce de Leon Blvd, Coral Gables, FL', postcode: '33134', country: 'USA' },
+  'Duke University': { city: 'Durham, NC, USA', address: '2020 Campus Dr, Durham, NC', postcode: '27708', country: 'USA' },
+  'University City': { city: 'University City, MO, USA', address: '6800 Delmar Blvd, University City, MO', postcode: '63130', country: 'USA' },
   'Brandon University': { city: 'Brandon, MB, Canada', address: '270 18th St, Brandon, MB', postcode: 'R7A 6A9', country: 'Canada' },
   'York University': { city: 'Toronto, ON, Canada', address: '4700 Keele St, Toronto, ON', postcode: 'M3J 1P3', country: 'Canada' },
   'Assumption University': { city: 'Windsor, ON, Canada', address: '400 Huron Church Rd, Windsor, ON', postcode: 'N9B 3P4', country: 'Canada' },
@@ -242,6 +277,12 @@ const getRandomId = (university: string): string => {
   if (university === 'Hudson County Community College') return `HCCC-US-${year}-${randomNum}`;
   if (university === 'University of Houston') return `UH-US-${year}-${randomNum}`;
   if (university === 'University of Guam') return `UOG-US-${year}-${randomNum}`;
+  if (university === 'Lee University') return `LU-US-${year}-${randomNum}`;
+  if (university === 'Air University') return `AU-US-${year}-${randomNum}`;
+  if (university === 'Ross University') return `RU-US-${year}-${randomNum}`;
+  if (university === 'ADEN University') return `ADEN-US-${year}-${randomNum}`;
+  if (university === 'Duke University') return `DU-US-${year}-${randomNum}`;
+  if (university === 'University City') return `UC-US-${year}-${randomNum}`;
   if (university === 'Brandon University') return `BU-CA-${year}-${randomNum}`;
   if (university === 'York University') return `YU-CA-${year}-${randomNum}`;
   if (university === 'Assumption University') return `AU-CA-${year}-${randomNum}`;
@@ -293,6 +334,19 @@ const getRandomId = (university: string): string => {
   return `CEA-${year}-${randomNum}`;
 };
 
+export const getRandomValidUntilDate = (): string => {
+  // Random date between 10/08/2027 and 30/09/2027
+  const startMs = new Date(2027, 7, 10).getTime(); // 10 Aug 2027
+  const endMs = new Date(2027, 8, 30).getTime();   // 30 Sep 2027
+  const randomMs = startMs + Math.random() * (endMs - startMs);
+  const randomDate = new Date(randomMs);
+  
+  const dd = String(randomDate.getDate()).padStart(2, '0');
+  const mm = String(randomDate.getMonth() + 1).padStart(2, '0');
+  const yyyy = randomDate.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+};
+
 export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo => {
   const university = fixedUniversity || getRandomElement(Object.keys(SCHOOL_ADDRESS_MAP));
   const details = SCHOOL_ADDRESS_MAP[university] || { city: 'London', address: 'High Street, London', postcode: 'SW1A 1AA', country: 'UK' };
@@ -337,8 +391,8 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     course: getRandomElement(COURSES),
     status: 'Currently Enrolled',
     issueDate: '01 Sep 2026',
-    validUntil: '31 Aug 2027',
-    website: `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
+    validUntil: getRandomValidUntilDate(),
+    website: university === 'Hudson County Community College' ? 'www.hccc.edu' : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
     photo: photo,
     logo: null,
     bloodGroup: getRandomElement(bloodGroups),

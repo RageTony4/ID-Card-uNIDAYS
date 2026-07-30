@@ -113,7 +113,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   const HologramBackground = () => (
     <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-[0.12]">
       <img 
-        src="/background hologram/logo-no-text.png" 
+        src="/background%20hologram/logo-no-text.png" 
         alt="Hologram" 
         className="w-40 h-40 object-contain"
         referrerPolicy="no-referrer"
@@ -770,7 +770,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                     </div>
                 </div>
                 <div className="mt-auto pb-0.5 text-center">
-                    <p className="text-red-700 font-black text-[10px] font-sans bg-red-50 px-1.5 py-0.5 rounded inline-block uppercase">VALID UNTIL 10/8/2027</p>
+                    <p className="text-red-700 font-black text-[10px] font-sans bg-red-50 px-1.5 py-0.5 rounded inline-block uppercase">VALID UNTIL {formatToDDMMYYYY(studentInfo.validUntil)}</p>
                 </div>
             </div>
 

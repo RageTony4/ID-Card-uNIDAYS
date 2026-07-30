@@ -4,7 +4,7 @@ import { StudentInfo, ToastMessage, ToastType, IdCardTemplate } from './types';
 import EditorPanel from './components/EditorPanel';
 import PreviewPanel from './components/PreviewPanel';
 import Toast from './components/Toast';
-import { generateRandomStudentInfo } from './lib/sampleData';
+import { generateRandomStudentInfo, getRandomValidUntilDate } from './lib/sampleData';
 import { GoogleGenAI } from "@google/genai";
 
 const App: React.FC = () => {
@@ -34,7 +34,7 @@ const App: React.FC = () => {
       course: 'Bachelor of Computer Science',
       status: 'Currently Enrolled',
       issueDate: '01 Sep 2026',
-      validUntil: '31 Aug 2027',
+      validUntil: getRandomValidUntilDate(),
       website: 'www.cea-academy.ac.uk',
       photo: 'https://picsum.photos/seed/ukstudent/252/324',
       logo: null,
@@ -47,6 +47,11 @@ const App: React.FC = () => {
     const saved = localStorage.getItem('id_gen_template');
     if (saved === 'training') return 'northfield';
     return (saved as IdCardTemplate) || 'elegant';
+  });
+
+  const [isNameLocked, setIsNameLocked] = useState<boolean>(() => {
+    const saved = localStorage.getItem('id_gen_name_locked');
+    return saved !== null ? saved === 'true' : true;
   });
 
   const [toast, setToast] = useState<ToastMessage | null>(null);
@@ -65,6 +70,23 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('id_gen_template', template);
   }, [template]);
+
+  useEffect(() => {
+    localStorage.setItem('id_gen_name_locked', String(isNameLocked));
+  }, [isNameLocked]);
+
+  const toggleNameLock = () => {
+    setIsNameLocked(prev => {
+      const next = !prev;
+      showToast(
+        next 
+          ? 'Student Name LOCKED 🔒 (Name won\'t change when changing schools or randomizing)' 
+          : 'Student Name UNLOCKED 🔓', 
+        'info'
+      );
+      return next;
+    });
+  };
 
   useEffect(() => {
     const CATBOX_URLS = [
@@ -100,10 +122,14 @@ const App: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
-    // If the university is changed, we want to auto-populate the address and details
+    // If the university is changed, auto-populate details but obey name lock for the student's name
     if (name === 'universityName') {
       const newInfo = generateRandomStudentInfo(value);
-      setStudentInfo(prev => ({ ...newInfo, logo: prev.logo }));
+      setStudentInfo(prev => ({ 
+        ...newInfo, 
+        studentName: isNameLocked ? prev.studentName : newInfo.studentName, // Keep name unchanged when locked
+        logo: prev.logo 
+      }));
       
       if (value === 'Shepherd School') {
         setTemplate('official');
@@ -141,19 +167,28 @@ const App: React.FC = () => {
 
   const handleGenerateSample = () => {
     const newInfo = generateRandomStudentInfo(studentInfo.universityName);
-    setStudentInfo(prev => ({ ...newInfo, logo: prev.logo })); 
-    showToast('Student details randomized!', 'success');
+    setStudentInfo(prev => ({ 
+      ...newInfo, 
+      studentName: isNameLocked ? prev.studentName : newInfo.studentName,
+      logo: prev.logo 
+    })); 
+    showToast(isNameLocked ? 'Student details randomized (Name locked)!' : 'Student details randomized!', 'success');
   };
 
   const handleAutoTrigger = () => {
     const newInfo = generateRandomStudentInfo(studentInfo.universityName);
-    setStudentInfo(prev => ({ ...newInfo, logo: prev.logo }));
+    const finalName = isNameLocked ? studentInfo.studentName : newInfo.studentName;
+    setStudentInfo(prev => ({ 
+      ...newInfo, 
+      studentName: finalName,
+      logo: prev.logo 
+    }));
     setAutoTrigger(prev => prev + 1);
     
-    // Copy the new name to clipboard
-    if (newInfo.studentName) {
-      navigator.clipboard.writeText(newInfo.studentName)
-        .then(() => showToast(`Name "${newInfo.studentName}" copied to clipboard!`, 'success'))
+    // Copy the name to clipboard
+    if (finalName) {
+      navigator.clipboard.writeText(finalName)
+        .then(() => showToast(`Name "${finalName}" copied to clipboard!`, 'success'))
         .catch(() => showToast('Failed to copy name to clipboard', 'error'));
     }
   };
@@ -186,6 +221,8 @@ const App: React.FC = () => {
             studentInfo={studentInfo}
             template={template}
             theme={theme}
+            isNameLocked={isNameLocked}
+            onToggleNameLock={toggleNameLock}
             onToggleTheme={toggleTheme}
             onTemplateChange={setTemplate}
             onInputChange={handleInputChange}

@@ -1,5 +1,6 @@
 {
-  "name": " Student ID Card unidays and Github",
-  "description": "A web application to create, customize, and download professional-looking student ID cards in both PNG and PDF formats with a live preview.",
-  "requestFramePermissions": []
+  "name": "Student ID Card Generator",
+  "description": "A web application to create, customize, and download professional-looking student ID cards in both PNG and PDF formats with a live preview and AI scene mockups.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
