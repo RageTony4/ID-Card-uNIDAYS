@@ -113,7 +113,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   const HologramBackground = () => (
     <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-[0.12]">
       <img 
-        src="/background%20hologram/logo-no-text.png" 
+        src="/background hologram/logo-no-text.png" 
         alt="Hologram" 
         className="w-40 h-40 object-contain"
         referrerPolicy="no-referrer"

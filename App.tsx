@@ -89,7 +89,28 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    const CATBOX_URLS = [
+    const ALL_AVATAR_URLS = [
+      "/assets/avatars/male_1.webp",
+      "/assets/avatars/male_2.webp",
+      "/assets/avatars/male_3.webp",
+      "/assets/avatars/male_4.webp",
+      "/assets/avatars/male_5.webp",
+      "/assets/avatars/male_6.webp",
+      "/assets/avatars/male_7.webp",
+      "/assets/avatars/male_8.webp",
+      "/assets/avatars/male_9.webp",
+      "/assets/avatars/male_10.webp",
+      "/assets/avatars/male_11.webp",
+      "/assets/avatars/female_1.webp",
+      "/assets/avatars/female_2.webp",
+      "/assets/avatars/female_3.webp",
+      "/assets/avatars/female_4.webp",
+      "/assets/avatars/female_5.webp",
+      "/assets/avatars/female_6.webp",
+      "/assets/avatars/female_7.webp",
+      "/assets/avatars/female_8.webp",
+      "/assets/avatars/female_9.webp",
+      "/assets/avatars/female_10.webp",
       "https://files.catbox.moe/m7lj8u.png",
       "https://files.catbox.moe/u1skwz.png",
       "https://files.catbox.moe/z2ersq.png",
@@ -109,7 +130,7 @@ const App: React.FC = () => {
       "https://any-link-me.lovable.app/f/2n4y4c1h3m.png"
     ];
 
-    CATBOX_URLS.forEach(url => {
+    ALL_AVATAR_URLS.forEach(url => {
       const img = new Image();
       img.src = url;
     });
@@ -122,12 +143,12 @@ const App: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
-    // If the university is changed, auto-populate details but obey name lock for the student's name
+    // If the university is changed, auto-populate details but NEVER change the student's name
     if (name === 'universityName') {
       const newInfo = generateRandomStudentInfo(value);
       setStudentInfo(prev => ({ 
         ...newInfo, 
-        studentName: isNameLocked ? prev.studentName : newInfo.studentName, // Keep name unchanged when locked
+        studentName: prev.studentName, // Keep name unchanged when switching schools
         logo: prev.logo 
       }));
       

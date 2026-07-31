@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { StudentInfo, IdCardTemplate, ToastType } from '../types';
 import InputField from './InputField';
-import { getRandomValidUntilDate, MALE_AVATARS, FEMALE_AVATARS } from '../lib/sampleData';
+import { getRandomValidUntilDate } from '../lib/sampleData';
 
 interface EditorPanelProps {
   studentInfo: StudentInfo;
@@ -22,7 +22,42 @@ interface EditorPanelProps {
   activeTab: 'edit' | 'preview';
 }
 
+const MALE_HEADSHOTS = [
+  "/assets/avatars/male_1.webp",
+  "/assets/avatars/male_2.webp",
+  "/assets/avatars/male_3.webp",
+  "/assets/avatars/male_4.webp",
+  "/assets/avatars/male_5.webp",
+  "/assets/avatars/male_6.webp",
+  "/assets/avatars/male_7.webp",
+  "/assets/avatars/male_8.webp",
+  "/assets/avatars/male_9.webp",
+  "/assets/avatars/male_10.webp",
+  "/assets/avatars/male_11.webp",
+  "https://files.catbox.moe/m7lj8u.png",
+  "https://files.catbox.moe/u1skwz.png",
+  "https://files.catbox.moe/z2ersq.png",
+  "https://files.catbox.moe/3kliif.png",
+  "https://files.catbox.moe/a4f1ct.png",
+  "https://files.catbox.moe/8eq6dp.png"
+];
 
+const FEMALE_HEADSHOTS = [
+  "/assets/avatars/female_1.webp",
+  "/assets/avatars/female_2.webp",
+  "/assets/avatars/female_3.webp",
+  "/assets/avatars/female_4.webp",
+  "/assets/avatars/female_5.webp",
+  "/assets/avatars/female_6.webp",
+  "/assets/avatars/female_7.webp",
+  "/assets/avatars/female_8.webp",
+  "/assets/avatars/female_9.webp",
+  "/assets/avatars/female_10.webp",
+  "https://files.catbox.moe/bx9f18.png",
+  "https://files.catbox.moe/w22pf1.png",
+  "https://files.catbox.moe/4w42hk.png",
+  "https://files.catbox.moe/c0ot8t.png"
+];
 
 const SCHOOL_DATA = {
     'United Kingdom': [
@@ -302,28 +337,26 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
         <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-zinc-300' : 'text-gray-700'}`}>Controls</label>
         
         <div className="mb-4">
-            <label className={`block text-xs font-bold mb-2 uppercase tracking-wide ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Select Avatar (Male - {MALE_AVATARS.length})</label>
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-3">
-                {MALE_AVATARS.map((url, index) => (
+            <label className={`block text-xs font-bold mb-2 uppercase tracking-wide ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Select Avatar (Male)</label>
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-2">
+                {MALE_HEADSHOTS.map((url, index) => (
                     <button 
                         key={`male-${index}`}
                         onClick={() => onPhotoSelect(url)}
                         className={`relative w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 transition-all ${studentInfo.photo === url ? 'border-purple-600 ring-2 ring-purple-100 scale-110' : isDark ? 'border-zinc-800 hover:border-zinc-600' : 'border-gray-200 hover:border-purple-400'}`}
-                        title={`Male Avatar #${index + 1}`}
                     >
                         <img src={url} alt={`Male Avatar ${index + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     </button>
                 ))}
             </div>
             
-            <label className={`block text-xs font-bold mb-2 uppercase tracking-wide ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Select Avatar (Female - {FEMALE_AVATARS.length})</label>
+            <label className={`block text-xs font-bold mb-2 uppercase tracking-wide ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Select Avatar (Female)</label>
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                {FEMALE_AVATARS.map((url, index) => (
+                {FEMALE_HEADSHOTS.map((url, index) => (
                     <button 
                         key={`female-${index}`}
                         onClick={() => onPhotoSelect(url)}
                         className={`relative w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 transition-all ${studentInfo.photo === url ? 'border-purple-600 ring-2 ring-purple-100 scale-110' : isDark ? 'border-zinc-800 hover:border-zinc-600' : 'border-gray-200 hover:border-purple-400'}`}
-                        title={`Female Avatar #${index + 1}`}
                     >
                         <img src={url} alt={`Female Avatar ${index + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     </button>

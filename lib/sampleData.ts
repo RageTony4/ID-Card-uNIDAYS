@@ -1,49 +1,41 @@
 
 import { StudentInfo } from '../types';
 
-export const REVE_FEMALE_AVATARS = [
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/ee942ff9-ee70-4776-9eee-45f966a129c3/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/a752fa6a-b31d-4558-814c-bba6d8218ac3/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/c65b7983-0b05-4473-80c3-d88c806c256b/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e3aded7f-613a-4f79-b798-392c2ff6c0f4/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/087248ad-d286-45c8-b7dd-550608c2c826/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/21e362c3-59ab-4bf5-937c-8b6f25f08df5/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/f1578fd4-0f3d-463b-9fec-d2baf41892bd/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/a424bafd-e310-46cd-998b-73cae06e7986/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/98d869d9-bb4c-498e-8f42-e3acd65d7a5b/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e1673c60-a9bc-48df-95ca-a28569790956/url"
-];
-
-export const REVE_MALE_AVATARS = [
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/3c403465-34a3-4606-bc33-69266ec0d922/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e350014c-2f58-4e8c-a162-1e137c31498e/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/a4be46cd-e277-4118-b603-66f226199a8e/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/b10bbae7-50c2-4f77-8807-6b22147e8ac7/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e3095f47-581a-4fb4-9c09-5f84309f850c/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/ac808c47-6fb5-4eaf-9f18-c1c5fcc6e2fe/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/e3522bef-ad8d-4fe6-a434-5df904194215/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/d5287704-9f8a-4410-bb44-81895642c9b7/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/5073776f-00e4-43d1-86c2-7398209d2831/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/d4b6f09a-cdd9-47fe-bb93-6862a8c8c933/url",
-  "https://app.reve.com/api/project/97aa6e46-a046-4d52-b96d-7ca022116d67/image/57ba6bd9-2ac9-49eb-99ad-fb65aeac3c61/url"
-];
-
-export const MALE_AVATARS = [
+const MALE_AVATARS = [
+  "/assets/avatars/male_1.webp",
+  "/assets/avatars/male_2.webp",
+  "/assets/avatars/male_3.webp",
+  "/assets/avatars/male_4.webp",
+  "/assets/avatars/male_5.webp",
+  "/assets/avatars/male_6.webp",
+  "/assets/avatars/male_7.webp",
+  "/assets/avatars/male_8.webp",
+  "/assets/avatars/male_9.webp",
+  "/assets/avatars/male_10.webp",
+  "/assets/avatars/male_11.webp",
   "https://files.catbox.moe/m7lj8u.png",
   "https://files.catbox.moe/u1skwz.png",
   "https://files.catbox.moe/z2ersq.png",
   "https://files.catbox.moe/3kliif.png",
   "https://files.catbox.moe/a4f1ct.png",
-  "https://files.catbox.moe/8eq6dp.png",
-  ...REVE_MALE_AVATARS
+  "https://files.catbox.moe/8eq6dp.png"
 ];
 
-export const FEMALE_AVATARS = [
+const FEMALE_AVATARS = [
+  "/assets/avatars/female_1.webp",
+  "/assets/avatars/female_2.webp",
+  "/assets/avatars/female_3.webp",
+  "/assets/avatars/female_4.webp",
+  "/assets/avatars/female_5.webp",
+  "/assets/avatars/female_6.webp",
+  "/assets/avatars/female_7.webp",
+  "/assets/avatars/female_8.webp",
+  "/assets/avatars/female_9.webp",
+  "/assets/avatars/female_10.webp",
   "https://files.catbox.moe/bx9f18.png",
   "https://files.catbox.moe/w22pf1.png",
   "https://files.catbox.moe/4w42hk.png",
-  "https://files.catbox.moe/c0ot8t.png",
-  ...REVE_FEMALE_AVATARS
+  "https://files.catbox.moe/c0ot8t.png"
 ];
 
 const UK_MALE_FIRST_NAMES = ['James', 'Jack', 'Harry', 'Charlie', 'George', 'Oscar', 'William', 'Noah', 'Alfie', 'Leo', 'Jacob', 'Archie', 'Henry', 'Joshua', 'Arthur', 'Theo', 'Freddie', 'Mason', 'Isaac', 'Lucas', 'Alexander', 'Ethan', 'Daniel', 'Joseph', 'Samuel', 'Sebastian', 'David', 'Adam', 'Mohammed', 'Benjamin', 'Max', 'Lucas', 'Harrison', 'Teddy', 'Finley', 'Arlo', 'Edward', 'Jude', 'Louie', 'Tommy', 'Rory', 'Arthur', 'Louis', 'Bobby', 'Elliott', 'Ronnie', 'Harvey', 'Hugo', 'Luca', 'Ollie'];

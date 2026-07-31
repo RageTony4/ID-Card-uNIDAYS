@@ -1,6 +1,27 @@
 
-const CACHE_NAME = 'catbox-image-cache-v1';
-const CATBOX_URLS = [
+const CACHE_NAME = 'avatar-image-cache-v3';
+const AVATAR_URLS = [
+  "/assets/avatars/male_1.webp",
+  "/assets/avatars/male_2.webp",
+  "/assets/avatars/male_3.webp",
+  "/assets/avatars/male_4.webp",
+  "/assets/avatars/male_5.webp",
+  "/assets/avatars/male_6.webp",
+  "/assets/avatars/male_7.webp",
+  "/assets/avatars/male_8.webp",
+  "/assets/avatars/male_9.webp",
+  "/assets/avatars/male_10.webp",
+  "/assets/avatars/male_11.webp",
+  "/assets/avatars/female_1.webp",
+  "/assets/avatars/female_2.webp",
+  "/assets/avatars/female_3.webp",
+  "/assets/avatars/female_4.webp",
+  "/assets/avatars/female_5.webp",
+  "/assets/avatars/female_6.webp",
+  "/assets/avatars/female_7.webp",
+  "/assets/avatars/female_8.webp",
+  "/assets/avatars/female_9.webp",
+  "/assets/avatars/female_10.webp",
   "https://files.catbox.moe/m7lj8u.png",
   "https://files.catbox.moe/u1skwz.png",
   "https://files.catbox.moe/z2ersq.png",
@@ -22,21 +43,24 @@ const CATBOX_URLS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('Opened cache');
-      return cache.addAll(CATBOX_URLS);
+      console.log('Opened avatar cache');
+      return cache.addAll(AVATAR_URLS);
     })
   );
 });
 
 self.addEventListener('fetch', (event) => {
-  if (CATBOX_URLS.includes(event.request.url)) {
+  const url = event.request.url;
+  const isAvatarRequest = AVATAR_URLS.some(avatarUrl => url.includes(avatarUrl)) || url.includes('/assets/avatars/');
+  
+  if (isAvatarRequest) {
     event.respondWith(
       caches.match(event.request).then((response) => {
         if (response) {
           return response;
         }
         return fetch(event.request).then((networkResponse) => {
-          if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+          if (!networkResponse || networkResponse.status !== 200) {
             return networkResponse;
           }
           const responseToCache = networkResponse.clone();
