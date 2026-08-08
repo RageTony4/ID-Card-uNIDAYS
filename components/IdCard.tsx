@@ -125,8 +125,81 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     </div>
   );
 
-  // Common Back Side for Classic/Elegant/Modern/Official/Northfield
+  const ShepherdShieldLogo = ({ className = "w-11 h-13" }: { className?: string }) => (
+    <svg className={className} viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 4 L10 20 V65 C10 92 50 114 50 114 C50 114 90 92 90 65 V20 L50 4 Z" fill="#2B5842" stroke="#1E4030" strokeWidth="3" />
+      <path d="M50 8 L14 23 V64 C14 88 50 108 50 108 C50 108 86 88 86 64 V23 L50 8 Z" stroke="#F8F6ED" strokeWidth="1.5" strokeDasharray="3 2" opacity="0.6" />
+      <path d="M50 15 V90" stroke="#F8F6ED" strokeWidth="1.5" opacity="0.3" />
+      <path d="M20 52 H80" stroke="#F8F6ED" strokeWidth="1.5" opacity="0.3" />
+      <g transform="translate(20, 22) scale(0.55)">
+        <path d="M12 28 C10 24 14 18 20 18 C22 14 28 12 34 15 C38 12 44 14 46 18 C52 18 56 24 54 28 C58 32 56 38 50 40 C48 44 42 46 36 44 C32 46 26 44 24 40 C18 38 16 32 12 28 Z" fill="#F8F6ED" />
+        <circle cx="22" cy="22" r="6" fill="#F8F6ED" />
+        <circle cx="20" cy="21" r="1" fill="#2B5842" />
+        <path d="M18 25 C20 27 24 27 26 25" stroke="#2B5842" strokeWidth="1.2" strokeLinecap="round" />
+        <rect x="22" y="42" width="3" height="8" rx="1.5" fill="#F8F6ED" />
+        <rect x="42" y="42" width="3" height="8" rx="1.5" fill="#F8F6ED" />
+      </g>
+      <path d="M50 22 C43 22 40 28 40 33 C40 37 43 40 46 39 C48 38 48 35 46 34 C44 33 43 35 43 33 C43 30 45 25 50 25 C55 25 57 30 57 33 V82" stroke="#F8F6ED" strokeWidth="3.5" strokeLinecap="round" fill="none" />
+      <g transform="translate(56, 26) scale(0.6)">
+        <path d="M4 8 C12 5 20 8 24 12 C28 8 36 5 44 8 V32 C36 29 28 32 24 35 C20 32 12 29 4 32 Z" fill="#F8F6ED" />
+        <path d="M24 12 V35" stroke="#2B5842" strokeWidth="1.5" />
+        <path d="M8 14 H18 M8 19 H18 M8 24 H16" stroke="#2B5842" strokeWidth="1.2" strokeLinecap="round" />
+        <path d="M30 14 H40 M30 19 H40 M30 24 H38" stroke="#2B5842" strokeWidth="1.2" strokeLinecap="round" />
+      </g>
+      <path d="M12 88 L25 82 H75 L88 88 L82 98 L75 94 H25 L18 98 Z" fill="#F8F6ED" stroke="#2B5842" strokeWidth="1" />
+      <text x="50" y="91" textAnchor="middle" fill="#2B5842" fontSize="6.5" fontWeight="900" fontFamily="sans-serif" letterSpacing="0.8">VERITAS • CARITAS</text>
+    </svg>
+  );
+
+  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd
   if (side === 'back') {
+    if (template === 'shepherd') {
+      return (
+        <div ref={ref} className="id-card-container id-card-back shadow-lg bg-[#F8F6ED] overflow-hidden relative rounded-xl border-2 border-[#2B5842] font-sans select-none animate-in fade-in duration-300">
+          <div className="h-8 w-full bg-[#2B5842] mt-3 z-10"></div>
+          <div className="relative z-10 flex flex-col h-full p-3 mt-1 text-[#2B5842]">
+            <div className="flex items-center justify-between border-b border-[#2B5842]/30 pb-1 mb-2">
+              <div className="flex items-center gap-1.5">
+                <ShepherdShieldLogo className="w-5 h-6" />
+                <span className="font-serif font-black text-[10px] uppercase tracking-wide text-[#2B5842]">
+                  {displayUniversityName}
+                </span>
+              </div>
+              <span className="font-sans font-bold text-[6px] tracking-widest text-[#2B5842]">STUDENT IDENTIFICATION</span>
+            </div>
+            <div className="text-left text-[#2B5842] text-[6.5px] font-medium leading-tight space-y-1">
+              <p>• This card is the property of <span className="font-black">{displayUniversityName}</span>. It must be presented upon request by school administration.</p>
+              <p>• Misuse or alteration of this card will result in disciplinary action. Non-transferable.</p>
+              <p>• If found, please return to: <span className="italic font-bold">{studentInfo.address}</span> or contact the registrar office.</p>
+            </div>
+            <div className="flex justify-between items-end px-2 mt-3">
+              <div className="flex flex-col items-center">
+                <div className="h-5 w-24 border-b border-[#2B5842] relative flex items-center justify-center">
+                  <span className="font-serif italic text-[7px] text-[#2B5842]">{studentInfo.studentName}</span>
+                </div>
+                <p className="text-[#2B5842] font-bold text-[5px] uppercase mt-0.5">Cardholder Signature</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="h-5 w-28 border-b border-[#2B5842] relative flex items-center justify-center">
+                  <span className="font-serif italic font-bold text-[8px] text-[#2B5842]">J. Shepherd, Registrar</span>
+                </div>
+                <p className="text-[#2B5842] font-bold text-[5px] uppercase mt-0.5">Authorized Registrar</p>
+              </div>
+            </div>
+            <div className="mt-auto flex justify-between items-center pt-2 border-t border-[#2B5842]/30">
+              <div className="flex flex-col">
+                <span className="text-[#2B5842] text-[5px] font-bold uppercase leading-none">STUDENT ID</span>
+                <p className="text-[7.5px] font-mono tracking-widest text-[#2B5842] font-black leading-none mt-0.5">{studentInfo.studentId}</p>
+              </div>
+              <div className="text-right">
+                <span className="text-[#2B5842] text-[5px] font-bold uppercase leading-none">VALID UNTIL</span>
+                <p className="text-[7.5px] font-bold text-[#2B5842] mt-0.5">{studentInfo.validUntil}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
     if (template === 'official') {
         return (
           <div ref={ref} className="id-card-container id-card-back shadow-lg bg-white overflow-hidden rounded-xl border border-gray-200">
@@ -293,6 +366,138 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                  <p className="text-center text-[8px] tracking-widest mt-1 font-mono">{studentInfo.studentId}</p>
             </div>
          </div>
+      </div>
+    );
+  }
+
+  // Shepherd School / Classic Parchment Template (Front View)
+  if (template === 'shepherd') {
+    const uLabel = (studentInfo.universityName || 'SHEPHERD SCHOOL').trim().toUpperCase();
+
+    let uniFontSize = 'text-[21px]';
+    if (uLabel.length > 32) {
+      uniFontSize = 'text-[14px]';
+    } else if (uLabel.length > 24) {
+      uniFontSize = 'text-[17px]';
+    }
+
+    const stuNameUpper = (studentInfo.studentName || 'ANY STUDENT').trim().toUpperCase();
+    let nameFontSize = 'text-[20px]';
+    if (stuNameUpper.length > 24) {
+      nameFontSize = 'text-[14px]';
+    } else if (stuNameUpper.length > 18) {
+      nameFontSize = 'text-[16px]';
+    }
+
+    const addressText = (studentInfo.address && studentInfo.address !== '750 University Avenue') 
+      ? `${studentInfo.address.toUpperCase()} ◆ ${studentInfo.location ? studentInfo.location.toUpperCase() : 'HOUSTON, TEXAS 77008'}`
+      : '2500 WEST 10TH STREET ◆ HOUSTON, TEXAS 77008';
+
+    const expDate = studentInfo.validUntil || '05/2028';
+
+    return (
+      <div ref={ref} className="id-card-container shadow-xl bg-[#F8F6ED] overflow-hidden relative rounded-xl border-2 border-[#2B5842] flex flex-col font-sans select-none animate-in fade-in duration-300">
+        
+        {/* HEADER SECTION */}
+        <div className="w-full px-3.5 pt-2 pb-1.5 flex items-center justify-between relative z-10">
+          {/* Left: Shepherd Shield Crest Logo */}
+          <div className="flex-shrink-0 mr-3">
+            <ShepherdShieldLogo className="w-11 h-13" />
+          </div>
+
+          {/* Center / Right: School Name & Address */}
+          <div className="flex-1 flex flex-col items-center justify-center text-center overflow-hidden px-1">
+            <h1 className={`font-serif font-extrabold tracking-wide text-[#2B5842] uppercase whitespace-nowrap overflow-visible leading-tight px-1 ${uniFontSize}`}>
+              {uLabel}
+            </h1>
+            <p className="font-sans font-bold tracking-wider text-[#2B5842] uppercase whitespace-nowrap overflow-hidden text-ellipsis text-[7.5px] leading-none mt-1 w-full">
+              {addressText}
+            </p>
+          </div>
+        </div>
+
+        {/* Solid Edge-to-Edge Dark Green Divider */}
+        <div className="w-full border-t-2 border-[#2B5842]" />
+
+        {/* MAIN BODY AREA */}
+        <div className="flex-1 flex px-4 pt-3 pb-1 justify-between items-start relative z-10">
+          {/* Left Side: Student Details */}
+          <div className="flex-1 flex flex-col justify-start overflow-hidden pr-2 pt-1">
+            {/* Student Name */}
+            <h2 className={`${nameFontSize} font-sans font-black tracking-tight text-black uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-none mb-1.5`}>
+              {stuNameUpper}
+            </h2>
+
+            {/* Student ID */}
+            <p className="font-sans font-extrabold text-black uppercase text-[12px] tracking-wide leading-none mb-3">
+              ID: {studentInfo.studentId || '000000009'}
+            </p>
+
+            {/* Ornamental Divider with Centered Diamond */}
+            <div className="flex items-center w-full my-1.5">
+              <div className="flex-1 h-[1px] bg-[#2B5842]" />
+              <span className="text-[#2B5842] text-[8px] mx-2 leading-none">◆</span>
+              <div className="flex-1 h-[1px] bg-[#2B5842]" />
+            </div>
+
+            {/* Expiry Date */}
+            <p className="font-sans font-extrabold text-[#2B5842] uppercase text-[11.5px] tracking-wider leading-none mt-2">
+              EXPIRES: {expDate}
+            </p>
+          </div>
+
+          {/* Right Side: Photo with 2px Dark Green Frame & Light Grey Background */}
+          <div className="flex-shrink-0 ml-2">
+            <div className="w-[102px] h-[126px] bg-[#E0E0E0] border-2 border-[#2B5842] rounded-md overflow-hidden shadow-sm">
+              <img 
+                src={studentInfo.photo || 'https://picsum.photos/250/300'} 
+                alt="Student Headshot" 
+                className="w-full h-full object-cover object-center"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* BOTTOM FOOTER BARCODE */}
+        <div className="w-full px-4 pb-2 pt-1 flex flex-col items-center justify-center relative z-10">
+          <div className="w-full h-[22px] flex items-center justify-center overflow-hidden bg-transparent">
+            <svg className="w-full h-full" viewBox="0 0 200 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" width="3" height="30" fill="#000000" />
+              <rect x="5" width="2" height="30" fill="#000000" />
+              <rect x="10" width="5" height="30" fill="#000000" />
+              <rect x="18" width="2" height="30" fill="#000000" />
+              <rect x="23" width="4" height="30" fill="#000000" />
+              <rect x="30" width="2" height="30" fill="#000000" />
+              <rect x="35" width="6" height="30" fill="#000000" />
+              <rect x="44" width="2" height="30" fill="#000000" />
+              <rect x="49" width="3" height="30" fill="#000000" />
+              <rect x="55" width="5" height="30" fill="#000000" />
+              <rect x="63" width="2" height="30" fill="#000000" />
+              <rect x="68" width="4" height="30" fill="#000000" />
+              <rect x="75" width="3" height="30" fill="#000000" />
+              <rect x="81" width="2" height="30" fill="#000000" />
+              <rect x="86" width="6" height="30" fill="#000000" />
+              <rect x="95" width="2" height="30" fill="#000000" />
+              <rect x="100" width="4" height="30" fill="#000000" />
+              <rect x="107" width="2" height="30" fill="#000000" />
+              <rect x="112" width="5" height="30" fill="#000000" />
+              <rect x="120" width="3" height="30" fill="#000000" />
+              <rect x="126" width="2" height="30" fill="#000000" />
+              <rect x="131" width="6" height="30" fill="#000000" />
+              <rect x="140" width="2" height="30" fill="#000000" />
+              <rect x="145" width="4" height="30" fill="#000000" />
+              <rect x="152" width="3" height="30" fill="#000000" />
+              <rect x="158" width="2" height="30" fill="#000000" />
+              <rect x="163" width="5" height="30" fill="#000000" />
+              <rect x="171" width="3" height="30" fill="#000000" />
+              <rect x="177" width="2" height="30" fill="#000000" />
+              <rect x="182" width="4" height="30" fill="#000000" />
+              <rect x="189" width="2" height="30" fill="#000000" />
+              <rect x="194" width="5" height="30" fill="#000000" />
+            </svg>
+          </div>
+        </div>
       </div>
     );
   }

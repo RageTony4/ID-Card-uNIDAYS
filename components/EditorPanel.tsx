@@ -279,8 +279,18 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-6 mb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-bold mb-3 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Design Template</label>
-        <div className="grid grid-cols-5 gap-2">
-           <button 
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+          <button 
+            onClick={() => onTemplateChange('shepherd')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'shepherd' 
+                ? 'border-[#2B5842] bg-[#F8F6ED] text-[#2B5842] shadow-md' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Shepherd
+          </button>
+          <button 
             onClick={() => onTemplateChange('elegant')}
             className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'elegant' 

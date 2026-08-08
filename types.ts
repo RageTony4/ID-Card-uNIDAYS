@@ -26,4 +26,4 @@ export interface ToastMessage {
   type: ToastType;
 }
 
-export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield';
+export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd';
