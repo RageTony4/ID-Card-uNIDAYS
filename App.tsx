@@ -54,6 +54,11 @@ const App: React.FC = () => {
     return saved !== null ? saved === 'true' : true;
   });
 
+  const [isDateLocked, setIsDateLocked] = useState<boolean>(() => {
+    const saved = localStorage.getItem('id_gen_date_locked');
+    return saved !== null ? saved === 'true' : true;
+  });
+
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [autoTrigger, setAutoTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
@@ -75,6 +80,10 @@ const App: React.FC = () => {
     localStorage.setItem('id_gen_name_locked', String(isNameLocked));
   }, [isNameLocked]);
 
+  useEffect(() => {
+    localStorage.setItem('id_gen_date_locked', String(isDateLocked));
+  }, [isDateLocked]);
+
   const toggleNameLock = () => {
     setIsNameLocked(prev => {
       const next = !prev;
@@ -82,6 +91,19 @@ const App: React.FC = () => {
         next 
           ? 'Student Name LOCKED 🔒 (Name won\'t change when changing schools or randomizing)' 
           : 'Student Name UNLOCKED 🔓', 
+        'info'
+      );
+      return next;
+    });
+  };
+
+  const toggleDateLock = () => {
+    setIsDateLocked(prev => {
+      const next = !prev;
+      showToast(
+        next 
+          ? 'Dates LOCKED 🔒 (Issue Date, Valid Until & DOB won\'t change when changing schools or randomizing)' 
+          : 'Dates UNLOCKED 🔓', 
         'info'
       );
       return next;
@@ -127,7 +149,8 @@ const App: React.FC = () => {
       "https://files.catbox.moe/0nk6tf.png",
       "https://files.catbox.moe/jkxmsd.png",
       "https://files.catbox.moe/mdd3ye.png",
-      "https://any-link-me.lovable.app/f/2n4y4c1h3m.png"
+      "https://any-link-me.lovable.app/f/2n4y4c1h3m.png",
+      "https://any-link-me.lovable.app/f/5p6r5h5n01.webp"
     ];
 
     ALL_AVATAR_URLS.forEach(url => {
@@ -143,12 +166,15 @@ const App: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
-    // If the university is changed, auto-populate details but NEVER change the student's name
+    // If the university is changed, auto-populate details but NEVER change the student's name (or dates if locked)
     if (name === 'universityName') {
       const newInfo = generateRandomStudentInfo(value);
       setStudentInfo(prev => ({ 
         ...newInfo, 
         studentName: prev.studentName, // Keep name unchanged when switching schools
+        issueDate: isDateLocked ? prev.issueDate : newInfo.issueDate,
+        validUntil: isDateLocked ? prev.validUntil : newInfo.validUntil,
+        dob: isDateLocked ? prev.dob : newInfo.dob,
         logo: prev.logo 
       }));
       
@@ -191,9 +217,18 @@ const App: React.FC = () => {
     setStudentInfo(prev => ({ 
       ...newInfo, 
       studentName: isNameLocked ? prev.studentName : newInfo.studentName,
+      issueDate: isDateLocked ? prev.issueDate : newInfo.issueDate,
+      validUntil: isDateLocked ? prev.validUntil : newInfo.validUntil,
+      dob: isDateLocked ? prev.dob : newInfo.dob,
       logo: prev.logo 
     })); 
-    showToast(isNameLocked ? 'Student details randomized (Name locked)!' : 'Student details randomized!', 'success');
+
+    const locks = [];
+    if (isNameLocked) locks.push('Name');
+    if (isDateLocked) locks.push('Dates');
+
+    const lockNotice = locks.length > 0 ? ` (${locks.join(' & ')} locked)` : '';
+    showToast(`Student details randomized${lockNotice}!`, 'success');
   };
 
   const handleAutoTrigger = () => {
@@ -202,6 +237,9 @@ const App: React.FC = () => {
     setStudentInfo(prev => ({ 
       ...newInfo, 
       studentName: finalName,
+      issueDate: isDateLocked ? prev.issueDate : newInfo.issueDate,
+      validUntil: isDateLocked ? prev.validUntil : newInfo.validUntil,
+      dob: isDateLocked ? prev.dob : newInfo.dob,
       logo: prev.logo 
     }));
     setAutoTrigger(prev => prev + 1);
@@ -244,6 +282,8 @@ const App: React.FC = () => {
             theme={theme}
             isNameLocked={isNameLocked}
             onToggleNameLock={toggleNameLock}
+            isDateLocked={isDateLocked}
+            onToggleDateLock={toggleDateLock}
             onToggleTheme={toggleTheme}
             onTemplateChange={setTemplate}
             onInputChange={handleInputChange}

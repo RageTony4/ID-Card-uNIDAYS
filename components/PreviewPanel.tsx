@@ -23,7 +23,8 @@ const MOCKUP_SCENES = [
   { url: "https://files.catbox.moe/0nk6tf.png", label: "Natural View 2" },
   { url: "https://files.catbox.moe/jkxmsd.png", label: "Natural View 3" },
   { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" },
-  { url: "https://any-link-me.lovable.app/f/2n4y4c1h3m.png", label: "Natural View 5" }
+  { url: "https://any-link-me.lovable.app/f/2n4y4c1h3m.png", label: "Natural View 5" },
+  { url: "https://any-link-me.lovable.app/f/5p6r5h5n01.webp", label: "Natural View 6" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0, setActiveTab, activeTab }) => {

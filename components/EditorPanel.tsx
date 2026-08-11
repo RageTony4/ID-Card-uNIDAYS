@@ -10,6 +10,8 @@ interface EditorPanelProps {
   theme: 'light' | 'dark';
   isNameLocked?: boolean;
   onToggleNameLock?: () => void;
+  isDateLocked?: boolean;
+  onToggleDateLock?: () => void;
   onToggleTheme: () => void;
   onTemplateChange: (template: IdCardTemplate) => void;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
@@ -191,6 +193,14 @@ const SCHOOL_DATA = {
         'University of Vienna',
         'University of Leoben',
         'University of Klagenfurt'
+    ],
+    'Malaysia': [
+        'Mila University',
+        'University Of Wales',
+        'University of Malaya',
+        'Tanta university',
+        'Alexandria University',
+        'Sunway University'
     ]
 };
 
@@ -200,6 +210,8 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   theme,
   isNameLocked = true,
   onToggleNameLock,
+  isDateLocked = true,
+  onToggleDateLock,
   onToggleTheme,
   onTemplateChange, 
   onInputChange, 
@@ -211,7 +223,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   setActiveTab,
   activeTab
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria'>('United Kingdom');
+  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia'>('United Kingdom');
   const panelRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -220,7 +232,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     }
   }, [activeTab]);
 
-  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria') => {
+  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia') => {
     setSelectedCountry(country);
     const firstSchool = SCHOOL_DATA[country][0].replace(/\*$/, '');
     const event = {
@@ -279,7 +291,17 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-6 mb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-bold mb-3 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Design Template</label>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-7 gap-1.5">
+          <button 
+            onClick={() => onTemplateChange('d1')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'd1' 
+                ? 'border-[#0B2545] bg-[#0B2545]/10 text-[#0B2545] shadow-md font-black ring-2 ring-[#0B2545]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            D1
+          </button>
           <button 
             onClick={() => onTemplateChange('shepherd')}
             className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
@@ -469,6 +491,12 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                  >
                      Austria Schools
                  </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('Malaysia')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Malaysia' ? 'bg-teal-600 border-teal-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-teal-300'}`}
+                 >
+                     Malaysia Schools
+                 </button>
              </div>
 
              <label htmlFor="universitySelect" className={`block text-sm font-medium mb-1 ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Select School</label>
@@ -524,12 +552,36 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                           {isNameLocked ? (
                               <>
                                   <svg className="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
-                                  <span>LOCKED</span>
+                                  <span>LOCKED NAME</span>
                               </>
                           ) : (
                               <>
                                   <svg className="w-3 h-3 opacity-70" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z" /></svg>
                                   <span>LOCK NAME</span>
+                              </>
+                          )}
+                      </button>
+                    )}
+                    {onToggleDateLock && (
+                      <button 
+                          type="button"
+                          onClick={onToggleDateLock}
+                          className={`text-[10px] font-bold flex items-center gap-1 transition-all px-2 py-0.5 rounded border ${
+                              isDateLocked 
+                                  ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 font-black shadow-sm' 
+                                  : isDark ? 'text-zinc-400 hover:text-zinc-200 border-zinc-700 hover:bg-zinc-800' : 'text-gray-600 hover:text-gray-900 border-gray-300 hover:bg-gray-100'
+                          }`}
+                          title={isDateLocked ? "Dates are LOCKED (Will not change when switching schools or randomizing)" : "Dates are UNLOCKED (Click to lock dates)"}
+                      >
+                          {isDateLocked ? (
+                              <>
+                                  <svg className="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                                  <span>LOCKED DATE</span>
+                              </>
+                          ) : (
+                              <>
+                                  <svg className="w-3 h-3 opacity-70" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z" /></svg>
+                                  <span>LOCK DATE</span>
                               </>
                           )}
                       </button>
@@ -608,21 +660,47 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             <label htmlFor="validUntil" className={`block text-sm font-medium ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>
               Valid Until Date:
             </label>
-            <button
-              type="button"
-              onClick={() => {
-                const newDate = getRandomValidUntilDate();
-                onInputChange({
-                  target: { name: 'validUntil', value: newDate }
-                } as React.ChangeEvent<HTMLInputElement>);
-                showToast(`Valid Until date set to ${newDate}`, 'success');
-              }}
-              className={`text-[10px] font-bold flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded ${isDark ? 'text-emerald-400 hover:text-emerald-300 hover:bg-zinc-800' : 'text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50'}`}
-              title="Generate Random Date between 10/08/2027 and 30/09/2027"
-            >
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-              Randomize (Aug-Sep '27)
-            </button>
+            <div className="flex items-center gap-1.5">
+              {onToggleDateLock && (
+                <button 
+                    type="button"
+                    onClick={onToggleDateLock}
+                    className={`text-[10px] font-bold flex items-center gap-1 transition-all px-2 py-0.5 rounded border ${
+                        isDateLocked 
+                            ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 font-black shadow-sm' 
+                            : isDark ? 'text-zinc-400 hover:text-zinc-200 border-zinc-700 hover:bg-zinc-800' : 'text-gray-600 hover:text-gray-900 border-gray-300 hover:bg-gray-100'
+                    }`}
+                    title={isDateLocked ? "Dates are LOCKED (Will not change when switching schools or randomizing)" : "Dates are UNLOCKED (Click to lock dates)"}
+                >
+                    {isDateLocked ? (
+                        <>
+                            <svg className="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                            <span>LOCKED</span>
+                        </>
+                    ) : (
+                        <>
+                            <svg className="w-3 h-3 opacity-70" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z" /></svg>
+                            <span>LOCK DATE</span>
+                        </>
+                    )}
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  const newDate = getRandomValidUntilDate();
+                  onInputChange({
+                    target: { name: 'validUntil', value: newDate }
+                  } as React.ChangeEvent<HTMLInputElement>);
+                  showToast(`Valid Until date set to ${newDate}`, 'success');
+                }}
+                className={`text-[10px] font-bold flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded ${isDark ? 'text-emerald-400 hover:text-emerald-300 hover:bg-zinc-800' : 'text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50'}`}
+                title="Generate Random Date between 10/08/2027 and 30/09/2027"
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                Randomize (Aug-Sep '27)
+              </button>
+            </div>
           </div>
           <input
             type="text"

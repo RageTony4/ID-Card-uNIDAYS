@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'avatar-image-cache-v3';
+const CACHE_NAME = 'avatar-image-cache-v4';
 const AVATAR_URLS = [
   "/assets/avatars/male_1.webp",
   "/assets/avatars/male_2.webp",
@@ -37,7 +37,9 @@ const AVATAR_URLS = [
   "https://files.catbox.moe/j9s890.png",
   "https://files.catbox.moe/0nk6tf.png",
   "https://files.catbox.moe/jkxmsd.png",
-  "https://files.catbox.moe/mdd3ye.png"
+  "https://files.catbox.moe/mdd3ye.png",
+  "https://any-link-me.lovable.app/f/2n4y4c1h3m.png",
+  "https://any-link-me.lovable.app/f/5p6r5h5n01.webp"
 ];
 
 self.addEventListener('install', (event) => {

@@ -68,6 +68,20 @@ const formatToDDMMYYYY = (dateStr: string): string => {
   return cleaned;
 };
 
+const formatToMMYYYY = (dateStr: string): string => {
+  if (!dateStr) return '';
+  const cleaned = dateStr.trim();
+  if (/^\d{2}\/\d{4}$/.test(cleaned)) {
+    return cleaned;
+  }
+  const ddmmyyyy = formatToDDMMYYYY(cleaned);
+  const parts = ddmmyyyy.split('/');
+  if (parts.length === 3) {
+    return `${parts[1]}/${parts[2]}`;
+  }
+  return cleaned;
+};
+
 const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant' }, ref) => {
   
   // Clean university name for display (remove trailing star if present)
@@ -151,8 +165,84 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     </svg>
   );
 
-  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd
+  const D1ShieldLogo = ({ className = "w-11 h-13" }: { className?: string }) => (
+    <svg className={className} viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 70 C8 50 15 28 32 18 C30 25 32 35 40 40 C32 45 22 55 25 68 C18 64 14 74 12 70 Z" fill="#D4AF37" opacity="0.9" />
+      <path d="M88 70 C92 50 85 28 68 18 C70 25 68 35 60 40 C68 45 78 55 75 68 C82 64 86 74 88 70 Z" fill="#D4AF37" opacity="0.9" />
+      <path d="M50 8 L16 22 V65 C16 90 50 112 50 112 C50 112 84 90 84 65 V22 L50 8 Z" fill="#0B2545" stroke="#D4AF37" strokeWidth="3.5" />
+      <path d="M50 12 L20 25 V63 C20 85 50 106 50 106 C50 106 80 85 80 63 V25 L50 12 Z" stroke="#D4AF37" strokeWidth="1.2" strokeDasharray="3 2" opacity="0.7" />
+      <path d="M50 15 V95" stroke="#D4AF37" strokeWidth="1.5" opacity="0.3" />
+      <path d="M22 52 H78" stroke="#D4AF37" strokeWidth="1.5" opacity="0.3" />
+      <g transform="translate(25, 22) scale(0.5)">
+        <circle cx="50" cy="30" r="16" fill="#D4AF37" opacity="0.8" />
+        <path d="M30 45 C28 40 32 32 40 32 C43 28 50 26 58 30 C62 26 70 28 72 32 C80 32 84 40 82 45 C86 50 84 58 78 60 C75 65 68 68 60 65 C55 68 46 65 42 60 C32 58 30 50 30 45 Z" fill="#FFFFFF" />
+        <path d="M50 20 V75 M50 28 H65 V42 H50" fill="#FFFFFF" stroke="#D4AF37" strokeWidth="2" />
+        <path d="M55 33 H60 M57.5 30 V36" stroke="#0B2545" strokeWidth="1.5" />
+        <path d="M25 65 L50 60 L75 65 L75 75 L50 70 L25 75 Z" fill="#FFFFFF" stroke="#D4AF37" strokeWidth="1.5" />
+      </g>
+      <path d="M10 90 L22 84 H78 L90 90 L84 100 L78 96 H22 L16 100 Z" fill="#0B2545" stroke="#D4AF37" strokeWidth="1.5" />
+      <text x="50" y="93.5" textAnchor="middle" fill="#D4AF37" fontSize="5.5" fontWeight="900" fontFamily="sans-serif" letterSpacing="0.6">VERITAS • FIDES • CARITAS</text>
+    </svg>
+  );
+
+  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd/D1
   if (side === 'back') {
+    if (template === 'd1') {
+      return (
+        <div ref={ref} className="id-card-container id-card-back shadow-lg bg-white overflow-hidden relative rounded-xl border border-gray-300 font-sans select-none animate-in fade-in duration-300 flex flex-col">
+          <div className="h-6 w-full bg-[#0B2545] flex items-center justify-between px-3 flex-shrink-0">
+            <span className="text-[#D4AF37] text-[8px] font-black uppercase tracking-widest">OFFICIAL STUDENT CARD</span>
+            <span className="text-white text-[7px] font-mono tracking-wider">{studentInfo.studentId}</span>
+          </div>
+
+          <div className="relative z-10 flex flex-col flex-1 p-2.5 text-[#0B2545] justify-between overflow-hidden">
+            <div className="flex items-center justify-between border-b border-[#0B2545]/20 pb-1 mb-1">
+              <div className="flex items-center gap-1.5">
+                <D1ShieldLogo className="w-4 h-5" />
+                <span className="font-serif font-black text-[9px] uppercase tracking-wide text-[#0B2545] truncate">
+                  {displayUniversityName}
+                </span>
+              </div>
+            </div>
+
+            <div className="text-left text-[#0B2545] text-[6.5px] font-medium leading-tight space-y-0.5">
+              <p>• This card is the property of <span className="font-black">{displayUniversityName}</span> and must be carried at all times on school premises.</p>
+              <p>• Non-transferable. Misuse or alteration will result in immediate revocation and disciplinary action.</p>
+              <p>• If lost or found, please return to: <span className="italic font-bold">{studentInfo.address}</span>.</p>
+            </div>
+
+            <div className="flex justify-between items-end px-1 my-1">
+              <div className="flex flex-col items-center">
+                <div className="h-4 w-20 border-b border-[#0B2545] relative flex items-center justify-center">
+                  <span className="font-serif italic text-[7px] text-[#0B2545]">{studentInfo.studentName}</span>
+                </div>
+                <p className="text-[#0B2545] font-bold text-[5px] uppercase mt-0.5">Holder's Signature</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="h-4 w-24 border-b border-[#0B2545] relative flex items-center justify-center">
+                  <span className="font-serif italic font-bold text-[7.5px] text-[#0B2545]">Academic Registrar</span>
+                </div>
+                <p className="text-[#0B2545] font-bold text-[5px] uppercase mt-0.5">Authorized Signature</p>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center pt-1 border-t border-[#0B2545]/20">
+              <div className="flex items-center gap-1.5">
+                <QRPlaceholder size={24} />
+                <div className="flex flex-col text-left">
+                  <span className="text-[#0B2545] text-[5px] font-black uppercase">STUDENT ID</span>
+                  <p className="text-[7.5px] font-mono tracking-widest text-[#0B2545] font-black">{studentInfo.studentId}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-[#0B2545] text-[5px] font-black uppercase">VALID THROUGH</span>
+                <p className="text-[7.5px] font-bold text-[#0B2545]">{formatToMMYYYY(studentInfo.validUntil)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
     if (template === 'shepherd') {
       return (
         <div ref={ref} className="id-card-container id-card-back shadow-lg bg-[#F8F6ED] overflow-hidden relative rounded-xl border-2 border-[#2B5842] font-sans select-none animate-in fade-in duration-300">
@@ -370,28 +460,205 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   }
 
+  // D1 Card Design Template (Front View)
+  if (template === 'd1') {
+    const uLabel = (studentInfo.universityName || 'SHEPHERD SCHOOL').trim().toUpperCase();
+
+    let uniFontSize = '15px';
+    let uniTracking = '0.01em';
+    const uLen = uLabel.length;
+    if (uLen > 35) {
+      uniFontSize = '8.5px';
+      uniTracking = '0em';
+    } else if (uLen > 29) {
+      uniFontSize = '10px';
+      uniTracking = '0em';
+    } else if (uLen > 24) {
+      uniFontSize = '11.5px';
+      uniTracking = '0.01em';
+    } else if (uLen > 19) {
+      uniFontSize = '13px';
+      uniTracking = '0.01em';
+    } else if (uLen > 15) {
+      uniFontSize = '14px';
+      uniTracking = '0.01em';
+    }
+
+    const stuNameUpper = (studentInfo.studentName || 'JANE DOE').trim().toUpperCase();
+    let nameFontSize = '14px';
+    let nameTracking = '-0.01em';
+    const len = stuNameUpper.length;
+    if (len > 32) {
+      nameFontSize = '8px';
+      nameTracking = '-0.02em';
+    } else if (len > 26) {
+      nameFontSize = '9px';
+      nameTracking = '-0.02em';
+    } else if (len > 21) {
+      nameFontSize = '10px';
+      nameTracking = '-0.01em';
+    } else if (len > 17) {
+      nameFontSize = '11.5px';
+      nameTracking = '-0.01em';
+    } else if (len > 14) {
+      nameFontSize = '13px';
+    }
+
+    return (
+      <div ref={ref} className="id-card-container shadow-xl bg-white overflow-hidden relative rounded-xl border border-gray-300 flex flex-col font-sans select-none animate-in fade-in duration-300">
+        
+        {/* Faint Watermark Logo in background */}
+        <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-[0.06]">
+          <D1ShieldLogo className="w-44 h-48" />
+        </div>
+
+        {/* TOP HEADER SECTION */}
+        <div className="w-full px-3 py-1.5 flex items-center gap-2.5 relative z-10 bg-white">
+          {/* Left: Shield Crest Logo */}
+          <div className="flex-shrink-0">
+            <D1ShieldLogo className="w-7 h-8.5" />
+          </div>
+
+          {/* Right: School Name */}
+          <div className="flex-1 flex flex-col justify-center overflow-hidden">
+            <h1 
+              style={{ fontSize: uniFontSize, letterSpacing: uniTracking }}
+              className="font-black text-[#0B2545] uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-tight text-left"
+            >
+              {uLabel}
+            </h1>
+          </div>
+        </div>
+
+        {/* ACCENT DIVIDER LINE (Navy Left, Gold Right) */}
+        <div className="w-full h-[2.5px] flex relative z-10">
+          <div className="w-[45%] bg-[#0B2545] h-full" />
+          <div className="w-[55%] bg-[#D4AF37] h-full" />
+        </div>
+
+        {/* MAIN BODY AREA */}
+        <div className="flex-1 flex px-3 py-1.5 justify-between items-center relative z-10 min-h-0">
+          {/* Left Column: Photo */}
+          <div className="flex-shrink-0 mr-2.5">
+            <div className="w-[78px] h-[98px] bg-gray-100 border-[1.5px] border-[#0B2545] rounded-md overflow-hidden shadow-2xs">
+              <img 
+                src={studentInfo.photo || 'https://picsum.photos/250/300'} 
+                alt="Student Headshot" 
+                className="w-full h-full object-cover object-center"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+
+          {/* Right Column: Key-Value Details */}
+          <div className="flex-1 flex flex-col justify-between h-full py-0.5 overflow-hidden text-left min-w-0">
+            {/* Student Name */}
+            <div>
+              <span className="text-[6.5px] font-black text-[#0B2545]/70 tracking-wider uppercase block leading-none mb-0.5">STUDENT NAME</span>
+              <h2 
+                style={{ fontSize: nameFontSize, letterSpacing: nameTracking }}
+                className="font-black text-[#0B2545] uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-none"
+              >
+                {stuNameUpper}
+              </h2>
+            </div>
+
+            {/* Grid for details to keep layout compact and balanced */}
+            <div className="grid grid-cols-2 gap-x-2 gap-y-1 my-0.5">
+              <div>
+                <span className="text-[6px] font-bold text-[#0B2545]/70 tracking-wider uppercase block leading-none mb-0.5">STUDENT ID</span>
+                <p className="text-[9px] font-mono font-black text-[#0B2545] leading-none tracking-wide">{studentInfo.studentId || 'SS-2026-01428'}</p>
+              </div>
+
+              <div>
+                <span className="text-[6px] font-bold text-[#0B2545]/70 tracking-wider uppercase block leading-none mb-0.5">ACADEMIC YEAR</span>
+                <p className="text-[8.5px] font-bold text-[#0B2545] leading-none">{studentInfo.academicYear || '2026-2027'}</p>
+              </div>
+
+              <div className="col-span-2">
+                <span className="text-[6px] font-bold text-[#0B2545]/70 tracking-wider uppercase block leading-none mb-0.5">GRADE / PROGRAM</span>
+                <p className="text-[8.5px] font-bold text-[#0B2545] leading-none truncate">{studentInfo.course || 'Grade 10'}</p>
+              </div>
+            </div>
+
+            {/* Expiry Date / Valid Until Badge */}
+            <div className="flex items-center gap-1.5 pt-0.5 border-t border-[#0B2545]/10">
+              <span className="text-[6.5px] font-black text-[#0B2545] tracking-wider uppercase leading-none">Valid through:</span>
+              <div className="border border-[#0B2545] bg-[#0B2545]/5 rounded px-1.5 py-0.5">
+                <span className="text-[8.5px] font-black text-[#0B2545] leading-none uppercase">{formatToMMYYYY(studentInfo.validUntil)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* BOTTOM FULL-WIDTH DEEP NAVY FOOTER BANNER */}
+        <div className="w-full bg-[#0B2545] py-1 px-2.5 flex items-center justify-center relative z-10 border-t border-[#D4AF37]/40 flex-shrink-0">
+          <p className="text-[7.5px] font-bold text-[#D4AF37] tracking-wider uppercase text-center truncate">
+            Official Student Identification — Property of {displayUniversityName}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   // Shepherd School / Classic Parchment Template (Front View)
   if (template === 'shepherd') {
     const uLabel = (studentInfo.universityName || 'SHEPHERD SCHOOL').trim().toUpperCase();
 
-    let uniFontSize = 'text-[21px]';
-    if (uLabel.length > 32) {
-      uniFontSize = 'text-[14px]';
-    } else if (uLabel.length > 24) {
-      uniFontSize = 'text-[17px]';
+    let uniFontSize = '21px';
+    let uniTracking = '0.02em';
+    const uLen = uLabel.length;
+    if (uLen > 35) {
+      uniFontSize = '8.5px';
+      uniTracking = '0em';
+    } else if (uLen > 29) {
+      uniFontSize = '10px';
+      uniTracking = '0em';
+    } else if (uLen > 24) {
+      uniFontSize = '12px';
+      uniTracking = '0.01em';
+    } else if (uLen > 19) {
+      uniFontSize = '14.5px';
+      uniTracking = '0.01em';
+    } else if (uLen > 15) {
+      uniFontSize = '17px';
+      uniTracking = '0.02em';
     }
 
     const stuNameUpper = (studentInfo.studentName || 'ANY STUDENT').trim().toUpperCase();
-    let nameFontSize = 'text-[20px]';
-    if (stuNameUpper.length > 24) {
-      nameFontSize = 'text-[14px]';
-    } else if (stuNameUpper.length > 18) {
-      nameFontSize = 'text-[16px]';
+    let nameFontSize = '20px';
+    let nameTracking = '-0.02em';
+    const len = stuNameUpper.length;
+    if (len > 32) {
+      nameFontSize = '7.5px';
+      nameTracking = '-0.03em';
+    } else if (len > 26) {
+      nameFontSize = '8.5px';
+      nameTracking = '-0.03em';
+    } else if (len > 21) {
+      nameFontSize = '10px';
+      nameTracking = '-0.02em';
+    } else if (len > 17) {
+      nameFontSize = '12px';
+      nameTracking = '-0.02em';
+    } else if (len > 14) {
+      nameFontSize = '14.5px';
+      nameTracking = '-0.01em';
+    } else if (len > 11) {
+      nameFontSize = '17px';
+      nameTracking = '-0.01em';
     }
 
     const addressText = (studentInfo.address && studentInfo.address !== '750 University Avenue') 
       ? `${studentInfo.address.toUpperCase()} ◆ ${studentInfo.location ? studentInfo.location.toUpperCase() : 'HOUSTON, TEXAS 77008'}`
       : '2500 WEST 10TH STREET ◆ HOUSTON, TEXAS 77008';
+
+    let addressFontSize = '7.5px';
+    if (addressText.length > 55) {
+      addressFontSize = '5.5px';
+    } else if (addressText.length > 42) {
+      addressFontSize = '6.5px';
+    }
 
     const expDate = studentInfo.validUntil || '05/2028';
 
@@ -407,10 +674,16 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
           {/* Center / Right: School Name & Address */}
           <div className="flex-1 flex flex-col items-center justify-center text-center overflow-hidden px-1">
-            <h1 className={`font-serif font-extrabold tracking-wide text-[#2B5842] uppercase whitespace-nowrap overflow-visible leading-tight px-1 ${uniFontSize}`}>
+            <h1 
+              style={{ fontSize: uniFontSize, letterSpacing: uniTracking }}
+              className="font-serif font-extrabold text-[#2B5842] uppercase whitespace-nowrap overflow-hidden leading-tight"
+            >
               {uLabel}
             </h1>
-            <p className="font-sans font-bold tracking-wider text-[#2B5842] uppercase whitespace-nowrap overflow-hidden text-ellipsis text-[7.5px] leading-none mt-1 w-full">
+            <p 
+              style={{ fontSize: addressFontSize }}
+              className="font-sans font-bold tracking-wider text-[#2B5842] uppercase whitespace-nowrap overflow-hidden leading-none mt-1 w-full"
+            >
               {addressText}
             </p>
           </div>
@@ -424,7 +697,10 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           {/* Left Side: Student Details */}
           <div className="flex-1 flex flex-col justify-start overflow-hidden pr-2 pt-1">
             {/* Student Name */}
-            <h2 className={`${nameFontSize} font-sans font-black tracking-tight text-black uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-none mb-1.5`}>
+            <h2 
+              style={{ fontSize: nameFontSize, letterSpacing: nameTracking }}
+              className="font-sans font-black text-black uppercase whitespace-nowrap overflow-hidden leading-none mb-1.5"
+            >
               {stuNameUpper}
             </h2>
 
