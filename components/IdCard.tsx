@@ -185,8 +185,294 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     </svg>
   );
 
-  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd/D1
+  const EdgeImagingMark = ({ className = "h-4" }: { className?: string }) => (
+    <div className={`flex items-center gap-1 opacity-90 ${className}`}>
+      <div className="w-3.5 h-3.5 rounded-full border-[1.5px] border-white flex items-center justify-center bg-transparent">
+        <span className="text-white text-[8px] font-black lowercase leading-none -mt-0.5">e</span>
+      </div>
+      <span className="text-white text-[7.5px] font-bold lowercase tracking-tight leading-none">edge imaging</span>
+    </div>
+  );
+
+  const WestdaleTopographicSVG = () => (
+    <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-35 mix-blend-overlay" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" preserveAspectRatio="none">
+      <path d="M-20 40 C60 10, 140 70, 220 30 C300 -10, 360 50, 420 20" fill="none" stroke="#000000" strokeWidth="1.4" />
+      <path d="M-20 70 C70 40, 130 110, 210 65 C290 20, 350 80, 420 50" fill="none" stroke="#ffffff" strokeWidth="0.8" opacity="0.4" />
+      <path d="M-20 100 C80 60, 120 140, 200 90 C280 40, 340 120, 420 80" fill="none" stroke="#000000" strokeWidth="1.6" />
+      <path d="M-20 130 C90 80, 110 170, 190 120 C270 70, 330 150, 420 110" fill="none" stroke="#ffffff" strokeWidth="0.7" opacity="0.5" />
+      <path d="M-20 160 C100 110, 130 200, 210 150 C290 100, 350 180, 420 140" fill="none" stroke="#000000" strokeWidth="1.4" />
+      <path d="M-20 190 C110 140, 150 230, 230 180 C310 130, 370 210, 420 170" fill="none" stroke="#000000" strokeWidth="1.2" />
+      <path d="M-20 220 C120 170, 170 250, 250 210 C330 160, 380 230, 420 200" fill="none" stroke="#ffffff" strokeWidth="0.8" opacity="0.4" />
+      <path d="M-20 10 C80 30, 160 -10, 240 20 C320 50, 380 0, 420 10" fill="none" stroke="#000000" strokeWidth="1.2" />
+    </svg>
+  );
+
+  const WestdaleWatermarkSVG = () => (
+    <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.08] flex items-center justify-center text-white" viewBox="0 0 300 200" fill="currentColor">
+      <path d="M40 160 V90 L70 70 L100 90 V160 H85 V120 H55 V160 Z M110 160 V60 L150 30 L190 60 V160 H170 V100 H130 V160 Z M200 160 V90 L230 70 L260 90 V160 H245 V120 H215 V160 Z" />
+      <circle cx="150" cy="70" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+      <line x1="150" y1="20" x2="150" y2="30" stroke="currentColor" strokeWidth="3" />
+    </svg>
+  );
+
+  const WestdaleBarcodeGraphic = () => {
+    const bars = [
+      2, 1, 3, 1, 2, 1, 1, 3, 1, 2, 2, 1, 3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 3, 1, 2, 1,
+      1, 3, 2, 1, 2, 1, 3, 1, 1, 2, 2, 1, 1, 3, 1, 2, 3, 1, 2, 1, 1, 3, 1, 2, 1, 3,
+      2, 1, 1, 2, 3, 1, 2, 1, 1, 3, 2, 1, 2, 1, 3, 1, 1, 2, 2, 1, 1, 3, 1, 2, 3, 1
+    ];
+    return (
+      <div className="w-full h-full flex items-stretch justify-center gap-[1px] overflow-hidden px-1">
+        {bars.map((width, idx) => (
+          <div
+            key={idx}
+            className="bg-black h-full flex-shrink-0"
+            style={{ width: `${width * 1.35}px` }}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const getWestdaleGrade = () => {
+    if (studentInfo.status && /\b(9|10|11|12)\b/.test(studentInfo.status)) {
+      const match = studentInfo.status.match(/\b(9|10|11|12)\b/);
+      if (match) return match[1];
+    }
+    if (studentInfo.academicYear && /\b(9|10|11|12)\b/.test(studentInfo.academicYear)) {
+      const match = studentInfo.academicYear.match(/\b(9|10|11|12)\b/);
+      if (match) return match[1];
+    }
+    return '12';
+  };
+
+  const getWestdaleHomeroom = () => {
+    if (studentInfo.location) {
+      const clean = studentInfo.location.split(',')[0].trim().replace(/\s+/g, '_').toUpperCase();
+      if (clean) return clean;
+    }
+    return 'WALD_LGYM';
+  };
+
+  const getWestdaleAcademicYear = () => {
+    if (studentInfo.academicYear) {
+      if (studentInfo.academicYear.includes('/') || studentInfo.academicYear.includes('-')) {
+        return studentInfo.academicYear.replace('/', ' - ');
+      }
+      return studentInfo.academicYear;
+    }
+    return '2024 - 2025';
+  };
+
+  const getWestdaleExpires = () => {
+    if (studentInfo.validUntil) {
+      const ddmmyyyy = formatToDDMMYYYY(studentInfo.validUntil);
+      const parts = ddmmyyyy.split('/');
+      if (parts.length === 3) {
+        return `OCT 31/${parts[2]}`;
+      }
+      return `OCT 31/${studentInfo.validUntil.slice(-4)}`;
+    }
+    return 'OCT 31/2026';
+  };
+
+  const getD2Grade = () => {
+    if (studentInfo.status && /\b(9|10|11|12)\b/.test(studentInfo.status)) {
+      const match = studentInfo.status.match(/\b(9|10|11|12)\b/);
+      if (match) return match[1];
+    }
+    if (studentInfo.course) {
+      const match = studentInfo.course.match(/\b(9|10|11|12)\b/);
+      if (match) return match[1];
+      if (/grade\s*(\d+)/i.test(studentInfo.course)) {
+        const match = studentInfo.course.match(/grade\s*(\d+)/i);
+        if (match) return match[1];
+      }
+    }
+    if (studentInfo.academicYear && /\b(9|10|11|12)\b/.test(studentInfo.academicYear)) {
+      const match = studentInfo.academicYear.match(/\b(9|10|11|12)\b/);
+      if (match) return match[1];
+    }
+    return '10';
+  };
+
+  const getD2Expiry = () => {
+    if (studentInfo.validUntil) {
+      return formatToMMYYYY(studentInfo.validUntil);
+    }
+    return '06/2027';
+  };
+
+  const D2FalconLogo = ({ className = "h-11 w-auto" }: { className?: string }) => {
+    const [hasError, setHasError] = React.useState(false);
+
+    if (hasError) {
+      return (
+        <svg className={`object-contain ${className}`} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 65 C25 45, 45 25, 75 20 C60 30, 52 42, 50 50 C62 46, 75 48, 88 56 C75 60, 65 68, 60 78 C52 70, 40 70, 28 78 C32 72, 28 68, 15 65 Z" fill="#24304A" stroke="#1E283D" strokeWidth="2" />
+          <path d="M62 46 C72 45, 84 50, 92 58 C82 62, 74 62, 68 58 Z" fill="#D4A232" />
+          <polygon points="50,38 56,44 48,44" fill="#D4A232" />
+          <circle cx="58" cy="38" r="3.5" fill="#FFFFFF" />
+          <circle cx="58" cy="38" r="1.8" fill="#1E283D" />
+        </svg>
+      );
+    }
+
+    return (
+      <img
+        src="/templates/d2_logo.png"
+        alt="School Mascot"
+        className={`object-contain ${className}`}
+        onError={() => setHasError(true)}
+      />
+    );
+  };
+
+  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd/D1/Westdale/D2
   if (side === 'back') {
+    if (template === 'd2') {
+      const uLabel = (studentInfo.universityName || 'NORTHWOOD ACADEMY').trim().toUpperCase();
+      const grade = getD2Grade();
+      const studentId = studentInfo.studentId || '987654';
+      const expiry = getD2Expiry();
+
+      return (
+        <div 
+          ref={ref} 
+          className="id-card-container id-card-back shadow-lg bg-gradient-to-b from-[#bcc0c4] via-[#b2b5b9] to-[#a8abb0] overflow-hidden relative rounded-xl border border-gray-400 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-black p-2.5"
+        >
+          {/* Subtle Matte Finish Overlay */}
+          <div className="absolute inset-0 bg-white/10 pointer-events-none" />
+
+          {/* Top Bar with Mascot and Title */}
+          <div className="relative z-10 flex items-center justify-between border-b border-black/25 pb-1">
+            <div className="flex items-center gap-1.5">
+              <D2FalconLogo className="w-5 h-5" />
+              <div className="flex flex-col text-left">
+                <span className="font-black text-[9px] uppercase tracking-wider text-black leading-tight">
+                  {uLabel}
+                </span>
+                <span className="text-[6.5px] font-bold text-black/70 uppercase tracking-widest leading-none">
+                  Official Student Identification
+                </span>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-[7.5px] font-black text-black font-mono">ID: {studentId}</span>
+            </div>
+          </div>
+
+          {/* Guidelines / Terms */}
+          <div className="relative z-10 text-left text-black text-[6.5px] font-medium leading-tight space-y-0.5 my-1">
+            <p>• This identification card is the property of <span className="font-bold">{uLabel}</span> and is non-transferable.</p>
+            <p>• Cardholder must present this card upon request to school staff, security, and during school activities.</p>
+            <p>• If lost or found, please return to the School Administration Office or notify: <span className="font-bold">{studentInfo.address || 'Administrative Services'}</span>.</p>
+          </div>
+
+          {/* Details & Signatures Row */}
+          <div className="relative z-10 flex justify-between items-end px-1 border-t border-b border-black/15 py-1">
+            <div className="text-left text-[7px] space-y-0.5">
+              <p><span className="font-bold">HOLDER:</span> {studentInfo.studentName || 'CHLOE DAVIS'}</p>
+              <p><span className="font-bold">GRADE:</span> {grade} &nbsp;|&nbsp; <span className="font-bold">EXP:</span> {expiry}</p>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex flex-col items-center">
+                <div className="h-3.5 w-16 border-b border-black/60 relative flex items-center justify-center">
+                  <span className="font-serif italic text-[6.5px] text-black/80">{studentInfo.studentName || 'Chloe Davis'}</span>
+                </div>
+                <p className="text-[5px] font-bold uppercase mt-0.5 text-black/70">Student Signature</p>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="h-3.5 w-20 border-b border-black/60 relative flex items-center justify-center">
+                  <span className="font-serif italic font-bold text-[6.5px] text-black/90">Principal Office</span>
+                </div>
+                <p className="text-[5px] font-bold uppercase mt-0.5 text-black/70">Authorized Signature</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Barcode Footer */}
+          <div className="relative z-10 flex justify-between items-center pt-1">
+            <div className="h-5 w-40 bg-white/90 rounded-[2px] p-0.5 flex items-center justify-center border border-black/30">
+              <WestdaleBarcodeGraphic />
+            </div>
+            <div className="text-right">
+              <span className="text-[6px] font-bold text-black/70 tracking-wider uppercase block">VALID FOR SESSION</span>
+              <span className="text-[8px] font-black text-black font-mono">{studentInfo.academicYear || '2026-2027'}</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (template === 'westdale') {
+      const expiresText = getWestdaleExpires();
+      return (
+        <div ref={ref} className="id-card-container id-card-back shadow-2xl bg-white overflow-hidden relative rounded-xl border border-gray-300 font-sans select-none animate-in fade-in duration-300 flex">
+          {/* Main Area (84% width) */}
+          <div className="w-[84%] h-full flex flex-col justify-between p-2.5 text-gray-800">
+            {/* Header Strip */}
+            <div className="bg-[#520914] text-white px-2 py-1 rounded-[2px] flex items-center justify-between gap-1">
+              <span className={`font-black uppercase tracking-wide break-words ${
+                (displayUniversityName || '').length > 30 ? 'text-[7px]' : (displayUniversityName || '').length > 20 ? 'text-[7.5px]' : 'text-[8.5px]'
+              }`}>
+                {displayUniversityName || 'WESTDALE SECONDARY SCHOOL'}
+              </span>
+              <span className="text-[6px] font-bold uppercase tracking-wider text-red-100 flex-shrink-0">
+                STUDENT CARD & TRANSIT PASS
+              </span>
+            </div>
+
+            {/* Terms / Rules */}
+            <div className="text-[6.5px] font-medium leading-tight text-gray-700 space-y-0.5 my-0.5">
+              <p>• This card is the property of the school and board. It must be presented upon request by school staff and transit operators.</p>
+              <p>• <span className="font-bold text-black">Non-transferable.</span> Misuse or lending this card will result in revocation of transit discounts and school privileges.</p>
+              <p>• If lost or found, please return to School Office: <span className="italic font-bold">{studentInfo.address}</span>.</p>
+            </div>
+
+            {/* Signature Box */}
+            <div className="flex justify-between items-end border border-gray-300 bg-gray-50 rounded p-1">
+              <div className="flex flex-col">
+                <span className="text-[5px] font-bold text-gray-500 uppercase">Cardholder Signature (Required)</span>
+                <span className="font-serif italic text-[8.5px] text-gray-900 mt-0.5">{studentInfo.studentName}</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[5px] font-bold text-gray-500 uppercase">Support / Crisis Line</span>
+                <p className="text-[6.5px] font-bold text-red-700">Kids Help Phone: 1-800-668-6868</p>
+              </div>
+            </div>
+
+            {/* Secondary Barcode / ID */}
+            <div className="flex items-center justify-between pt-1 border-t border-gray-200">
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-28 bg-white border border-gray-300 p-0.5 flex items-center justify-center">
+                  <WestdaleBarcodeGraphic />
+                </div>
+                <span className="text-[7.5px] font-mono font-bold text-gray-800">{studentInfo.studentId}</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[5px] font-bold text-gray-500 uppercase">Academic Session</span>
+                <p className="text-[7.5px] font-black text-gray-900">{getWestdaleAcademicYear()}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Stripe (16% width) */}
+          <div className="w-[16%] h-full bg-[#8fc322] border-l border-black/30 flex items-center justify-center relative overflow-hidden">
+            <div className="transform -rotate-90 origin-center whitespace-nowrap flex flex-col items-center justify-center text-center">
+              <span className="font-black text-[9px] tracking-widest text-black uppercase leading-none">
+                HSR TRANSIT VALID
+              </span>
+              <span className="font-extrabold text-[7px] tracking-wider text-black uppercase leading-none mt-0.5">
+                {expiresText}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     if (template === 'd1') {
       return (
         <div ref={ref} className="id-card-container id-card-back shadow-lg bg-white overflow-hidden relative rounded-xl border border-gray-300 font-sans select-none animate-in fade-in duration-300 flex flex-col">
@@ -456,6 +742,240 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                  <p className="text-center text-[8px] tracking-widest mt-1 font-mono">{studentInfo.studentId}</p>
             </div>
          </div>
+      </div>
+    );
+  }
+
+  // Westdale Card Design Template (Front View)
+  if (template === 'westdale') {
+    const uRaw = (studentInfo.universityName || 'WESTDALE').trim().toUpperCase();
+    let westdaleTitle = uRaw;
+    if (uRaw.includes('SECONDARY SCHOOL')) {
+      westdaleTitle = uRaw.replace('SECONDARY SCHOOL', '').trim();
+    } else if (uRaw.includes('HIGH SCHOOL')) {
+      westdaleTitle = uRaw.replace('HIGH SCHOOL', '').trim();
+    }
+    if (!westdaleTitle) westdaleTitle = uRaw;
+
+    let titleClass = 'text-[15px] sm:text-[16px] leading-none';
+    let titleTracking = 'tracking-wider';
+    if (westdaleTitle.length > 35) {
+      titleClass = 'text-[8.5px] leading-[1.05]';
+      titleTracking = 'tracking-normal';
+    } else if (westdaleTitle.length > 25) {
+      titleClass = 'text-[9.5px] leading-[1.1]';
+      titleTracking = 'tracking-tight';
+    } else if (westdaleTitle.length > 18) {
+      titleClass = 'text-[11px] leading-[1.15]';
+      titleTracking = 'tracking-normal';
+    } else if (westdaleTitle.length > 12) {
+      titleClass = 'text-[13px] leading-[1.15]';
+      titleTracking = 'tracking-wide';
+    }
+
+    const grade = getWestdaleGrade();
+    const homeroom = getWestdaleHomeroom();
+    const academicYearText = getWestdaleAcademicYear();
+    const expiresText = getWestdaleExpires();
+
+    const nameParts = (studentInfo.studentName || 'STUDENT NAME').trim().split(/\s+/);
+
+    return (
+      <div ref={ref} className="id-card-container shadow-2xl bg-[#520914] overflow-hidden relative rounded-xl border border-neutral-900 select-none flex animate-in fade-in duration-300">
+        {/* Left/Main Red Graphic Area (~84% width) */}
+        <div className="w-[84%] h-full relative bg-gradient-to-br from-[#800f20] via-[#520914] to-[#250308] p-2.5 flex flex-col justify-between overflow-hidden">
+          {/* Topographic Lines Overlay */}
+          <WestdaleTopographicSVG />
+          {/* Watermark */}
+          <WestdaleWatermarkSVG />
+
+          {/* Header Row */}
+          <div className="relative z-10 flex items-start justify-between gap-1.5">
+            <div className="flex-1 pr-1 min-w-0">
+              <h1 className={`font-black ${titleClass} ${titleTracking} text-white uppercase font-sans drop-shadow-sm break-words`}>
+                {westdaleTitle}
+              </h1>
+              <p className="font-extrabold text-[9.5px] sm:text-[10px] text-white/95 tracking-wider uppercase leading-none mt-0.5 sm:mt-1">
+                STUDENT ID
+              </p>
+            </div>
+
+            {/* Academic Year */}
+            <div className="text-center pt-0.5 px-1 flex-shrink-0">
+              <span className="font-black text-[11.5px] sm:text-[13px] text-white tracking-tight leading-none drop-shadow-sm font-sans whitespace-nowrap">
+                {academicYearText}
+              </span>
+            </div>
+
+            {/* Edge Imaging Logo */}
+            <div className="pt-0.5 flex-shrink-0">
+              <EdgeImagingMark />
+            </div>
+          </div>
+
+          {/* Body Row: Photo + Student Information */}
+          <div className="relative z-10 flex items-center gap-3 my-auto">
+            {/* Student Photo */}
+            <div className="w-[74px] h-[96px] flex-shrink-0 bg-blue-100 border-2 border-white rounded-[2px] shadow-md overflow-hidden relative">
+              <img 
+                src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                alt="Student Portrait" 
+                className="w-full h-full object-cover object-top"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+
+            {/* Student Details */}
+            <div className="flex flex-col justify-center text-left text-white overflow-hidden flex-1">
+              <div className="font-black text-[13.5px] leading-[1.1] tracking-tight uppercase drop-shadow-sm">
+                {nameParts.map((part, idx) => (
+                  <div key={idx} className="truncate">{part}</div>
+                ))}
+              </div>
+              <p className="text-[9.5px] font-bold text-white uppercase mt-2 leading-none">
+                Grade: <span className="font-black">{grade}</span>
+              </p>
+              <p className="text-[8.5px] font-bold text-white/95 uppercase mt-1 leading-none truncate">
+                Hr: <span className="font-medium">{homeroom}</span>
+              </p>
+              <p className="text-[8px] font-mono font-bold text-white/80 uppercase mt-1 leading-none truncate">
+                ID: <span className="font-mono">{studentInfo.studentId}</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Bottom Row: Barcode Box */}
+          <div className="relative z-10 bg-white rounded-[3px] border border-black/80 px-2 py-0.5 flex items-center justify-center h-8 shadow-sm">
+            <WestdaleBarcodeGraphic />
+          </div>
+        </div>
+
+        {/* Right Vertical Stripe (Lime Green HSR Transit Banner) (~16% width) */}
+        <div className="w-[16%] h-full bg-[#8fc322] border-l border-black/30 flex items-center justify-center relative overflow-hidden">
+          <div className="transform -rotate-90 origin-center whitespace-nowrap flex flex-col items-center justify-center text-center">
+            <span className="font-black text-[9.5px] tracking-widest text-black uppercase leading-none">
+              HSR PHOTO ID
+            </span>
+            <span className="font-extrabold text-[7.5px] tracking-wider text-black uppercase leading-none mt-1">
+              EXPIRES {expiresText}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // D2 Card Design Template (Front View - Northwood Academy Style)
+  if (template === 'd2') {
+    const uLabel = (studentInfo.universityName || 'NORTHWOOD ACADEMY').trim().toUpperCase();
+
+    let uniFontSize = '18px';
+    let uniTracking = '-0.01em';
+    const uLen = uLabel.length;
+    if (uLen > 36) {
+      uniFontSize = '9px';
+      uniTracking = '0em';
+    } else if (uLen > 28) {
+      uniFontSize = '11px';
+      uniTracking = '0em';
+    } else if (uLen > 22) {
+      uniFontSize = '13.5px';
+      uniTracking = '-0.01em';
+    } else if (uLen > 18) {
+      uniFontSize = '15.5px';
+      uniTracking = '-0.01em';
+    } else if (uLen > 14) {
+      uniFontSize = '17.5px';
+      uniTracking = '-0.01em';
+    }
+
+    const stuNameUpper = (studentInfo.studentName || 'CHLOE DAVIS').trim().toUpperCase();
+    let nameFontSize = '14px';
+    let nameTracking = '-0.01em';
+    const nameLen = stuNameUpper.length;
+    if (nameLen > 30) {
+      nameFontSize = '9px';
+      nameTracking = '-0.02em';
+    } else if (nameLen > 24) {
+      nameFontSize = '10.5px';
+      nameTracking = '-0.02em';
+    } else if (nameLen > 18) {
+      nameFontSize = '12px';
+      nameTracking = '-0.01em';
+    } else if (nameLen > 14) {
+      nameFontSize = '13px';
+    }
+
+    const grade = getD2Grade();
+    const studentId = studentInfo.studentId || '987654';
+    const expiry = getD2Expiry();
+
+    return (
+      <div 
+        ref={ref} 
+        className="id-card-container shadow-xl bg-gradient-to-b from-[#bcc0c4] via-[#b2b5b9] to-[#a8abb0] overflow-hidden relative rounded-xl border border-gray-400 !flex-col font-sans select-none animate-in fade-in duration-300"
+      >
+        {/* Subtle Matte Card Texture Overlay */}
+        <div className="absolute inset-0 bg-white/10 pointer-events-none" />
+
+        {/* TOP HEADER: Centered School Name & STUDENT ID CARD */}
+        <div className="w-full pt-3 pb-1 px-3 text-center flex flex-col items-center relative z-10 flex-shrink-0">
+          <h1 
+            style={{ fontSize: uniFontSize, letterSpacing: uniTracking }}
+            className="font-black text-black uppercase leading-tight w-full break-words text-center"
+          >
+            {uLabel}
+          </h1>
+          <p 
+            style={{ fontSize: '11px', letterSpacing: '0.03em' }}
+            className="font-black text-black uppercase leading-none mt-1 text-center"
+          >
+            STUDENT ID CARD
+          </p>
+        </div>
+
+        {/* MAIN BODY: Photo (Left) + Student Credentials (Right) */}
+        <div className="flex-1 w-full px-4 pb-2.5 pt-1 flex flex-row items-center gap-4 relative z-10 overflow-hidden">
+          {/* LEFT: Student Portrait Photo */}
+          <div className="w-[32%] max-w-[96px] h-full flex items-center justify-center flex-shrink-0">
+            <div className="w-full max-w-[92px] aspect-[3/4] bg-gray-200 rounded-[2px] overflow-hidden border border-black/35 shadow-xs">
+              <img 
+                src={studentInfo.photo || 'https://picsum.photos/250/300'} 
+                alt="Student Headshot" 
+                className="w-full h-full object-cover object-top"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+
+          {/* RIGHT: Student Info - clean, consistent typography with ample balanced spacing */}
+          <div className="flex-1 h-full flex flex-col justify-center py-1 overflow-hidden text-black">
+            <div className="flex flex-col text-left space-y-2.5">
+              {/* Student Name */}
+              <h2 
+                style={{ fontSize: nameFontSize, letterSpacing: nameTracking }}
+                className="font-black text-black uppercase leading-tight whitespace-nowrap overflow-hidden text-ellipsis mb-0.5"
+              >
+                {stuNameUpper}
+              </h2>
+
+              {/* Grade */}
+              <p className="text-[11px] font-bold text-black uppercase tracking-wider leading-tight">
+                GRADE: {grade}
+              </p>
+
+              {/* ID */}
+              <p className="text-[11px] font-bold text-black uppercase tracking-wider leading-tight">
+                ID: {studentId}
+              </p>
+
+              {/* Expiry Date */}
+              <p className="text-[11px] font-bold text-black uppercase tracking-wider leading-tight">
+                EXP: {expiry}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

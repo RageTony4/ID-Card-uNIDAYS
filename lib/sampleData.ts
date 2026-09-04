@@ -139,6 +139,8 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Kenya Medical Training College (Kakamega)': { city: 'Kakamega, Kenya', address: 'P.O. Box 535, Kakamega', postcode: '50100', country: 'Kenya' },
   'Alliance High School': { city: 'Kikuyu, Kenya', address: 'P.O. Box 7-00602, Kikuyu', postcode: '00602', country: 'Kenya' },
   'Maseno University': { city: 'Maseno, Kenya', address: 'Private Bag, Maseno', postcode: '40105', country: 'Kenya' },
+  'Masinde Muliro University': { city: 'Kakamega, Kenya', address: 'Kakamega-Webuye Road, P.O. Box 190', postcode: '50100', country: 'Kenya' },
+  'Masinde Muliro University of Science and Technology': { city: 'Kakamega, Kenya', address: 'Kakamega-Webuye Road, P.O. Box 190', postcode: '50100', country: 'Kenya' },
   'Salem Community School': { city: 'Salem, Germany', address: 'Schlossbezirk 1, 88682 Salem', postcode: '88682', country: 'Germany' },
   'Shepherd School': { city: 'Rendsburg, Germany', address: 'Am Stadtsee 1, 24768 Rendsburg', postcode: '24768', country: 'Germany' },
   'Fichteschule': { city: 'Weida, Germany', address: 'Schloßberg 1, 07570 Weida', postcode: '07570', country: 'Germany' },
@@ -171,6 +173,7 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'ADEN University': { city: 'Miami, FL, USA', address: '2121 Ponce de Leon Blvd, Coral Gables, FL', postcode: '33134', country: 'USA' },
   'Duke University': { city: 'Durham, NC, USA', address: '2020 Campus Dr, Durham, NC', postcode: '27708', country: 'USA' },
   'University City': { city: 'University City, MO, USA', address: '6800 Delmar Blvd, University City, MO', postcode: '63130', country: 'USA' },
+  'Westdale Secondary School': { city: 'Hamilton, ON, Canada', address: '700 Main St W, Hamilton, ON', postcode: 'L8S 1A5', country: 'Canada' },
   'Brandon University': { city: 'Brandon, MB, Canada', address: '270 18th St, Brandon, MB', postcode: 'R7A 6A9', country: 'Canada' },
   'York University': { city: 'Toronto, ON, Canada', address: '4700 Keele St, Toronto, ON', postcode: 'M3J 1P3', country: 'Canada' },
   'Assumption University': { city: 'Windsor, ON, Canada', address: '400 Huron Church Rd, Windsor, ON', postcode: 'N9B 3P4', country: 'Canada' },
@@ -278,6 +281,7 @@ const getRandomId = (university: string): string => {
   if (university.includes('Kenya Medical Training College')) return `KMTC/KKM/20${year}/${randomNum}`;
   if (university === 'Alliance High School') return `AHS-KE-${year}-${randomNum}`;
   if (university === 'Maseno University') return `MSU-KE-${year}-${randomNum}`;
+  if (university.includes('Masinde Muliro')) return `MMUST/20${year}/${randomNum}`;
   if (university === 'Salem Community School') return `SCS-DE-${year}-${randomNum}`;
   if (university === 'Shepherd School') return `SS-DE-${year}-${randomNum}`;
   if (university === 'Fichteschule') return `FS-DE-${year}-${randomNum}`;
@@ -310,6 +314,7 @@ const getRandomId = (university: string): string => {
   if (university === 'ADEN University') return `ADEN-US-${year}-${randomNum}`;
   if (university === 'Duke University') return `DU-US-${year}-${randomNum}`;
   if (university === 'University City') return `UC-US-${year}-${randomNum}`;
+  if (university === 'Westdale Secondary School' || university.toLowerCase().includes('westdale')) return `WSS-CA-${year}-${randomNum}`;
   if (university === 'Brandon University') return `BU-CA-${year}-${randomNum}`;
   if (university === 'York University') return `YU-CA-${year}-${randomNum}`;
   if (university === 'Assumption University') return `AU-CA-${year}-${randomNum}`;
@@ -425,7 +430,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     status: 'Currently Enrolled',
     issueDate: '01 Sep 2026',
     validUntil: getRandomValidUntilDate(),
-    website: university === 'Hudson County Community College' ? 'www.hccc.edu' : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
+    website: university.includes('Masinde Muliro') ? 'www.mmust.ac.ke' : university === 'Hudson County Community College' ? 'www.hccc.edu' : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
     photo: photo,
     logo: null,
     bloodGroup: getRandomElement(bloodGroups),

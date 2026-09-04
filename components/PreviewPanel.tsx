@@ -4,6 +4,7 @@ import { StudentInfo, ToastType, IdCardTemplate } from '../types';
 import IdCard from './IdCard';
 import { GoogleGenAI } from "@google/genai";
 import * as htmlToImage from 'html-to-image';
+import { canvasToIPhoneJpeg, imageUrlToIPhoneJpeg } from '../lib/exifUtils';
 
 // Defining the missing props interface for PreviewPanel
 interface PreviewPanelProps {
@@ -24,7 +25,13 @@ const MOCKUP_SCENES = [
   { url: "https://files.catbox.moe/jkxmsd.png", label: "Natural View 3" },
   { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" },
   { url: "https://any-link-me.lovable.app/f/2n4y4c1h3m.png", label: "Natural View 5" },
-  { url: "https://any-link-me.lovable.app/f/5p6r5h5n01.webp", label: "Natural View 6" }
+  { url: "https://any-link-me.lovable.app/f/5p6r5h5n01.webp", label: "Natural View 6" },
+  { url: "https://any-link-me.lovable.app/f/000v4c1d4e.jpg", label: "Natural View 7" },
+  { url: "https://any-link-me.lovable.app/f/6l3b513840.webp", label: "Natural View 8" },
+  { url: "https://any-link-me.lovable.app/f/243o6m301q.jpg", label: "Natural View 9" },
+  { url: "https://any-link-me.lovable.app/f/4n6f2g4720.jpeg", label: "Natural View 10" },
+  { url: "https://any-link-me.lovable.app/f/5e27000y3s.webp", label: "Natural View 11" },
+  { url: "https://any-link-me.lovable.app/f/3y512p0g01.png", label: "Natural View 12" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0, setActiveTab, activeTab }) => {
@@ -50,6 +57,33 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
   const editorImageRef = useRef<HTMLImageElement>(null);
   const cropperRef = useRef<any>(null);
 
+  // Filename Option State ('id' or 'name')
+  const [fileNameOption, setFileNameOption] = useState<'id' | 'name'>('id');
+
+  const getExportFileName = (
+    side?: 'front' | 'back',
+    extension: 'jpg' | 'png' | 'pdf' = 'jpg',
+    isIPhoneJpg: boolean = false
+  ): string => {
+    let baseIdentifier = '';
+
+    if (fileNameOption === 'id') {
+      const rawId = (studentInfo.studentId || 'STUDENT_ID').trim();
+      baseIdentifier = rawId.replace(/[/\\?%*:|"<>]/g, '_').replace(/\s+/g, '_');
+    } else {
+      const rawName = (studentInfo.studentName || 'STUDENT_NAME').trim();
+      baseIdentifier = rawName.replace(/[/\\?%*:|"<>]/g, '_').replace(/\s+/g, '_');
+    }
+
+    const sideSuffix = side ? `_${side}` : '';
+    const ext = extension.toLowerCase();
+
+    if (isIPhoneJpg || ext === 'jpg') {
+      return `IMG_${baseIdentifier}${sideSuffix}.jpg`;
+    }
+    return `${baseIdentifier}${sideSuffix}.${ext}`;
+  };
+
   const isDark = theme === 'dark';
 
   // Auto Generate Effect
@@ -72,35 +106,48 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
     }
   }, [autoTrigger]);
 
+  const initCropper = () => {
+    if (!editorImageRef.current) return;
+    const Cropper = (window as any).Cropper;
+    if (!Cropper) {
+      console.warn("Cropper.js script not available");
+      return;
+    }
+    if (cropperRef.current) {
+      cropperRef.current.destroy();
+      cropperRef.current = null;
+    }
+    try {
+      cropperRef.current = new Cropper(editorImageRef.current, {
+        viewMode: 1,
+        dragMode: 'move',
+        autoCropArea: 0.85,
+        restore: false,
+        modal: true,
+        guides: true,
+        highlight: false,
+        cropBoxMovable: true,
+        cropBoxResizable: true,
+        toggleDragModeOnDblclick: false,
+        background: false
+      });
+    } catch (err) {
+      console.error("Failed to initialize Cropper:", err);
+    }
+  };
+
   useEffect(() => {
     if (isEditModalOpen && editorImageRef.current) {
-        if (cropperRef.current) {
-            cropperRef.current.destroy();
-        }
-        
-        const Cropper = (window as any).Cropper;
-        if (Cropper) {
-             cropperRef.current = new Cropper(editorImageRef.current, {
-                viewMode: 1,
-                dragMode: 'move',
-                autoCropArea: 0.8,
-                restore: false,
-                modal: true,
-                guides: true,
-                highlight: false,
-                cropBoxMovable: true,
-                cropBoxResizable: true,
-                toggleDragModeOnDblclick: false,
-                background: false
-            });
-        }
+      if (editorImageRef.current.complete) {
+        initCropper();
+      }
     }
     return () => {
-        if (cropperRef.current) {
-            cropperRef.current.destroy();
-            cropperRef.current = null;
-        }
-    }
+      if (cropperRef.current) {
+        cropperRef.current.destroy();
+        cropperRef.current = null;
+      }
+    };
   }, [isEditModalOpen, mockupImage]);
 
   const captureCard = async (ref: React.RefObject<HTMLDivElement>, scaleFactor: number = 4) => {
@@ -192,30 +239,35 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
     }
   };
 
-  const handleDownloadImage = async (side: 'front' | 'back') => {
+  const handleDownloadImage = async (side: 'front' | 'back', format: 'jpg' | 'png' = 'jpg') => {
     const ref = side === 'front' ? frontCardRef : backCardRef;
     if (!ref.current) return;
 
     try {
-      showToast(`Generating ${side} image...`, "info");
+      showToast(`Generating ${side} image (${format.toUpperCase()} with iPhone camera EXIF)...`, "info");
       const canvas = await captureCard(ref);
       if (!canvas) {
         showToast("Library missing or element not found.", "error");
         return;
       }
 
-      const safeStudentName = studentInfo.studentName.trim().replace(/\s+/g, '_') || 'Student';
-      const firstSchoolWord = studentInfo.universityName.trim().split(/\s+/)[0] || 'School';
-      const fileName = `${safeStudentName}_${firstSchoolWord}.png`;
+      const fileName = getExportFileName(side, format, format === 'jpg');
       
-      const pngUrl = canvas.toDataURL('image/png');
-      const pngLink = document.createElement('a');
-      pngLink.href = pngUrl;
-      pngLink.download = fileName;
-      document.body.appendChild(pngLink);
-      pngLink.click();
-      document.body.removeChild(pngLink);
-      showToast(`${side.charAt(0).toUpperCase() + side.slice(1)} downloaded!`, "success");
+      let imageUrl: string;
+      if (format === 'jpg') {
+        // Strip web/canvas metadata and attach Apple iPhone 15 Pro EXIF metadata
+        imageUrl = canvasToIPhoneJpeg(canvas, 0.95);
+      } else {
+        imageUrl = canvas.toDataURL('image/png');
+      }
+
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast(`${side.charAt(0).toUpperCase() + side.slice(1)} side downloaded! (iPhone EXIF attached)`, "success");
     } catch (e) {
       console.error(e);
       showToast("Error downloading image.", "error");
@@ -252,9 +304,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
       pdf.addPage();
       pdf.addImage(backCanvas.toDataURL('image/png'), 'PNG', 0, 0, pdfWidth, pdfHeight);
 
-      const safeStudentName = studentInfo.studentName.trim().replace(/\s+/g, '_') || 'Student';
-      const firstSchoolWord = studentInfo.universityName.trim().split(/\s+/)[0] || 'School';
-      const fileName = `${safeStudentName}_${firstSchoolWord}.pdf`;
+      const fileName = getExportFileName(undefined, 'pdf', false);
       pdf.save(fileName);
 
       showToast("PDF downloaded!", "success");
@@ -264,22 +314,74 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
     }
   };
 
-  const handleDownloadCrop = () => {
-    if (cropperRef.current) {
-        const canvas = cropperRef.current.getCroppedCanvas();
-        if (canvas) {
-            const url = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.href = url;
-            const safeStudentName = studentInfo.studentName.trim().replace(/\s+/g, '_') || 'Student';
-            const firstSchoolWord = studentInfo.universityName.trim().split(/\s+/)[0] || 'School';
-            const fileName = `${safeStudentName}_${firstSchoolWord}.png`;
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast("Edited image downloaded", "success");
+  const handleDownloadCrop = async (format: 'iphone_jpg' | 'png' = 'iphone_jpg') => {
+    try {
+      showToast("Preparing download...", "info");
+      let canvas: HTMLCanvasElement | null = null;
+
+      if (cropperRef.current) {
+        canvas = cropperRef.current.getCroppedCanvas();
+      }
+
+      // Fallback if cropper canvas wasn't obtained, capture directly from image
+      if (!canvas && editorImageRef.current) {
+        const img = editorImageRef.current;
+        canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width || 1200;
+        canvas.height = img.naturalHeight || img.height || 900;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0);
         }
+      }
+
+      if (!canvas) {
+        showToast("Could not capture image for download.", "error");
+        return;
+      }
+
+      const fileName = getExportFileName(undefined, format === 'iphone_jpg' ? 'jpg' : 'png', format === 'iphone_jpg');
+
+      let downloadUrl: string;
+      if (format === 'iphone_jpg') {
+        downloadUrl = canvasToIPhoneJpeg(canvas, 0.95);
+      } else {
+        downloadUrl = canvas.toDataURL('image/png');
+      }
+
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast(`Image downloaded (${format === 'iphone_jpg' ? 'iPhone Photo .JPG' : 'PNG'})!`, "success");
+    } catch (err) {
+      console.error("Failed to download image:", err);
+      showToast("Error downloading image.", "error");
+    }
+  };
+
+  const handleDownloadMockupDirect = async () => {
+    if (!mockupImage) return;
+    try {
+      showToast("Preparing iPhone Camera photo download...", "info");
+      const fileName = getExportFileName(undefined, 'jpg', true);
+
+      // Convert image to JPEG with Apple iPhone 15 Pro EXIF metadata
+      const jpegUrl = await imageUrlToIPhoneJpeg(mockupImage, 0.95);
+
+      const link = document.createElement('a');
+      link.href = jpegUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Downloaded as iPhone photo!", "success");
+    } catch (err) {
+      console.error("Failed to download photo:", err);
+      showToast("Error downloading photo.", "error");
     }
   };
 
@@ -499,20 +601,63 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
         </div>
       </div>
 
-      <div className={`mt-8 flex flex-wrap justify-center gap-3 border-b pb-8 w-full transition-colors duration-300 ${isDark ? 'border-zinc-800' : 'border-gray-300'}`}>
+      {/* Save Filename Selector */}
+      <div className={`mt-8 w-full max-w-xl p-3.5 rounded-xl border flex flex-col sm:flex-row items-center justify-between gap-3 transition-colors duration-300 ${isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-white border-gray-300 shadow-xs'}`}>
+        <div className="flex items-center gap-2">
+          <svg className={`w-4 h-4 ${isDark ? 'text-purple-400' : 'text-purple-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+          <span className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-zinc-300' : 'text-gray-700'}`}>
+            Save Filename As:
+          </span>
+        </div>
+
+        <div className="flex bg-gray-100 dark:bg-zinc-800/80 p-1 rounded-lg border border-gray-200 dark:border-zinc-700 w-full sm:w-auto">
+          <button
+            type="button"
+            onClick={() => setFileNameOption('id')}
+            className={`flex-1 sm:flex-none px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+              fileNameOption === 'id'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : isDark ? 'text-zinc-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Student ID No. ({studentInfo.studentId || 'ID'})
+          </button>
+          <button
+            type="button"
+            onClick={() => setFileNameOption('name')}
+            className={`flex-1 sm:flex-none px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+              fileNameOption === 'name'
+                ? 'bg-purple-600 text-white shadow-xs'
+                : isDark ? 'text-zinc-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Student Name ({studentInfo.studentName || 'NAME'})
+          </button>
+        </div>
+      </div>
+
+      <div className={`mt-4 flex flex-wrap justify-center gap-3 border-b pb-8 w-full transition-colors duration-300 ${isDark ? 'border-zinc-800' : 'border-gray-300'}`}>
         <button onClick={handleCopyName} className="modern-button text-xs">
           Copy Name
         </button>
         <button onClick={handleCopySchool} className="modern-button text-xs">
           Copy School
         </button>
-        <button onClick={() => handleDownloadImage('front')} className="modern-button text-xs">
-          Download Front PNG
+        <button onClick={() => handleDownloadImage('front', 'jpg')} className="modern-button-purple text-xs font-semibold">
+          Download Front JPG (iPhone EXIF)
         </button>
-        <button onClick={() => handleDownloadImage('back')} className="modern-button text-xs">
-          Download Back PNG
+        <button onClick={() => handleDownloadImage('back', 'jpg')} className="modern-button-purple text-xs font-semibold">
+          Download Back JPG (iPhone EXIF)
         </button>
-        <button onClick={handleDownloadPDF} className="modern-button-green">
+        <button onClick={() => handleDownloadImage('front', 'png')} className="modern-button text-xs">
+          Front PNG
+        </button>
+        <button onClick={() => handleDownloadImage('back', 'png')} className="modern-button text-xs">
+          Back PNG
+        </button>
+        <button onClick={handleDownloadPDF} className="modern-button-green text-xs">
           Download Full PDF
         </button>
       </div>
@@ -625,12 +770,20 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
         {mockupImage && (
             <div className="mt-6 animate-in fade-in zoom-in duration-300 w-full">
                 <p className={`text-xs font-bold mb-2 uppercase tracking-wide text-center transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Latest Result</p>
-                <button 
-                    onClick={() => setIsEditModalOpen(true)}
-                    className="w-full mb-3 modern-button text-xs"
-                >
-                    Preview & Edit Mockup
-                </button>
+                <div className="flex gap-2 mb-3">
+                    <button 
+                        onClick={handleDownloadMockupDirect}
+                        className="flex-1 modern-button-purple text-xs font-semibold py-2"
+                    >
+                        Download iPhone Photo (.JPG)
+                    </button>
+                    <button 
+                        onClick={() => setIsEditModalOpen(true)}
+                        className="flex-1 modern-button text-xs py-2"
+                    >
+                        Preview & Crop
+                    </button>
+                </div>
                 <div className={`rounded-lg overflow-hidden shadow-lg border transition-colors duration-300 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
                     <img src={mockupImage} alt="AI Mockup" className="w-full h-auto" referrerPolicy="no-referrer" />
                 </div>
@@ -640,26 +793,81 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
 
       {isEditModalOpen && mockupImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4 backdrop-blur-sm">
-            <div className={`rounded-xl shadow-2xl w-full max-w-5xl h-[80vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors duration-300 ${isDark ? 'bg-zinc-900' : 'bg-white'}`}>
+            <div className={`rounded-xl shadow-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 transition-colors duration-300 ${isDark ? 'bg-zinc-900 border border-zinc-800' : 'bg-white'}`}>
                 <div className={`p-4 border-b flex justify-between items-center transition-colors duration-300 ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-gray-50'}`}>
-                    <h3 className={`font-bold text-lg transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-800'}`}>Preview & Resize Mockup</h3>
+                    <div>
+                        <h3 className={`font-bold text-lg transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-800'}`}>Preview & Frame Image</h3>
+                        <p className={`text-xs transition-colors duration-300 ${isDark ? 'text-zinc-400' : 'text-gray-500'}`}>Drag handles to frame. Select filename option & format below.</p>
+                    </div>
                     <button 
                         onClick={() => setIsEditModalOpen(false)} 
-                        className={`transition-colors p-1 rounded-full ${isDark ? 'text-zinc-400 hover:text-white hover:bg-zinc-800' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-200'}`}
+                        className={`transition-colors p-1.5 rounded-full ${isDark ? 'text-zinc-400 hover:text-white hover:bg-zinc-800' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-200'}`}
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
                 
-                <div className="flex-1 bg-black overflow-hidden relative flex items-center justify-center">
-                    <img ref={editorImageRef} src={mockupImage} alt="Edit" className="max-w-full max-h-full" referrerPolicy="no-referrer" />
+                <div className="flex-1 bg-black overflow-hidden relative flex items-center justify-center p-2">
+                    <img 
+                        ref={editorImageRef} 
+                        src={mockupImage} 
+                        onLoad={initCropper}
+                        alt="Edit" 
+                        className="max-w-full max-h-full block" 
+                        referrerPolicy="no-referrer" 
+                    />
                 </div>
 
-                <div className={`p-4 border-t flex justify-between items-center transition-colors duration-300 ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-gray-50'}`}>
-                     <p className={`text-xs transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Drag corners to crop/resize.</p>
-                     <div className="flex gap-3">
-                         <button onClick={() => setIsEditModalOpen(false)} className={`px-4 py-2 text-sm font-bold transition-colors duration-300 ${isDark ? 'text-zinc-400 hover:text-white' : 'text-gray-600 hover:text-gray-800'}`}>Cancel</button>
-                         <button onClick={handleDownloadCrop} className="modern-button-purple text-sm px-6">Download Crop</button>
+                <div className={`p-4 border-t flex flex-wrap gap-3 items-center justify-between transition-colors duration-300 ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-gray-50'}`}>
+                     {/* Filename Option Selector in Modal */}
+                     <div className="flex items-center gap-2">
+                        <span className={`text-xs font-bold transition-colors ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>Save Filename:</span>
+                        <div className="flex bg-gray-200 dark:bg-zinc-800 p-0.5 rounded-md border border-gray-300 dark:border-zinc-700">
+                           <button
+                             type="button"
+                             onClick={() => setFileNameOption('id')}
+                             className={`px-2.5 py-1 rounded text-xs font-bold transition-all ${
+                               fileNameOption === 'id'
+                                 ? 'bg-purple-600 text-white'
+                                 : isDark ? 'text-zinc-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                             }`}
+                           >
+                             Student ID No
+                           </button>
+                           <button
+                             type="button"
+                             onClick={() => setFileNameOption('name')}
+                             className={`px-2.5 py-1 rounded text-xs font-bold transition-all ${
+                               fileNameOption === 'name'
+                                 ? 'bg-purple-600 text-white'
+                                 : isDark ? 'text-zinc-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
+                             }`}
+                           >
+                             Student Name
+                           </button>
+                        </div>
+                     </div>
+
+                     <div className="flex flex-wrap gap-2 items-center">
+                         <button 
+                             onClick={() => setIsEditModalOpen(false)} 
+                             className={`px-4 py-2 text-xs font-bold transition-colors duration-300 rounded-lg ${isDark ? 'text-zinc-400 hover:text-white hover:bg-zinc-800' : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'}`}
+                         >
+                             Cancel
+                         </button>
+                         <button 
+                             onClick={() => handleDownloadCrop('png')} 
+                             className={`px-4 py-2 text-xs font-bold transition-colors duration-300 rounded-lg border ${isDark ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-800' : 'border-gray-300 text-gray-700 hover:bg-gray-100'}`}
+                         >
+                             Download PNG
+                         </button>
+                         <button 
+                             onClick={() => handleDownloadCrop('iphone_jpg')} 
+                             className="modern-button-purple text-xs px-5 py-2 font-bold shadow-md flex items-center gap-1.5"
+                         >
+                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                             Download iPhone Photo (.JPG)
+                         </button>
                      </div>
                 </div>
             </div>

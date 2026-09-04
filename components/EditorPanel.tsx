@@ -92,7 +92,9 @@ const SCHOOL_DATA = {
     'Kenya': [
         'Kenya Medical Training College (Kakamega)',
         'Alliance High School',
-        'Maseno University'
+        'Maseno University',
+        'Masinde Muliro University',
+        'Masinde Muliro University of Science and Technology'
     ],
     'Germany': [
         'Salem Community School',
@@ -114,6 +116,7 @@ const SCHOOL_DATA = {
         'Cornerstone Community'
     ],
     'USA': [
+        'Northwood Academy',
         'Hudson County Community College',
         'Lee University',
         'Air University',
@@ -133,6 +136,7 @@ const SCHOOL_DATA = {
         'Park University'
     ],
     'Canada': [
+        'Westdale Secondary School',
         'Brandon University',
         'York University',
         'Assumption University',
@@ -291,7 +295,17 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-6 mb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-bold mb-3 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Design Template</label>
-        <div className="grid grid-cols-3 sm:grid-cols-7 gap-1.5">
+        <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-1.5">
+          <button 
+            onClick={() => onTemplateChange('d2')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'd2' 
+                ? 'border-[#24304A] bg-[#24304A]/15 text-[#24304A] dark:text-blue-300 shadow-md font-black ring-2 ring-[#24304A]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            D2
+          </button>
           <button 
             onClick={() => onTemplateChange('d1')}
             className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
@@ -301,6 +315,16 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             }`}
           >
             D1
+          </button>
+          <button 
+            onClick={() => onTemplateChange('westdale')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'westdale' 
+                ? 'border-[#7b0d1e] bg-[#7b0d1e]/15 text-[#7b0d1e] dark:text-red-400 shadow-md font-black ring-2 ring-[#7b0d1e]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Westdale
           </button>
           <button 
             onClick={() => onTemplateChange('shepherd')}
