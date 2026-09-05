@@ -150,7 +150,13 @@ const App: React.FC = () => {
       "https://files.catbox.moe/jkxmsd.png",
       "https://files.catbox.moe/mdd3ye.png",
       "https://any-link-me.lovable.app/f/2n4y4c1h3m.png",
-      "https://any-link-me.lovable.app/f/5p6r5h5n01.webp"
+      "https://any-link-me.lovable.app/f/5p6r5h5n01.webp",
+      "https://any-link-me.lovable.app/f/2i55155k27.jfif",
+      "https://any-link-me.lovable.app/f/4e411e195u.jfif",
+      "https://any-link-me.lovable.app/f/30416n5j5f.jfif",
+      "https://any-link-me.lovable.app/f/6q2k3h3j5y.jfif",
+      "https://any-link-me.lovable.app/f/6n6e3m654l.jfif",
+      "https://any-link-me.lovable.app/f/0p5117681p.jfif"
     ];
 
     ALL_AVATAR_URLS.forEach(url => {

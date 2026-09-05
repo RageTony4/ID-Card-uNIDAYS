@@ -31,7 +31,13 @@ const MOCKUP_SCENES = [
   { url: "https://any-link-me.lovable.app/f/243o6m301q.jpg", label: "Natural View 9" },
   { url: "https://any-link-me.lovable.app/f/4n6f2g4720.jpeg", label: "Natural View 10" },
   { url: "https://any-link-me.lovable.app/f/5e27000y3s.webp", label: "Natural View 11" },
-  { url: "https://any-link-me.lovable.app/f/3y512p0g01.png", label: "Natural View 12" }
+  { url: "https://any-link-me.lovable.app/f/3y512p0g01.png", label: "Natural View 12" },
+  { url: "https://any-link-me.lovable.app/f/2i55155k27.jfif", label: "Natural View 13" },
+  { url: "https://any-link-me.lovable.app/f/4e411e195u.jfif", label: "Natural View 14" },
+  { url: "https://any-link-me.lovable.app/f/30416n5j5f.jfif", label: "Natural View 15" },
+  { url: "https://any-link-me.lovable.app/f/6q2k3h3j5y.jfif", label: "Natural View 16" },
+  { url: "https://any-link-me.lovable.app/f/6n6e3m654l.jfif", label: "Natural View 17" },
+  { url: "https://any-link-me.lovable.app/f/0p5117681p.jfif", label: "Natural View 18" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0, setActiveTab, activeTab }) => {
