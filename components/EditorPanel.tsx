@@ -36,12 +36,19 @@ const MALE_HEADSHOTS = [
   "/assets/avatars/male_9.webp",
   "/assets/avatars/male_10.webp",
   "/assets/avatars/male_11.webp",
-  "https://files.catbox.moe/m7lj8u.png",
-  "https://files.catbox.moe/u1skwz.png",
-  "https://files.catbox.moe/z2ersq.png",
-  "https://files.catbox.moe/3kliif.png",
-  "https://files.catbox.moe/a4f1ct.png",
-  "https://files.catbox.moe/8eq6dp.png"
+  "/assets/avatars/male_12.webp",
+  "/assets/avatars/male_13.webp",
+  "/assets/avatars/male_14.webp",
+  "/assets/avatars/male_15.webp",
+  "/assets/avatars/male_16.webp",
+  "/assets/avatars/male_17.webp",
+  "/assets/avatars/male_18.webp",
+  "/assets/avatars/male_19.webp",
+  "/assets/avatars/male_20.webp",
+  "/assets/avatars/male_21.webp",
+  "/assets/avatars/male_22.webp",
+  "/assets/avatars/male_23.webp",
+  "/assets/avatars/male_24.webp"
 ];
 
 const FEMALE_HEADSHOTS = [
@@ -55,10 +62,18 @@ const FEMALE_HEADSHOTS = [
   "/assets/avatars/female_8.webp",
   "/assets/avatars/female_9.webp",
   "/assets/avatars/female_10.webp",
-  "https://files.catbox.moe/bx9f18.png",
-  "https://files.catbox.moe/w22pf1.png",
-  "https://files.catbox.moe/4w42hk.png",
-  "https://files.catbox.moe/c0ot8t.png"
+  "/assets/avatars/female_11.webp",
+  "/assets/avatars/female_12.webp",
+  "/assets/avatars/female_13.webp",
+  "/assets/avatars/female_14.webp",
+  "/assets/avatars/female_15.webp",
+  "/assets/avatars/female_16.webp",
+  "/assets/avatars/female_17.webp",
+  "/assets/avatars/female_18.webp",
+  "/assets/avatars/female_19.webp",
+  "/assets/avatars/female_20.webp",
+  "/assets/avatars/female_21.webp",
+  "/assets/avatars/female_22.webp"
 ];
 
 const SCHOOL_DATA = {
@@ -107,6 +122,7 @@ const SCHOOL_DATA = {
         'Städtisches Gymnasium Hennef*'
     ],
     'Australia': [
+        'Cranbourne East Secondary College',
         'Bond University',
         'University of Tasmania',
         'University of Canberra',
@@ -116,6 +132,7 @@ const SCHOOL_DATA = {
         'Cornerstone Community'
     ],
     'USA': [
+        'The University of Texas at Austin',
         'Northwood Academy',
         'Hudson County Community College',
         'Lee University',
@@ -295,7 +312,27 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-6 mb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-bold mb-3 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Design Template</label>
-        <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-1.5">
+        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-11 gap-1.5">
+          <button 
+            onClick={() => onTemplateChange('t2')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 't2' 
+                ? 'border-[#142144] bg-[#142144]/15 text-[#142144] dark:text-amber-300 shadow-md font-black ring-2 ring-[#142144]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            T2
+          </button>
+          <button 
+            onClick={() => onTemplateChange('t1')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 't1' 
+                ? 'border-[#BF5700] bg-[#BF5700]/15 text-[#BF5700] dark:text-orange-400 shadow-md font-black ring-2 ring-[#BF5700]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            T1
+          </button>
           <button 
             onClick={() => onTemplateChange('d2')}
             className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
@@ -401,7 +438,13 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                         onClick={() => onPhotoSelect(url)}
                         className={`relative w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 transition-all ${studentInfo.photo === url ? 'border-purple-600 ring-2 ring-purple-100 scale-110' : isDark ? 'border-zinc-800 hover:border-zinc-600' : 'border-gray-200 hover:border-purple-400'}`}
                     >
-                        <img src={url} alt={`Male Avatar ${index + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        <img 
+                            src={url} 
+                            alt={`Male Avatar ${index + 1}`} 
+                            className="w-full h-full object-cover" 
+                            referrerPolicy="no-referrer"
+                            onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/male_1.webp'; }}
+                        />
                     </button>
                 ))}
             </div>
@@ -414,7 +457,13 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                         onClick={() => onPhotoSelect(url)}
                         className={`relative w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 transition-all ${studentInfo.photo === url ? 'border-purple-600 ring-2 ring-purple-100 scale-110' : isDark ? 'border-zinc-800 hover:border-zinc-600' : 'border-gray-200 hover:border-purple-400'}`}
                     >
-                        <img src={url} alt={`Female Avatar ${index + 1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        <img 
+                            src={url} 
+                            alt={`Female Avatar ${index + 1}`} 
+                            className="w-full h-full object-cover" 
+                            referrerPolicy="no-referrer"
+                            onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }}
+                        />
                     </button>
                 ))}
             </div>

@@ -13,12 +13,19 @@ const MALE_AVATARS = [
   "/assets/avatars/male_9.webp",
   "/assets/avatars/male_10.webp",
   "/assets/avatars/male_11.webp",
-  "https://files.catbox.moe/m7lj8u.png",
-  "https://files.catbox.moe/u1skwz.png",
-  "https://files.catbox.moe/z2ersq.png",
-  "https://files.catbox.moe/3kliif.png",
-  "https://files.catbox.moe/a4f1ct.png",
-  "https://files.catbox.moe/8eq6dp.png"
+  "/assets/avatars/male_12.webp",
+  "/assets/avatars/male_13.webp",
+  "/assets/avatars/male_14.webp",
+  "/assets/avatars/male_15.webp",
+  "/assets/avatars/male_16.webp",
+  "/assets/avatars/male_17.webp",
+  "/assets/avatars/male_18.webp",
+  "/assets/avatars/male_19.webp",
+  "/assets/avatars/male_20.webp",
+  "/assets/avatars/male_21.webp",
+  "/assets/avatars/male_22.webp",
+  "/assets/avatars/male_23.webp",
+  "/assets/avatars/male_24.webp"
 ];
 
 const FEMALE_AVATARS = [
@@ -32,10 +39,18 @@ const FEMALE_AVATARS = [
   "/assets/avatars/female_8.webp",
   "/assets/avatars/female_9.webp",
   "/assets/avatars/female_10.webp",
-  "https://files.catbox.moe/bx9f18.png",
-  "https://files.catbox.moe/w22pf1.png",
-  "https://files.catbox.moe/4w42hk.png",
-  "https://files.catbox.moe/c0ot8t.png"
+  "/assets/avatars/female_11.webp",
+  "/assets/avatars/female_12.webp",
+  "/assets/avatars/female_13.webp",
+  "/assets/avatars/female_14.webp",
+  "/assets/avatars/female_15.webp",
+  "/assets/avatars/female_16.webp",
+  "/assets/avatars/female_17.webp",
+  "/assets/avatars/female_18.webp",
+  "/assets/avatars/female_19.webp",
+  "/assets/avatars/female_20.webp",
+  "/assets/avatars/female_21.webp",
+  "/assets/avatars/female_22.webp"
 ];
 
 export const cleanDiacritics = (str: string): string => {
@@ -150,6 +165,7 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Luise-Henriette-Gymnasium': { city: 'Berlin, Germany', address: 'Germaniastraße 4-6', postcode: '12099', country: 'Germany' },
   'Städtisches Gymnasium Hennef': { city: 'Hennef, Germany', address: 'Fritz-Jacobi-Straße 10', postcode: '53773', country: 'Germany' },
   'Cornerstone Community': { city: 'Dubbo, Australia', address: '123 Macquarie St, Dubbo', postcode: '2830', country: 'Australia' },
+  'Cranbourne East Secondary College': { city: 'Cranbourne East, VIC, Australia', address: '50 Hunt Club Blvd', postcode: '3977', country: 'Australia' },
   'Bond University': { city: 'Gold Coast, QLD, Australia', address: '14 University Dr, Robina', postcode: '4226', country: 'Australia' },
   'University of Tasmania': { city: 'Hobart, TAS, Australia', address: 'Churchill Ave, Hobart', postcode: '7005', country: 'Australia' },
   'University of Canberra': { city: 'Canberra, ACT, Australia', address: '11 Kirinari St, Bruce', postcode: '2617', country: 'Australia' },
@@ -163,6 +179,8 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Coalfield School': { city: 'Coalfield, TN, USA', address: '1720 Coalfield Rd, Coalfield, TN', postcode: '37719', country: 'USA' },
   'Mona School': { city: 'Mona, UT, USA', address: '150 S 100 E, Mona, UT', postcode: '84645', country: 'USA' },
   'Deary School': { city: 'Deary, ID, USA', address: '502 1st Ave, Deary, ID', postcode: '83823', country: 'USA' },
+  'The University of Texas at Austin': { city: 'Austin, TX, USA', address: '110 Inner Campus Dr, Austin, TX', postcode: '78712', country: 'USA' },
+  'University of Texas at Austin': { city: 'Austin, TX, USA', address: '110 Inner Campus Dr, Austin, TX', postcode: '78712', country: 'USA' },
   'Park University': { city: 'Parkville, MO', address: '8700 NW River Park Dr', postcode: '64152', country: 'USA' },
   'Hudson County Community College': { city: 'Jersey City, NJ, USA', address: '70 Sip Ave, Jersey City, NJ', postcode: '07306', country: 'USA' },
   'University of Houston': { city: 'Houston, TX, USA', address: '4800 Calhoun Rd, Houston, TX', postcode: '77004', country: 'USA' },
@@ -291,6 +309,7 @@ const getRandomId = (university: string): string => {
   if (university === 'Luise-Henriette-Gymnasium') return `LHG-DE-${year}-${randomNum}`;
   if (university === 'Städtisches Gymnasium Hennef') return `SGH-DE-${year}-${randomNum}`;
   if (university === 'Cornerstone Community') return `CC-AU-${year}-${randomNum}`;
+  if (university.toLowerCase().includes('cranbourne')) return `CESC-AU-${year}-${randomNum}`;
   if (university === 'Bond University') return `BU-AU-${year}-${randomNum}`;
   if (university === 'University of Tasmania') return `UTAS-AU-${year}-${randomNum}`;
   if (university === 'University of Canberra') return `UC-AU-${year}-${randomNum}`;
@@ -305,6 +324,7 @@ const getRandomId = (university: string): string => {
   if (university === 'Mona School') return `MS-US-${year}-${randomNum}`;
   if (university === 'Deary School') return `DS-US-${year}-${randomNum}`;
   if (university === 'Park University') return `PU-US-${year}-${randomNum}`;
+  if (university.toLowerCase().includes('texas')) return `9008${Math.floor(100000 + Math.random() * 900000)}`;
   if (university === 'Hudson County Community College') return `HCCC-US-${year}-${randomNum}`;
   if (university === 'University of Houston') return `UH-US-${year}-${randomNum}`;
   if (university === 'University of Guam') return `UOG-US-${year}-${randomNum}`;
@@ -430,7 +450,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     status: 'Currently Enrolled',
     issueDate: '01 Sep 2026',
     validUntil: getRandomValidUntilDate(),
-    website: university.includes('Masinde Muliro') ? 'www.mmust.ac.ke' : university === 'Hudson County Community College' ? 'www.hccc.edu' : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
+    website: university.toLowerCase().includes('cranbourne') ? 'cesc.vic.edu.au' : university.toLowerCase().includes('texas') ? 'www.utexas.edu' : university.includes('Masinde Muliro') ? 'www.mmust.ac.ke' : university === 'Hudson County Community College' ? 'www.hccc.edu' : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
     photo: photo,
     logo: null,
     bloodGroup: getRandomElement(bloodGroups),

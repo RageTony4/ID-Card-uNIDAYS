@@ -328,8 +328,340 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   };
 
-  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd/D1/Westdale/D2
+  const UTAustinSealSVG = ({ className = "w-9 h-9" }: { className?: string }) => {
+    return (
+      <svg className={`object-contain flex-shrink-0 ${className}`} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Outer Circular Ring */}
+        <circle cx="60" cy="60" r="56" stroke="#BF5700" strokeWidth="2.5" />
+        <circle cx="60" cy="60" r="48" stroke="#BF5700" strokeWidth="1.2" strokeDasharray="2 2" />
+        <circle cx="60" cy="60" r="44" stroke="#BF5700" strokeWidth="0.8" />
+        
+        {/* Decorative ring stars */}
+        <polygon points="15,60 17,56 21,58 18,61 19,65 16,62" fill="#BF5700" />
+        <polygon points="105,60 103,56 99,58 102,61 101,65 104,62" fill="#BF5700" />
+        
+        {/* Center Heraldic Shield */}
+        <path
+          d="M 32,26 L 88,26 L 88,68 C 88,96 60,110 60,110 C 60,110 32,96 32,68 Z"
+          fill="#FAF8F5"
+          stroke="#BF5700"
+          strokeWidth="3"
+        />
+        {/* Horizontal dividing line */}
+        <line x1="33" y1="56" x2="87" y2="56" stroke="#BF5700" strokeWidth="2" />
+
+        {/* Top Half: Open Book */}
+        <g transform="translate(38, 30)">
+          {/* Left Page */}
+          <path d="M 22,7 C 14,7 7,9 1,12 L 1,22 C 7,19 14,17 22,17 Z" fill="#BF5700" />
+          {/* Right Page */}
+          <path d="M 22,7 C 30,7 37,9 43,12 L 43,22 C 37,19 30,17 22,17 Z" fill="#BF5700" />
+          {/* Spine divider */}
+          <line x1="22" y1="7" x2="22" y2="23" stroke="#FAF8F5" strokeWidth="1.5" />
+          {/* Ribbons */}
+          <polygon points="22,18 20,24 22,22 24,24" fill="#BF5700" />
+        </g>
+
+        {/* Bottom Half: Lone Star & Laurel Wreath */}
+        <g transform="translate(35, 58)">
+          {/* Five-Pointed Lone Star */}
+          <polygon
+            points="25,5 28,14 38,14 30,20 33,29 25,23 17,29 20,20 12,14 22,14"
+            fill="#BF5700"
+          />
+          {/* Laurel Wreath */}
+          <path
+            d="M 10,12 C 8,24 15,34 25,37"
+            fill="none"
+            stroke="#BF5700"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 40,12 C 42,24 35,34 25,37"
+            fill="none"
+            stroke="#BF5700"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          />
+          {/* Laurel Leaves */}
+          <circle cx="9" cy="16" r="1.5" fill="#BF5700" />
+          <circle cx="11" cy="23" r="1.5" fill="#BF5700" />
+          <circle cx="17" cy="30" r="1.5" fill="#BF5700" />
+          <circle cx="41" cy="16" r="1.5" fill="#BF5700" />
+          <circle cx="39" cy="23" r="1.5" fill="#BF5700" />
+          <circle cx="33" cy="30" r="1.5" fill="#BF5700" />
+        </g>
+
+        {/* Arced Latin Motto: DISCIPLINA PRAESIDIUM CIVITATIS */}
+        <path id="t1-seal-path-top" d="M 18,58 A 42,42 0 0,1 102,58" fill="none" />
+        <path id="t1-seal-path-bot" d="M 102,62 A 42,42 0 0,1 18,62" fill="none" />
+        <text fill="#BF5700" fontSize="6.2" fontFamily="serif" fontWeight="bold" letterSpacing="0.12em">
+          <textPath href="#t1-seal-path-top" startOffset="50%" textAnchor="middle">
+            DISCIPLINA PRAESIDIUM
+          </textPath>
+        </text>
+        <text fill="#BF5700" fontSize="6" fontFamily="serif" fontWeight="bold" letterSpacing="0.14em">
+          <textPath href="#t1-seal-path-bot" startOffset="50%" textAnchor="middle">
+            CIVITATIS
+          </textPath>
+        </text>
+      </svg>
+    );
+  };
+
+  const T1Barcode = ({ value, className = "h-4 w-full" }: { value: string; className?: string }) => {
+    const bars = [
+      2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
+      1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
+      3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1,
+      2, 3, 1, 2, 1, 1, 2, 1, 3, 2, 1, 2, 2, 1, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1,
+      2, 3, 1, 2, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 2
+    ];
+    let curX = 0;
+    return (
+      <svg className={className} viewBox="0 0 180 22" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {bars.map((w, idx) => {
+          const x = curX;
+          curX += w * 1.4 + (idx % 2 === 0 ? 1 : 1.2);
+          if (x > 176) return null;
+          return (
+            <rect
+              key={idx}
+              x={x}
+              y="0"
+              width={w}
+              height="22"
+              fill="#1F2421"
+            />
+          );
+        })}
+      </svg>
+    );
+  };
+
+  const CranbourneEastLogo = ({ className = "w-10 h-7" }: { className?: string }) => {
+    return (
+      <svg className={`object-contain flex-shrink-0 ${className}`} viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {/* Navy blue semi-circular dome */}
+        <path d="M 92 56 A 42 42 0 0 0 8 56 L 92 56 Z" fill="#142144" />
+        
+        {/* Subtle base cyan line */}
+        <path d="M 12 55.5 L 88 55.5" stroke="#38BDF8" strokeWidth="1.2" strokeOpacity="0.8" />
+        
+        {/* Dynamic yellow/gold curved swoosh */}
+        <path
+          d="M 14 53 C 28 53, 38 34, 76 26"
+          stroke="#FFC700"
+          strokeWidth="3.2"
+          strokeLinecap="round"
+          fill="none"
+        />
+        
+        {/* White star near trajectory apex */}
+        <circle cx="82" cy="24" r="1.8" fill="#FFFFFF" />
+        <polygon points="82,21 82.8,23 85,24 82.8,25 82,27 81.2,25 79,24 81.2,23" fill="#FFFFFF" />
+      </svg>
+    );
+  };
+
+  const T2Barcode = ({ className = "h-4 w-full" }: { className?: string }) => {
+    const bars = [
+      2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
+      1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
+      3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1,
+      2, 3, 1, 2, 1, 1, 2, 1, 3, 2, 1, 2, 2, 1, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1
+    ];
+    let curX = 0;
+    return (
+      <svg className={className} viewBox="0 0 160 20" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {bars.map((w, idx) => {
+          const x = curX;
+          curX += w * 1.35 + (idx % 2 === 0 ? 1 : 1.1);
+          if (x > 158) return null;
+          return (
+            <rect
+              key={idx}
+              x={x}
+              y="0"
+              width={w}
+              height="20"
+              fill="#000000"
+            />
+          );
+        })}
+      </svg>
+    );
+  };
+
+  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd/D1/Westdale/D2/T1/T2
   if (side === 'back') {
+    if (template === 't2') {
+      const uFull = (studentInfo.universityName || 'Cranbourne East Secondary College').trim();
+      const isCranbourne = uFull.toLowerCase().includes('cranbourne');
+      const studentId = studentInfo.studentId || 'CESC-2025-481920';
+
+      return (
+        <div 
+          ref={ref} 
+          className="id-card-container id-card-back shadow-xl bg-white overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900"
+        >
+          {/* Subtle Sheen Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-black/[0.015] via-transparent to-white/40 pointer-events-none" />
+
+          {/* Top Header Strip */}
+          <div className="px-3.5 pt-3 pb-1 border-b border-neutral-200/80 flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <CranbourneEastLogo className="w-6 h-4 flex-shrink-0" />
+              <span className="font-sans font-black text-[9px] uppercase tracking-wider text-[#142144]">
+                {uFull}
+              </span>
+            </div>
+            <span className="font-mono text-[7px] text-neutral-500 font-semibold">
+              {studentId}
+            </span>
+          </div>
+
+          {/* Cardholder notice & conditions */}
+          <div className="px-3.5 py-1.5 flex-1 flex flex-col justify-between text-[7px] text-neutral-700 leading-[1.35]">
+            <p>
+              This card is the official property of {uFull}. It is issued for identification, library borrowing, and school attendance. It is non-transferable and must be carried at all times on school grounds.
+            </p>
+
+            <div className="flex justify-between items-end gap-3 mt-1">
+              <div className="flex-1 bg-neutral-50 rounded border border-neutral-200 p-1.5">
+                <p className="font-bold text-neutral-800 uppercase text-[6px] tracking-wider mb-0.5">
+                  If found, please return to:
+                </p>
+                <p className="text-[6.5px] text-neutral-600 leading-tight">
+                  {isCranbourne ? 'General Office • 50 Hunt Club Blvd, Cranbourne East VIC 3977' : studentInfo.address}
+                </p>
+                <p className="text-[6.5px] text-neutral-500 leading-tight mt-0.5">
+                  {isCranbourne ? 'Phone: (03) 5990 0200 • Email: cranbourne.east.sc@education.vic.gov.au' : studentInfo.phone}
+                </p>
+              </div>
+
+              {/* Student Signature Box */}
+              <div className="w-28 flex flex-col items-center flex-shrink-0">
+                <div className="w-full h-7 bg-white border border-neutral-300 rounded-[2px] flex items-center justify-center relative overflow-hidden shadow-inner">
+                  <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:4px_4px]" />
+                  <span className="font-serif italic text-[7.5px] text-neutral-400 select-none">
+                    Student Signature
+                  </span>
+                </div>
+                <span className="text-[5.5px] text-neutral-400 uppercase tracking-widest mt-0.5">
+                  Cardholder Signature
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Barcode Strip */}
+          <div className="px-3.5 py-1.5 bg-neutral-100/90 border-t border-neutral-200/80 flex items-center justify-between text-[6.5px]">
+            <div className="flex items-center gap-2">
+              <T2Barcode className="w-28 h-3.5" />
+            </div>
+            <span className="font-semibold text-neutral-600 uppercase tracking-wider text-[6.5px]">
+              OFFICIAL STUDENT CARD
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    if (template === 't1') {
+      const uFull = (studentInfo.universityName || 'The University of Texas at Austin').trim();
+      const isTexas = uFull.toLowerCase().includes('texas');
+      const mainTitle = isTexas ? 'TEXAS' : (uFull.split(/\s+/)[0] || 'TEXAS').toUpperCase();
+      const studentId = studentInfo.studentId || '9008356046';
+      const rawValid = (studentInfo.validUntil || '08/2028').trim();
+      let validUntil = rawValid;
+      const mMatch = rawValid.match(/^(\d{1,2})\/(\d{4})$/);
+      const dmMatch = rawValid.match(/^\d{1,2}\/(\d{1,2})\/(\d{4})$/);
+      const ymdMatch = rawValid.match(/^(\d{4})-(\d{1,2})-\d{1,2}$/);
+      if (mMatch) {
+        validUntil = `${mMatch[1].padStart(2, '0')}/${mMatch[2]}`;
+      } else if (dmMatch) {
+        validUntil = `${dmMatch[1].padStart(2, '0')}/${dmMatch[2]}`;
+      } else if (ymdMatch) {
+        validUntil = `${ymdMatch[2].padStart(2, '0')}/${ymdMatch[1]}`;
+      } else {
+        const d = new Date(rawValid);
+        if (!isNaN(d.getTime())) {
+          validUntil = `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+        }
+      }
+
+      return (
+        <div 
+          ref={ref} 
+          className="id-card-container id-card-back shadow-xl bg-[#FAF8F5] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900"
+        >
+          {/* Subtle Sheen Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-black/[0.02] via-transparent to-white/40 pointer-events-none" />
+
+          {/* Magnetic Stripe */}
+          <div className="w-full h-8 bg-[#1A1A1A] relative flex-shrink-0 flex items-center justify-end px-3">
+            <div className="h-1.5 w-16 bg-white/10 rounded-full" />
+          </div>
+
+          {/* Back Body Content */}
+          <div className="p-2.5 flex-1 flex flex-col justify-between relative z-10">
+            <div className="flex justify-between items-start gap-2">
+              <div className="flex-1 pr-1">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="font-serif font-black text-[#BF5700] text-[10px] tracking-wider leading-none">
+                    {mainTitle}
+                  </span>
+                  <span className="font-serif text-[6.5px] text-neutral-600 tracking-tight leading-none truncate max-w-[130px]">
+                    {uFull}
+                  </span>
+                </div>
+                <p className="text-[6.2px] text-neutral-600 leading-[1.3] mb-1 font-sans">
+                  This card is the official property of the university and is non-transferable.
+                  Cardholder must carry this card while on campus and present it upon request.
+                </p>
+                <div className="bg-neutral-100/90 rounded border border-neutral-200/80 p-1 mt-0.5">
+                  <p className="text-[5.5px] font-bold text-neutral-700 uppercase tracking-wide leading-tight">
+                    If found, please return to:
+                  </p>
+                  <p className="text-[5.5px] text-neutral-600 leading-tight">
+                    {isTexas ? 'ID Center, Texas Union Building • P.O. Box 7556, Austin, TX 78713' : `${studentInfo.address || 'Campus ID Services'}`}
+                  </p>
+                  <p className="text-[5.5px] text-neutral-500 leading-tight mt-0.5">
+                    {isTexas ? 'Emergency: (512) 471-4441 • utexas.edu' : `Phone: ${studentInfo.phone || '+1 (512) 471-4441'}`}
+                  </p>
+                </div>
+              </div>
+
+              {/* Signature Strip & Barcode */}
+              <div className="w-24 flex flex-col items-center flex-shrink-0">
+                <div className="w-full h-6 bg-white border border-neutral-300 rounded-[2px] flex items-center justify-center relative overflow-hidden shadow-inner">
+                  <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:4px_4px]" />
+                  <span className="font-serif italic text-[7.5px] text-neutral-400 select-none">
+                    Authorized Signature
+                  </span>
+                </div>
+                <div className="w-full mt-1.5 flex flex-col items-center">
+                  <T1Barcode value={studentId} className="w-full h-3.5" />
+                  <span className="font-mono text-[6px] tracking-widest text-neutral-600 mt-0.5 leading-none">
+                    {studentId}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Footer Bar */}
+            <div className="flex justify-between items-center border-t border-neutral-200/80 pt-1 mt-1 text-[6px] font-medium text-neutral-500">
+              <span className="uppercase tracking-wider">Official Student Credential</span>
+              <span className="font-bold text-neutral-700 tracking-wider">
+                VALID THROUGH: {validUntil}
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    }
     if (template === 'd2') {
       const uLabel = (studentInfo.universityName || 'NORTHWOOD ACADEMY').trim().toUpperCase();
       const grade = getD2Grade();
@@ -746,6 +1078,277 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   }
 
+  // T2 Cranbourne East Secondary College Card Template (Front View)
+  if (template === 't2') {
+    const uFull = (studentInfo.universityName || 'Cranbourne East Secondary College').trim();
+    const isCranbourne = uFull.toLowerCase().includes('cranbourne');
+    
+    // Header lines: Line 1 = "CRANBOURNE EAST", Line 2 = "SECONDARY COLLEGE"
+    let line1 = 'CRANBOURNE EAST';
+    let line2 = 'SECONDARY COLLEGE';
+    if (!isCranbourne) {
+      const words = uFull.split(/\s+/);
+      if (words.length > 2) {
+        const mid = Math.ceil(words.length / 2);
+        line1 = words.slice(0, mid).join(' ').toUpperCase();
+        line2 = words.slice(mid).join(' ').toUpperCase();
+      } else if (words.length === 2) {
+        line1 = words[0].toUpperCase();
+        line2 = words[1].toUpperCase();
+      } else {
+        line1 = uFull.toUpperCase();
+        line2 = 'SECONDARY COLLEGE';
+      }
+    }
+
+    // Student Name parsing:
+    // First Name: Title Case (e.g. "Triciamae")
+    // Last Name: UPPERCASE BOLD (e.g. "MALABANAN")
+    const rawName = (studentInfo.studentName || 'Triciamae Malabanan').trim();
+    const nameParts = rawName.split(/\s+/);
+    const rawFirst = nameParts[0] || 'Triciamae';
+    const rawLast = nameParts.slice(1).join(' ');
+
+    // Convert rawFirst to Title Case
+    const titleFirst = rawFirst.length > 0
+      ? rawFirst.charAt(0).toUpperCase() + rawFirst.slice(1).toLowerCase()
+      : 'Triciamae';
+    const upperLast = rawLast.length > 0 ? rawLast.toUpperCase() : (nameParts.length === 1 ? '' : 'MALABANAN');
+
+    // DOB formatting (DD/MM/YYYY)
+    const rawDob = studentInfo.dob || '10/09/2012';
+    let formattedDob = rawDob;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(rawDob)) {
+      const [y, m, d] = rawDob.split('-');
+      formattedDob = `${d}/${m}/${y}`;
+    } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(rawDob)) {
+      formattedDob = rawDob;
+    } else {
+      const parsedDate = new Date(rawDob);
+      if (!isNaN(parsedDate.getTime()) && rawDob.includes(' ')) {
+        const d = String(parsedDate.getDate()).padStart(2, '0');
+        const m = String(parsedDate.getMonth() + 1).padStart(2, '0');
+        const y = parsedDate.getFullYear();
+        formattedDob = `${d}/${m}/${y}`;
+      }
+    }
+
+    // Year Issued
+    const issueStr = studentInfo.issueDate || '2025';
+    const yearMatch = issueStr.match(/\b(20\d\d)\b/);
+    const yearIssued = yearMatch ? yearMatch[1] : '2025';
+
+    return (
+      <div 
+        ref={ref} 
+        className="id-card-container shadow-xl bg-white overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-row p-3.5 text-[#1F2421]"
+      >
+        {/* Card Surface Sheen Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-black/[0.015] via-transparent to-white/60 pointer-events-none" />
+
+        {/* Left Column: Portrait Photo & Barcode directly below */}
+        <div className="w-[32%] h-full flex flex-col justify-between items-start flex-shrink-0 relative z-10 pr-2">
+          {/* Photo Frame with solid thin 1px black border */}
+          <div className="w-full h-[105px] border border-black bg-[#C8D8E6] overflow-hidden shadow-sm flex items-center justify-center">
+            <img
+              src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }}
+              alt={rawName}
+              className="w-full h-full object-cover object-center"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          {/* Barcode directly under the photo frame */}
+          <div className="w-full mt-auto pt-1.5 flex flex-col items-center">
+            <T2Barcode className="w-full h-4" />
+          </div>
+        </div>
+
+        {/* Right Column: Top Right Header + Logo, Student Name, D.O.B, Year Issued */}
+        <div className="flex-1 h-full flex flex-col justify-between pl-2 relative z-10">
+          {/* Top Right Header & Logo */}
+          <div className="flex justify-end items-center gap-2">
+            <div className="flex flex-col text-right">
+              <span className="font-sans font-black text-[#1F2421] text-[11px] sm:text-[12px] leading-tight tracking-tight uppercase">
+                {line1}
+              </span>
+              <span className="font-sans font-bold text-[#1F2421] text-[9.5px] sm:text-[10px] leading-tight tracking-tight uppercase">
+                {line2}
+              </span>
+            </div>
+            {studentInfo.logo ? (
+              <img 
+                src={studentInfo.logo} 
+                alt="School Logo" 
+                className="w-10 h-7 object-contain flex-shrink-0"
+              />
+            ) : (
+              <CranbourneEastLogo className="w-10 h-7 flex-shrink-0" />
+            )}
+          </div>
+
+          {/* Center Student Info */}
+          <div className="my-auto flex flex-col justify-center py-1">
+            <span className="font-sans font-semibold text-[#1F2421] text-[15px] sm:text-[16px] leading-none tracking-normal">
+              {titleFirst}
+            </span>
+            {upperLast ? (
+              <span className="font-sans font-black text-[#1F2421] text-[16px] sm:text-[17px] leading-tight tracking-tight mt-0.5">
+                {upperLast}
+              </span>
+            ) : null}
+            <div className="mt-2 font-sans font-bold text-[11px] sm:text-[11.5px] text-[#1F2421] tracking-wide">
+              D.O.B: {formattedDob}
+            </div>
+          </div>
+
+          {/* Bottom Right Year Issued */}
+          <div className="flex justify-end items-end pb-0.5">
+            <span className="font-sans font-bold text-[10.5px] sm:text-[11px] text-[#1F2421] tracking-tight">
+              Year Issued {yearIssued}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // T1 Texas Student ID Card Template (Front View)
+  if (template === 't1') {
+    const uFull = (studentInfo.universityName || 'The University of Texas at Austin').trim();
+    const isTexas = uFull.toLowerCase().includes('texas');
+    const mainTitle = isTexas ? 'TEXAS' : (uFull.split(/\s+/)[0] || 'TEXAS').toUpperCase();
+    
+    // Dynamic student name
+    const rawName = (studentInfo.studentName || 'JULIA HENDRIX').trim().toUpperCase();
+    let nameSizeClass = 'text-[16px] sm:text-[17px] leading-tight';
+    if (rawName.length > 25) {
+      nameSizeClass = 'text-[11.5px] leading-tight';
+    } else if (rawName.length > 19) {
+      nameSizeClass = 'text-[13px] leading-tight';
+    } else if (rawName.length > 14) {
+      nameSizeClass = 'text-[14.5px] leading-tight';
+    }
+
+    // Status: STUDENT (or STAFF if status is Staff)
+    const statusText = (studentInfo.status && studentInfo.status.toLowerCase().includes('staff')) 
+      ? 'STAFF' 
+      : 'STUDENT';
+
+    // Numbers: 600861 + Student ID (default: 9008356046)
+    const campusCode = '600861';
+    const cleanId = (studentInfo.studentId || '9008356046').replace(/[^0-9A-Za-z]/g, '');
+    const displayStudentId = cleanId.length > 0 ? cleanId : '9008356046';
+
+    // Format date into mm/yyyy
+    const formatMmYyyy = (dateStr?: string): string => {
+      if (!dateStr) return '08/2028';
+      const trimmed = dateStr.trim();
+      const m1 = trimmed.match(/^(\d{1,2})\/(\d{4})$/);
+      if (m1) {
+        return `${m1[1].padStart(2, '0')}/${m1[2]}`;
+      }
+      const m2 = trimmed.match(/^\d{1,2}\/(\d{1,2})\/(\d{4})$/);
+      if (m2) {
+        return `${m2[1].padStart(2, '0')}/${m2[2]}`;
+      }
+      const m3 = trimmed.match(/^(\d{4})-(\d{1,2})-\d{1,2}$/);
+      if (m3) {
+        return `${m3[2].padStart(2, '0')}/${m3[1]}`;
+      }
+      const d = new Date(trimmed);
+      if (!isNaN(d.getTime())) {
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const yyyy = d.getFullYear();
+        return `${mm}/${yyyy}`;
+      }
+      return trimmed || '08/2028';
+    };
+
+    const validThroughFormatted = formatMmYyyy(studentInfo.validUntil);
+    const academicYearFormatted = (studentInfo.academicYear && studentInfo.academicYear.trim())
+      ? studentInfo.academicYear.trim()
+      : '2026/2027';
+
+    return (
+      <div 
+        ref={ref} 
+        className="id-card-container shadow-xl bg-[#FAF8F5] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-row justify-between text-neutral-900"
+      >
+        {/* Subtle realistic sheen overlay */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-black/[0.015] via-transparent to-white/40 pointer-events-none" />
+
+        {/* Left 65% Information Area */}
+        <div className="w-[66%] h-full p-3 sm:p-3.5 flex flex-col justify-between relative z-10">
+          {/* Header Row: Seal + Texas Wordmark */}
+          <div className="flex items-center gap-2">
+            {studentInfo.logo ? (
+              <img 
+                src={studentInfo.logo} 
+                alt="University Seal" 
+                className="w-9 h-9 object-contain flex-shrink-0"
+              />
+            ) : (
+              <UTAustinSealSVG className="w-9 h-9 flex-shrink-0" />
+            )}
+            <div className="flex flex-col min-w-0 pr-1">
+              <span className="font-serif font-black text-[#BF5700] text-[22px] sm:text-[23px] leading-none tracking-wider uppercase">
+                {mainTitle}
+              </span>
+              <span className="font-serif text-[8.5px] text-neutral-800 leading-tight font-medium tracking-normal mt-0.5 truncate">
+                {uFull}
+              </span>
+            </div>
+          </div>
+
+          {/* Student Information - proportioned and evenly distributed vertically to eliminate dead space */}
+          <div className="flex-1 flex flex-col justify-evenly py-1 my-0.5">
+            <div>
+              <h2 className={`font-sans font-black text-[#BF5700] ${nameSizeClass} tracking-wide uppercase break-words`}>
+                {rawName}
+              </h2>
+              <p className="font-sans font-bold text-[10px] sm:text-[10.5px] text-neutral-800 uppercase tracking-widest mt-0.5">
+                {statusText}
+              </p>
+            </div>
+
+            <div className="font-mono text-[10px] sm:text-[10.5px] font-bold text-neutral-900 tracking-wider flex items-center gap-2.5">
+              <span>{campusCode}</span>
+              <span>{displayStudentId}</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-[9px] sm:text-[9.5px] font-sans font-bold text-neutral-800 leading-tight">
+              <span className="tracking-wider text-neutral-600 font-semibold">VALID THROUGH:</span>
+              <span className="font-mono font-bold text-neutral-900">{validThroughFormatted}</span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-[9px] sm:text-[9.5px] font-sans font-bold text-neutral-800 leading-tight">
+              <span className="tracking-wider text-neutral-600 font-semibold">ACADEMIC YEAR:</span>
+              <span className="font-mono font-bold text-neutral-900">{academicYearFormatted}</span>
+            </div>
+          </div>
+
+          {/* Barcode at bottom left */}
+          <div className="pt-1 w-[98%]">
+            <T1Barcode value={displayStudentId} className="w-full h-5" />
+          </div>
+        </div>
+
+        {/* Right 34% Portrait Photo Area */}
+        <div className="w-[34%] h-full p-2.5 sm:p-3 pl-0 flex items-center justify-center relative z-10">
+          <div className="w-full h-full max-h-[115px] sm:max-h-[120px] max-w-[85px] sm:max-w-[90px] rounded-[3px] overflow-hidden bg-[#C8D8E6] border border-neutral-300 shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)]">
+            <img
+              src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }}
+              alt={rawName}
+              className="w-full h-full object-cover object-center"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Westdale Card Design Template (Front View)
   if (template === 'westdale') {
     const uRaw = (studentInfo.universityName || 'WESTDALE').trim().toUpperCase();
@@ -818,7 +1421,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             {/* Student Photo */}
             <div className="w-[74px] h-[96px] flex-shrink-0 bg-blue-100 border-2 border-white rounded-[2px] shadow-md overflow-hidden relative">
               <img 
-                src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                 alt="Student Portrait" 
                 className="w-full h-full object-cover object-top"
                 referrerPolicy="no-referrer"
@@ -940,7 +1543,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           <div className="w-[32%] max-w-[96px] h-full flex items-center justify-center flex-shrink-0">
             <div className="w-full max-w-[92px] aspect-[3/4] bg-gray-200 rounded-[2px] overflow-hidden border border-black/35 shadow-xs">
               <img 
-                src={studentInfo.photo || 'https://picsum.photos/250/300'} 
+                src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                 alt="Student Headshot" 
                 className="w-full h-full object-cover object-top"
                 referrerPolicy="no-referrer"
@@ -1062,7 +1665,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           <div className="flex-shrink-0 mr-2.5">
             <div className="w-[78px] h-[98px] bg-gray-100 border-[1.5px] border-[#0B2545] rounded-md overflow-hidden shadow-2xs">
               <img 
-                src={studentInfo.photo || 'https://picsum.photos/250/300'} 
+                src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                 alt="Student Headshot" 
                 className="w-full h-full object-cover object-center"
                 referrerPolicy="no-referrer"
@@ -1246,7 +1849,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           <div className="flex-shrink-0 ml-2">
             <div className="w-[102px] h-[126px] bg-[#E0E0E0] border-2 border-[#2B5842] rounded-md overflow-hidden shadow-sm">
               <img 
-                src={studentInfo.photo || 'https://picsum.photos/250/300'} 
+                src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                 alt="Student Headshot" 
                 className="w-full h-full object-cover object-center"
                 referrerPolicy="no-referrer"
@@ -1410,7 +2013,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           <div className="flex flex-col items-center flex-shrink-0">
             <div className="w-[64px] h-[84px] bg-[#93BBE5] border border-gray-300 rounded-[2px] shadow-sm overflow-hidden flex-shrink-0">
               <img 
-                src={studentInfo.photo || 'https://picsum.photos/250/300'} 
+                src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                 alt="Student Headshot" 
                 className="w-full h-full object-cover object-center"
                 referrerPolicy="no-referrer"
@@ -1550,7 +2153,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 <div className="relative">
                   <div className="w-full aspect-[3/4] bg-gray-100 rounded border-2 border-gray-200 overflow-hidden shadow-inner">
                     <img 
-                      src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                      src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                       alt="Student" 
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
@@ -1718,7 +2321,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                     {/* Small Ghost Photo */}
                     <div className="mr-3 flex flex-col items-center">
                         <img 
-                            src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                            src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                             alt="Ghost" 
                             className="w-12 h-14 object-cover border border-gray-300 bg-orange-50 opacity-90" 
                             referrerPolicy="no-referrer"
@@ -1755,7 +2358,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             <div className="w-[34%] h-full flex flex-col items-center ml-2 relative">
                 <div className="w-full h-[74%] relative mt-0.5">
                     <img 
-                        src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                        src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                         alt="Main"
                         className="w-full h-full object-cover shadow-sm" 
                         referrerPolicy="no-referrer"
@@ -1820,7 +2423,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             <div className="w-[30%] h-full z-10 relative flex flex-col">
                 <div className="w-full aspect-[3/4] border-2 border-white shadow-md bg-gray-200 overflow-hidden rounded-sm">
                     <img 
-                        src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+                        src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
                         alt="Student"
                         className="w-full h-full object-cover object-top" 
                         referrerPolicy="no-referrer"
@@ -1885,7 +2488,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
       
       <div className="photo-section relative">
         <img 
-          src={studentInfo.photo || 'https://picsum.photos/252/324'} 
+          src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
           alt="Student"
           className="w-full h-full object-cover" 
           referrerPolicy="no-referrer"

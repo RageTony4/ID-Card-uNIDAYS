@@ -17,7 +17,11 @@ const App: React.FC = () => {
     const saved = localStorage.getItem('id_gen_student_info');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (!parsed.photo || parsed.photo.includes('catbox.moe') || parsed.photo.includes('picsum.photos') || parsed.photo.includes('any-link-me')) {
+          parsed.photo = '/assets/avatars/female_1.webp';
+        }
+        return parsed;
       } catch (e) {
         console.error('Failed to parse saved student info', e);
       }
@@ -36,7 +40,7 @@ const App: React.FC = () => {
       issueDate: '01 Sep 2026',
       validUntil: getRandomValidUntilDate(),
       website: 'www.cea-academy.ac.uk',
-      photo: 'https://picsum.photos/seed/ukstudent/252/324',
+      photo: '/assets/avatars/female_1.webp',
       logo: null,
       bloodGroup: 'O+',
       emergencyContact: '+44 7700 900999'
@@ -123,6 +127,19 @@ const App: React.FC = () => {
       "/assets/avatars/male_9.webp",
       "/assets/avatars/male_10.webp",
       "/assets/avatars/male_11.webp",
+      "/assets/avatars/male_12.webp",
+      "/assets/avatars/male_13.webp",
+      "/assets/avatars/male_14.webp",
+      "/assets/avatars/male_15.webp",
+      "/assets/avatars/male_16.webp",
+      "/assets/avatars/male_17.webp",
+      "/assets/avatars/male_18.webp",
+      "/assets/avatars/male_19.webp",
+      "/assets/avatars/male_20.webp",
+      "/assets/avatars/male_21.webp",
+      "/assets/avatars/male_22.webp",
+      "/assets/avatars/male_23.webp",
+      "/assets/avatars/male_24.webp",
       "/assets/avatars/female_1.webp",
       "/assets/avatars/female_2.webp",
       "/assets/avatars/female_3.webp",
@@ -133,30 +150,18 @@ const App: React.FC = () => {
       "/assets/avatars/female_8.webp",
       "/assets/avatars/female_9.webp",
       "/assets/avatars/female_10.webp",
-      "https://files.catbox.moe/m7lj8u.png",
-      "https://files.catbox.moe/u1skwz.png",
-      "https://files.catbox.moe/z2ersq.png",
-      "https://files.catbox.moe/3kliif.png",
-      "https://files.catbox.moe/a4f1ct.png",
-      "https://files.catbox.moe/8eq6dp.png",
-      "https://files.catbox.moe/bx9f18.png",
-      "https://files.catbox.moe/w22pf1.png",
-      "https://files.catbox.moe/4w42hk.png",
-      "https://files.catbox.moe/c0ot8t.png",
-      "https://files.catbox.moe/021b0u.png",
-      "https://files.catbox.moe/6rjppv.jfif",
-      "https://files.catbox.moe/j9s890.png",
-      "https://files.catbox.moe/0nk6tf.png",
-      "https://files.catbox.moe/jkxmsd.png",
-      "https://files.catbox.moe/mdd3ye.png",
-      "https://any-link-me.lovable.app/f/2n4y4c1h3m.png",
-      "https://any-link-me.lovable.app/f/5p6r5h5n01.webp",
-      "https://any-link-me.lovable.app/f/2i55155k27.jfif",
-      "https://any-link-me.lovable.app/f/4e411e195u.jfif",
-      "https://any-link-me.lovable.app/f/30416n5j5f.jfif",
-      "https://any-link-me.lovable.app/f/6q2k3h3j5y.jfif",
-      "https://any-link-me.lovable.app/f/6n6e3m654l.jfif",
-      "https://any-link-me.lovable.app/f/0p5117681p.jfif"
+      "/assets/avatars/female_11.webp",
+      "/assets/avatars/female_12.webp",
+      "/assets/avatars/female_13.webp",
+      "/assets/avatars/female_14.webp",
+      "/assets/avatars/female_15.webp",
+      "/assets/avatars/female_16.webp",
+      "/assets/avatars/female_17.webp",
+      "/assets/avatars/female_18.webp",
+      "/assets/avatars/female_19.webp",
+      "/assets/avatars/female_20.webp",
+      "/assets/avatars/female_21.webp",
+      "/assets/avatars/female_22.webp"
     ];
 
     ALL_AVATAR_URLS.forEach(url => {
