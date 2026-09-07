@@ -25,7 +25,12 @@ const MALE_AVATARS = [
   "/assets/avatars/male_21.webp",
   "/assets/avatars/male_22.webp",
   "/assets/avatars/male_23.webp",
-  "/assets/avatars/male_24.webp"
+  "/assets/avatars/male_24.webp",
+  "/assets/avatars/male_25.webp",
+  "/assets/avatars/male_26.webp",
+  "/assets/avatars/male_27.webp",
+  "/assets/avatars/male_28.webp",
+  "/assets/avatars/male_29.webp"
 ];
 
 const FEMALE_AVATARS = [
@@ -50,7 +55,12 @@ const FEMALE_AVATARS = [
   "/assets/avatars/female_19.webp",
   "/assets/avatars/female_20.webp",
   "/assets/avatars/female_21.webp",
-  "/assets/avatars/female_22.webp"
+  "/assets/avatars/female_22.webp",
+  "/assets/avatars/female_23.webp",
+  "/assets/avatars/female_24.webp",
+  "/assets/avatars/female_25.webp",
+  "/assets/avatars/female_26.webp",
+  "/assets/avatars/female_27.webp"
 ];
 
 export const cleanDiacritics = (str: string): string => {

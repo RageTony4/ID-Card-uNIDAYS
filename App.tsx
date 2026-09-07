@@ -140,6 +140,11 @@ const App: React.FC = () => {
       "/assets/avatars/male_22.webp",
       "/assets/avatars/male_23.webp",
       "/assets/avatars/male_24.webp",
+      "/assets/avatars/male_25.webp",
+      "/assets/avatars/male_26.webp",
+      "/assets/avatars/male_27.webp",
+      "/assets/avatars/male_28.webp",
+      "/assets/avatars/male_29.webp",
       "/assets/avatars/female_1.webp",
       "/assets/avatars/female_2.webp",
       "/assets/avatars/female_3.webp",
@@ -161,7 +166,12 @@ const App: React.FC = () => {
       "/assets/avatars/female_19.webp",
       "/assets/avatars/female_20.webp",
       "/assets/avatars/female_21.webp",
-      "/assets/avatars/female_22.webp"
+      "/assets/avatars/female_22.webp",
+      "/assets/avatars/female_23.webp",
+      "/assets/avatars/female_24.webp",
+      "/assets/avatars/female_25.webp",
+      "/assets/avatars/female_26.webp",
+      "/assets/avatars/female_27.webp"
     ];
 
     ALL_AVATAR_URLS.forEach(url => {

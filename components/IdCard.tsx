@@ -1907,11 +1907,17 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     const maxTextLen = uLabel.length;
     
     // Scale school name font size dynamically for maximum legibility without overflow
-    let schoolFontSizeClass = 'text-[12px]';
-    if (maxTextLen > 32) {
-      schoolFontSizeClass = 'text-[9.5px]';
-    } else if (maxTextLen > 24) {
-      schoolFontSizeClass = 'text-[11px]';
+    let schoolFontSizeClass = 'text-[12px] tracking-wide';
+    if (maxTextLen > 40) {
+      schoolFontSizeClass = 'text-[7.5px] tracking-tight';
+    } else if (maxTextLen > 34) {
+      schoolFontSizeClass = 'text-[8px] tracking-tight';
+    } else if (maxTextLen > 28) {
+      schoolFontSizeClass = 'text-[9px] tracking-tight';
+    } else if (maxTextLen > 22) {
+      schoolFontSizeClass = 'text-[10px] tracking-tight';
+    } else if (maxTextLen > 16) {
+      schoolFontSizeClass = 'text-[11px] tracking-normal';
     }
 
     // Determine student name font size depending on length (shrink to fit, no wrapping)
@@ -1965,9 +1971,9 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         </div>
 
         {/* HEADER SECTION */}
-        <div className="w-full h-[54px] bg-[#002B49] px-2.5 flex items-center justify-between relative z-10 border-b-2 border-[#C59B27]">
+        <div className="w-full h-[54px] bg-[#002B49] px-2 flex items-center justify-between relative z-10 border-b-2 border-[#C59B27]">
           {/* Left Panel: White Crest Logo */}
-          <div className="flex items-center justify-center flex-shrink-0 w-8 h-8 mr-2">
+          <div className="flex items-center justify-center flex-shrink-0 w-7 h-7 mr-1.5">
             <svg className="w-full h-full text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M50 12 L20 22 V54 C20 72 50 86 50 86 C50 86 80 72 80 54 V22 L50 12 Z" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M50 12 V86" stroke="currentColor" strokeWidth="2" strokeDasharray="3 3" />
@@ -1981,29 +1987,29 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           </div>
 
           {/* Center Panel: Institution Name, Address, and Student ID centered perfectly */}
-          <div className="flex-1 flex flex-col justify-center items-center text-center overflow-hidden min-w-0 px-1">
+          <div className="flex-1 flex flex-col justify-center items-center text-center overflow-hidden min-w-0 px-0.5">
             {/* Row 1: Entire University Name fully on first line */}
             <span 
-              className={`font-serif font-black tracking-wide text-white uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-tight ${schoolFontSizeClass}`}
+              className={`font-serif font-black text-white uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-tight block w-full max-w-full text-center px-0.5 ${schoolFontSizeClass}`}
             >
               {uLabel}
             </span>
             {/* Row 2: Address of the School */}
             <span 
-              className="font-sans font-bold tracking-[0.1em] text-white/80 uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-none mt-0.5 text-[6.5px]"
+              className="font-sans font-bold tracking-[0.08em] text-white/80 uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-none mt-0.5 text-[6.5px] block w-full max-w-full text-center"
             >
               {studentInfo.location || 'NORTHFIELD, MN, USA'}
             </span>
             {/* Row 3: STUDENT ID as the last line after the school address */}
             <span 
-              className="font-sans font-extrabold tracking-[0.25em] text-[#C59B27] uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-none mt-[2.5px] text-[7.5px]"
+              className="font-sans font-extrabold tracking-[0.22em] text-[#C59B27] uppercase whitespace-nowrap overflow-hidden text-ellipsis leading-none mt-[2.5px] text-[7.5px] block w-full max-w-full text-center"
             >
               STUDENT ID
             </span>
           </div>
 
           {/* Right Logo Symmetry/Spacer to ensure perfect centering inside the main container boundary */}
-          <div className="w-8 ml-2 flex-shrink-0" />
+          <div className="w-7 ml-1.5 flex-shrink-0" />
         </div>
 
         {/* DETAILS BODY AREA */}
