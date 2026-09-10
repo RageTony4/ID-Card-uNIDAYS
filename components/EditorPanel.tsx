@@ -232,6 +232,14 @@ const SCHOOL_DATA = {
         'Tanta university',
         'Alexandria University',
         'Sunway University'
+    ],
+    'Poland': [
+        'University of Finance and Law',
+        'University of Warsaw',
+        'Jagiellonian University',
+        'AGH University of Krakow',
+        'Warsaw University of Technology',
+        'University of Wrocław'
     ]
 };
 
@@ -254,7 +262,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   setActiveTab,
   activeTab
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia'>('United Kingdom');
+  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' | 'Poland'>('United Kingdom');
   const panelRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -263,7 +271,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     }
   }, [activeTab]);
 
-  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia') => {
+  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' | 'Poland') => {
     setSelectedCountry(country);
     const firstSchool = SCHOOL_DATA[country][0].replace(/\*$/, '');
     const event = {
@@ -579,6 +587,12 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                     className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Malaysia' ? 'bg-teal-600 border-teal-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-teal-300'}`}
                  >
                      Malaysia Schools
+                 </button>
+                 <button 
+                    onClick={() => handleCountrySwitch('Poland')}
+                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Poland' ? 'bg-rose-600 border-rose-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-rose-300'}`}
+                 >
+                     Poland Schools
                  </button>
              </div>
 

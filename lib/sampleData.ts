@@ -70,6 +70,8 @@ export const cleanDiacritics = (str: string): string => {
     .replace(/æ/gi, 'ae')
     .replace(/ø/gi, 'o')
     .replace(/å/gi, 'a')
+    .replace(/ł/g, 'l')
+    .replace(/Ł/g, 'L')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 };
@@ -122,9 +124,13 @@ const MALAYSIA_MALE_FIRST_NAMES = ['Ahmad', 'Muhammad', 'Adam', 'Amir', 'Daniel'
 const MALAYSIA_FEMALE_FIRST_NAMES = ['Siti', 'Nur', 'Aisha', 'Irdina', 'Mei Ling', 'Hui Ling', 'Priya', 'Anis', 'Farah', 'Hannah', 'Michelle', 'Kavitha', 'Zara', 'Amanda', 'Chloe', 'Yasmin', 'Divya'];
 const MALAYSIA_LAST_NAMES = ['Tan', 'Wong', 'Lee', 'Lim', 'Ng', 'Chua', 'Rahman', 'Abdullah', 'Ismail', 'Ibrahim', 'Razak', 'Subramaniam', 'Ramasamy', 'Kaur', 'Singh', 'Chen', 'Teoh', 'Goh'];
 
+const POLAND_MALE_FIRST_NAMES = ['Jan', 'Aleksander', 'Antoni', 'Jakub', 'Franciszek', 'Szymon', 'Mikołaj', 'Filip', 'Stanisław', 'Wojciech', 'Adam', 'Michał', 'Kacper', 'Piotr', 'Bartosz', 'Krzysztof', 'Mateusz', 'Tomasz', 'Paweł', 'Kamil', 'Marcin', 'Dawid', 'Hubert', 'Maciej', 'Patryk', 'Adrian', 'Krystian', 'Dominik', 'Grzegorz', 'Rafał'];
+const POLAND_FEMALE_FIRST_NAMES = ['Zofia', 'Zuzanna', 'Hanna', 'Maja', 'Julia', 'Oliwia', 'Alicja', 'Maria', 'Pola', 'Amelia', 'Wiktoria', 'Aleksandra', 'Natalia', 'Karolina', 'Emilia', 'Magdalena', 'Klaudia', 'Patrycja', 'Paulina', 'Anna', 'Katarzyna', 'Monika', 'Joanna', 'Ewa', 'Agnieszka', 'Martyna', 'Weronika', 'Dominika', 'Izabela', 'Justyna'];
+const POLAND_LAST_NAMES = ['Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kowalczyk', 'Kamiński', 'Lewandowski', 'Zieliński', 'Szymański', 'Woźniak', 'Dąbrowski', 'Kozłowski', 'Jankowski', 'Mazur', 'Wojciechowski', 'Kwiatkowski', 'Krawczyk', 'Kaczmarek', 'Piotrowski', 'Grabowski', 'Pawłowski', 'Michalski', 'Nowicki', 'Adamczyk', 'Dudek', 'Zając', 'Wieczorek', 'Jabłoński', 'Majewski', 'Olszewski', 'Jaworski', 'Malinowski', 'Pawlak', 'Witkowski', 'Walczak', 'Stępień', 'Górski', 'Rutkowski', 'Michalak', 'Sikora', 'Ostrowski', 'Baran'];
+
 const usedNames = new Set<string>();
 
-const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postcode: string, country: 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' }> = {
+const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postcode: string, country: 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' | 'Poland' }> = {
   'Birmingham City FC Community Trust': { city: 'Birmingham, UK', address: 'St. Andrew\'s Stadium, Birmingham', postcode: 'B9 4RL', country: 'UK' },
   'Communicate School': { city: 'Manchester, UK', address: '24 Nicholas St, Manchester', postcode: 'M1 4EJ', country: 'UK' },
   'Manchester Communication Academy': { city: 'Manchester, UK', address: 'Silchester Drive, Manchester', postcode: 'M40 8NT', country: 'UK' },
@@ -238,7 +244,13 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'University of Malaya': { city: 'Kuala Lumpur, Malaysia', address: 'Jln Prof. Diraja Ungku Abdul Aziz', postcode: '50603', country: 'Malaysia' },
   'Tanta university': { city: 'Kuala Lumpur, Malaysia', address: 'Jalan Ampang, Kuala Lumpur', postcode: '50450', country: 'Malaysia' },
   'Alexandria University': { city: 'Petaling Jaya, Malaysia', address: 'Jalan Utara, Petaling Jaya, Selangor', postcode: '46200', country: 'Malaysia' },
-  'Sunway University': { city: 'Subang Jaya, Malaysia', address: '5 Jalan Universiti, Bandar Sunway', postcode: '47500', country: 'Malaysia' }
+  'Sunway University': { city: 'Subang Jaya, Malaysia', address: '5 Jalan Universiti, Bandar Sunway', postcode: '47500', country: 'Malaysia' },
+  'University of Finance and Law': { city: 'Bielsko-Biała, Poland', address: 'ul. Czesława Tańskiego 5', postcode: '43-382', country: 'Poland' },
+  'University of Warsaw': { city: 'Warsaw, Poland', address: 'Krakowskie Przedmieście 26/28', postcode: '00-927', country: 'Poland' },
+  'Jagiellonian University': { city: 'Krakow, Poland', address: 'Gołębia 24', postcode: '31-007', country: 'Poland' },
+  'AGH University of Krakow': { city: 'Krakow, Poland', address: 'al. Mickiewicza 30', postcode: '30-059', country: 'Poland' },
+  'Warsaw University of Technology': { city: 'Warsaw, Poland', address: 'Plac Politechniki 1', postcode: '00-661', country: 'Poland' },
+  'University of Wrocław': { city: 'Wrocław, Poland', address: 'Plac Uniwersytecki 1', postcode: '50-137', country: 'Poland' }
 };
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -257,7 +269,7 @@ const COURSES = [
 
 const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia'): string => {
+const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' | 'Poland'): string => {
   if (country === 'Kenya') {
     const number = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
     return `+254 7${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`;
@@ -298,6 +310,11 @@ const getRandomPhoneNumber = (country: 'Kenya' | 'UK' | 'Germany' | 'Australia' 
     const rest1 = Math.floor(Math.random() * 900) + 100;
     const rest2 = Math.floor(Math.random() * 9000) + 1000;
     return `+60 ${prefix}-${rest1} ${rest2}`;
+  } else if (country === 'Poland') {
+    const prefix = ['50', '51', '53', '57', '60', '66', '69', '72', '73', '78', '79', '88'].sort(() => Math.random() - 0.5)[0];
+    const rest1 = Math.floor(Math.random() * 900) + 100;
+    const rest2 = Math.floor(Math.random() * 900) + 100;
+    return `+48 ${prefix}${Math.floor(Math.random() * 10)} ${rest1} ${rest2}`;
   }
   const number = Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
   return `+44 7${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
@@ -399,6 +416,12 @@ const getRandomId = (university: string): string => {
   if (university === 'Tanta university') return `TU-MY-${year}-${randomNum}`;
   if (university === 'Alexandria University') return `AU-MY-${year}-${randomNum}`;
   if (university === 'Sunway University') return `SUN-MY-${year}-${randomNum}`;
+  if (university === 'University of Finance and Law') return `WSFIP-PL-${year}-${randomNum}`;
+  if (university === 'University of Warsaw') return `UW-PL-${year}-${randomNum}`;
+  if (university === 'Jagiellonian University') return `UJ-PL-${year}-${randomNum}`;
+  if (university === 'AGH University of Krakow') return `AGH-PL-${year}-${randomNum}`;
+  if (university === 'Warsaw University of Technology') return `WUT-PL-${year}-${randomNum}`;
+  if (university === 'University of Wrocław') return `UWR-PL-${year}-${randomNum}`;
   return `CEA-${year}-${randomNum}`;
 };
 
@@ -422,7 +445,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   const countryType = details.country;
   const gender = Math.random() > 0.5 ? 'male' : 'female';
   
-  const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : countryType === 'Italy' ? ITALY_LAST_NAMES : countryType === 'Ireland' ? IRELAND_LAST_NAMES : countryType === 'Austria' ? AUSTRIA_LAST_NAMES : countryType === 'Malaysia' ? MALAYSIA_LAST_NAMES : UK_LAST_NAMES;
+  const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : countryType === 'Italy' ? ITALY_LAST_NAMES : countryType === 'Ireland' ? IRELAND_LAST_NAMES : countryType === 'Austria' ? AUSTRIA_LAST_NAMES : countryType === 'Malaysia' ? MALAYSIA_LAST_NAMES : countryType === 'Poland' ? POLAND_LAST_NAMES : UK_LAST_NAMES;
   
   let fullName = '';
   let photo = '';
@@ -432,10 +455,10 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   do {
     let firstName: string;
     if (gender === 'male') {
-      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_MALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_MALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_MALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_MALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_MALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_MALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_MALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_MALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_MALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_MALE_FIRST_NAMES) : countryType === 'Malaysia' ? getRandomElement(MALAYSIA_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
+      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_MALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_MALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_MALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_MALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_MALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_MALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_MALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_MALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_MALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_MALE_FIRST_NAMES) : countryType === 'Malaysia' ? getRandomElement(MALAYSIA_MALE_FIRST_NAMES) : countryType === 'Poland' ? getRandomElement(POLAND_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
       photo = getRandomElement(MALE_AVATARS);
     } else {
-      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_FEMALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_FEMALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_FEMALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_FEMALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_FEMALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_FEMALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_FEMALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_FEMALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_FEMALE_FIRST_NAMES) : countryType === 'Malaysia' ? getRandomElement(MALAYSIA_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
+      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_FEMALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_FEMALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_FEMALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_FEMALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_FEMALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_FEMALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_FEMALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_FEMALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_FEMALE_FIRST_NAMES) : countryType === 'Malaysia' ? getRandomElement(MALAYSIA_FEMALE_FIRST_NAMES) : countryType === 'Poland' ? getRandomElement(POLAND_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
       photo = getRandomElement(FEMALE_AVATARS);
     }
     const lastName = getRandomElement(lastNamePool);
@@ -460,7 +483,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     status: 'Currently Enrolled',
     issueDate: '01 Sep 2026',
     validUntil: getRandomValidUntilDate(),
-    website: university.toLowerCase().includes('cranbourne') ? 'cesc.vic.edu.au' : university.toLowerCase().includes('texas') ? 'www.utexas.edu' : university.includes('Masinde Muliro') ? 'www.mmust.ac.ke' : university === 'Hudson County Community College' ? 'www.hccc.edu' : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
+    website: university === 'University of Finance and Law' ? 'www.ansbb.edu.pl' : university === 'University of Warsaw' ? 'www.uw.edu.pl' : university === 'Jagiellonian University' ? 'www.uj.edu.pl' : university.toLowerCase().includes('cranbourne') ? 'cesc.vic.edu.au' : university.toLowerCase().includes('texas') ? 'www.utexas.edu' : university.includes('Masinde Muliro') ? 'www.mmust.ac.ke' : university === 'Hudson County Community College' ? 'www.hccc.edu' : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
     photo: photo,
     logo: null,
     bloodGroup: getRandomElement(bloodGroups),
