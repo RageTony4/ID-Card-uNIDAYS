@@ -37,7 +37,9 @@ const MOCKUP_SCENES = [
   { url: "https://any-link-me.lovable.app/f/30416n5j5f.jfif", label: "Natural View 15" },
   { url: "https://any-link-me.lovable.app/f/6q2k3h3j5y.jfif", label: "Natural View 16" },
   { url: "https://any-link-me.lovable.app/f/6n6e3m654l.jfif", label: "Natural View 17" },
-  { url: "https://any-link-me.lovable.app/f/0p5117681p.jfif", label: "Natural View 18" }
+  { url: "https://any-link-me.lovable.app/f/0p5117681p.jfif", label: "Natural View 18" },
+  { url: "https://any-link-me.lovable.app/f/3k0t4v194f.jpg", label: "Natural View 19" },
+  { url: "https://any-link-me.lovable.app/f/1p23565p63.jfif", label: "Natural View 20" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0, setActiveTab, activeTab }) => {

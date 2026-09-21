@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { StudentInfo, ToastMessage, ToastType, IdCardTemplate } from './types';
+import { StudentInfo, ToastMessage, ToastType, IdCardTemplate, GenerationHistoryItem } from './types';
 import EditorPanel from './components/EditorPanel';
 import PreviewPanel from './components/PreviewPanel';
 import Toast from './components/Toast';
 import { generateRandomStudentInfo, getRandomValidUntilDate } from './lib/sampleData';
+import { copyTextToClipboard } from './lib/clipboard';
 import { GoogleGenAI } from "@google/genai";
 
 const App: React.FC = () => {
@@ -67,6 +68,22 @@ const App: React.FC = () => {
   const [autoTrigger, setAutoTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
 
+  // Last 5 generations history
+  const [history, setHistory] = useState<GenerationHistoryItem[]>(() => {
+    const saved = localStorage.getItem('id_gen_history');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.slice(0, 5);
+        }
+      } catch (e) {
+        console.error('Failed to parse saved history', e);
+      }
+    }
+    return [];
+  });
+
   // Persistence effects
   useEffect(() => {
     localStorage.setItem('id_gen_theme', theme);
@@ -87,6 +104,48 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('id_gen_date_locked', String(isDateLocked));
   }, [isDateLocked]);
+
+  useEffect(() => {
+    localStorage.setItem('id_gen_history', JSON.stringify(history));
+  }, [history]);
+
+  // Seed history with initial profile if empty
+  useEffect(() => {
+    setHistory(prev => {
+      if (prev.length === 0 && studentInfo.studentName) {
+        return [{
+          id: `${Date.now()}-init`,
+          timestamp: Date.now(),
+          studentInfo: { ...studentInfo },
+          template
+        }];
+      }
+      return prev;
+    });
+  }, []);
+
+  const recordGeneration = (newInfo: StudentInfo, tpl?: IdCardTemplate) => {
+    setHistory(prev => {
+      if (prev.length > 0) {
+        const top = prev[0].studentInfo;
+        if (
+          top.studentName === newInfo.studentName &&
+          top.studentId === newInfo.studentId &&
+          top.universityName === newInfo.universityName &&
+          top.issueDate === newInfo.issueDate
+        ) {
+          return prev;
+        }
+      }
+      const newItem: GenerationHistoryItem = {
+        id: `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        timestamp: Date.now(),
+        studentInfo: { ...newInfo },
+        template: tpl || template
+      };
+      return [newItem, ...prev].slice(0, 5);
+    });
+  };
 
   const toggleNameLock = () => {
     setIsNameLocked(prev => {
@@ -116,6 +175,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const ALL_AVATAR_URLS = [
+      "/assets/avatars/t3_headshot.jpg",
       "/assets/avatars/male_1.webp",
       "/assets/avatars/male_2.webp",
       "/assets/avatars/male_3.webp",
@@ -145,6 +205,16 @@ const App: React.FC = () => {
       "/assets/avatars/male_27.webp",
       "/assets/avatars/male_28.webp",
       "/assets/avatars/male_29.webp",
+      "/assets/avatars/male_30.webp",
+      "/assets/avatars/male_31.webp",
+      "/assets/avatars/male_32.webp",
+      "/assets/avatars/male_33.webp",
+      "/assets/avatars/male_34.webp",
+      "/assets/avatars/male_35.webp",
+      "/assets/avatars/male_36.webp",
+      "/assets/avatars/male_37.webp",
+      "/assets/avatars/male_38.webp",
+      "/assets/avatars/male_39.webp",
       "/assets/avatars/female_1.webp",
       "/assets/avatars/female_2.webp",
       "/assets/avatars/female_3.webp",
@@ -171,7 +241,17 @@ const App: React.FC = () => {
       "/assets/avatars/female_24.webp",
       "/assets/avatars/female_25.webp",
       "/assets/avatars/female_26.webp",
-      "/assets/avatars/female_27.webp"
+      "/assets/avatars/female_27.webp",
+      "/assets/avatars/female_28.webp",
+      "/assets/avatars/female_29.webp",
+      "/assets/avatars/female_30.webp",
+      "/assets/avatars/female_31.webp",
+      "/assets/avatars/female_32.webp",
+      "/assets/avatars/female_33.webp",
+      "/assets/avatars/female_34.webp",
+      "/assets/avatars/female_35.webp",
+      "/assets/avatars/female_36.webp",
+      "/assets/avatars/female_37.webp"
     ];
 
     ALL_AVATAR_URLS.forEach(url => {
@@ -190,18 +270,26 @@ const App: React.FC = () => {
     // If the university is changed, auto-populate details but NEVER change the student's name (or dates if locked)
     if (name === 'universityName') {
       const newInfo = generateRandomStudentInfo(value);
-      setStudentInfo(prev => ({ 
-        ...newInfo, 
-        studentName: prev.studentName, // Keep name unchanged when switching schools
-        issueDate: isDateLocked ? prev.issueDate : newInfo.issueDate,
-        validUntil: isDateLocked ? prev.validUntil : newInfo.validUntil,
-        dob: isDateLocked ? prev.dob : newInfo.dob,
-        logo: prev.logo 
-      }));
-      
+      let targetTemplate = template;
       if (value === 'Shepherd School') {
+        targetTemplate = 'official';
         setTemplate('official');
+      } else if (value === 'BRAC University') {
+        targetTemplate = 't3';
+        setTemplate('t3');
       }
+
+      const updatedInfo: StudentInfo = { 
+        ...newInfo, 
+        studentName: studentInfo.studentName, // Keep name unchanged when switching schools
+        issueDate: isDateLocked ? studentInfo.issueDate : newInfo.issueDate,
+        validUntil: isDateLocked ? studentInfo.validUntil : newInfo.validUntil,
+        dob: isDateLocked ? studentInfo.dob : newInfo.dob,
+        logo: studentInfo.logo 
+      };
+
+      setStudentInfo(updatedInfo);
+      recordGeneration(updatedInfo, targetTemplate);
     } else {
       setStudentInfo(prev => ({ ...prev, [name]: value }));
     }
@@ -229,47 +317,94 @@ const App: React.FC = () => {
     }
   };
 
+  const handleTemplateChange = (newTemplate: IdCardTemplate) => {
+    setTemplate(newTemplate);
+    if (newTemplate === 't3') {
+      if (!studentInfo.universityName || studentInfo.universityName.includes('Cranbourne') || studentInfo.universityName.includes('Texas') || studentInfo.universityName === 'Community-Ed Academy') {
+        setStudentInfo(prev => ({
+          ...prev,
+          universityName: 'BRAC University',
+          studentName: isNameLocked ? prev.studentName : 'SHAMSIL ARAFIN ULLAH',
+          course: 'Bachelor of Science in Computer Science and Engineering',
+          studentId: '19101164',
+          bloodGroup: 'AB+ve',
+          validUntil: isDateLocked ? prev.validUntil : '02-01-2023',
+          photo: prev.photo && !prev.photo.includes('female_1') ? prev.photo : '/assets/avatars/t3_headshot.jpg'
+        }));
+      }
+    }
+  };
+
   const handlePhotoSelect = (url: string) => {
     setStudentInfo(prev => ({ ...prev, photo: url }));
   };
 
-  const handleGenerateSample = () => {
+  const handleGenerateSample = async () => {
     const newInfo = generateRandomStudentInfo(studentInfo.universityName);
-    setStudentInfo(prev => ({ 
+    const finalName = isNameLocked ? studentInfo.studentName : newInfo.studentName;
+    const finalInfo: StudentInfo = { 
       ...newInfo, 
-      studentName: isNameLocked ? prev.studentName : newInfo.studentName,
-      issueDate: isDateLocked ? prev.issueDate : newInfo.issueDate,
-      validUntil: isDateLocked ? prev.validUntil : newInfo.validUntil,
-      dob: isDateLocked ? prev.dob : newInfo.dob,
-      logo: prev.logo 
-    })); 
+      studentName: finalName,
+      issueDate: isDateLocked ? studentInfo.issueDate : newInfo.issueDate,
+      validUntil: isDateLocked ? studentInfo.validUntil : newInfo.validUntil,
+      dob: isDateLocked ? studentInfo.dob : newInfo.dob,
+      logo: studentInfo.logo 
+    };
+
+    setStudentInfo(finalInfo);
+    recordGeneration(finalInfo, template);
 
     const locks = [];
     if (isNameLocked) locks.push('Name');
     if (isDateLocked) locks.push('Dates');
-
     const lockNotice = locks.length > 0 ? ` (${locks.join(' & ')} locked)` : '';
-    showToast(`Student details randomized${lockNotice}!`, 'success');
+
+    if (finalName) {
+      const copied = await copyTextToClipboard(finalName);
+      if (copied) {
+        showToast(`Randomized & "${finalName}" copied to clipboard!${lockNotice}`, 'success');
+      } else {
+        showToast(`Student details randomized${lockNotice}!`, 'success');
+      }
+    } else {
+      showToast(`Student details randomized${lockNotice}!`, 'success');
+    }
   };
 
-  const handleAutoTrigger = () => {
+  const handleAutoTrigger = async () => {
     const newInfo = generateRandomStudentInfo(studentInfo.universityName);
     const finalName = isNameLocked ? studentInfo.studentName : newInfo.studentName;
-    setStudentInfo(prev => ({ 
+    const finalInfo: StudentInfo = { 
       ...newInfo, 
       studentName: finalName,
-      issueDate: isDateLocked ? prev.issueDate : newInfo.issueDate,
-      validUntil: isDateLocked ? prev.validUntil : newInfo.validUntil,
-      dob: isDateLocked ? prev.dob : newInfo.dob,
-      logo: prev.logo 
-    }));
+      issueDate: isDateLocked ? studentInfo.issueDate : newInfo.issueDate,
+      validUntil: isDateLocked ? studentInfo.validUntil : newInfo.validUntil,
+      dob: isDateLocked ? studentInfo.dob : newInfo.dob,
+      logo: studentInfo.logo 
+    };
+
+    setStudentInfo(finalInfo);
+    recordGeneration(finalInfo, template);
     setAutoTrigger(prev => prev + 1);
     
     // Copy the name to clipboard
     if (finalName) {
-      navigator.clipboard.writeText(finalName)
-        .then(() => showToast(`Name "${finalName}" copied to clipboard!`, 'success'))
-        .catch(() => showToast('Failed to copy name to clipboard', 'error'));
+      await copyTextToClipboard(finalName);
+      showToast(`Name "${finalName}" copied to clipboard!`, 'success');
+    }
+  };
+
+  const handleRestoreHistory = async (item: GenerationHistoryItem) => {
+    setStudentInfo(item.studentInfo);
+    if (item.template) {
+      setTemplate(item.template);
+    }
+    const name = item.studentInfo.studentName;
+    if (name) {
+      await copyTextToClipboard(name);
+      showToast(`Restored: "${name}" (copied to clipboard)!`, 'success');
+    } else {
+      showToast('Restored previous generation!', 'info');
     }
   };
 
@@ -306,7 +441,7 @@ const App: React.FC = () => {
             isDateLocked={isDateLocked}
             onToggleDateLock={toggleDateLock}
             onToggleTheme={toggleTheme}
-            onTemplateChange={setTemplate}
+            onTemplateChange={handleTemplateChange}
             onInputChange={handleInputChange}
             onPhotoChange={handlePhotoChange}
             onPhotoSelect={handlePhotoSelect}
@@ -315,6 +450,8 @@ const App: React.FC = () => {
             showToast={showToast}
             setActiveTab={setActiveTab}
             activeTab={activeTab}
+            history={history}
+            onRestoreHistory={handleRestoreHistory}
           />
         </div>
         <div className={`${activeTab === 'preview' ? 'block' : 'absolute top-0 left-0 opacity-0 pointer-events-none lg:static lg:block lg:opacity-100 lg:pointer-events-auto'} w-full lg:w-1/2`}>

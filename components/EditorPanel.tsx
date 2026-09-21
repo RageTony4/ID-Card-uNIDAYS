@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { StudentInfo, IdCardTemplate, ToastType } from '../types';
+import { StudentInfo, IdCardTemplate, ToastType, GenerationHistoryItem } from '../types';
 import InputField from './InputField';
 import { getRandomValidUntilDate } from '../lib/sampleData';
+import { GenerationHistory } from './GenerationHistory';
 
 interface EditorPanelProps {
   studentInfo: StudentInfo;
@@ -22,9 +23,12 @@ interface EditorPanelProps {
   showToast: (message: string, type: ToastType) => void;
   setActiveTab: (tab: 'edit' | 'preview') => void;
   activeTab: 'edit' | 'preview';
+  history?: GenerationHistoryItem[];
+  onRestoreHistory?: (item: GenerationHistoryItem) => void;
 }
 
 const MALE_HEADSHOTS = [
+  "/assets/avatars/t3_headshot.jpg",
   "/assets/avatars/male_1.webp",
   "/assets/avatars/male_2.webp",
   "/assets/avatars/male_3.webp",
@@ -53,7 +57,17 @@ const MALE_HEADSHOTS = [
   "/assets/avatars/male_26.webp",
   "/assets/avatars/male_27.webp",
   "/assets/avatars/male_28.webp",
-  "/assets/avatars/male_29.webp"
+  "/assets/avatars/male_29.webp",
+  "/assets/avatars/male_30.webp",
+  "/assets/avatars/male_31.webp",
+  "/assets/avatars/male_32.webp",
+  "/assets/avatars/male_33.webp",
+  "/assets/avatars/male_34.webp",
+  "/assets/avatars/male_35.webp",
+  "/assets/avatars/male_36.webp",
+  "/assets/avatars/male_37.webp",
+  "/assets/avatars/male_38.webp",
+  "/assets/avatars/male_39.webp"
 ];
 
 const FEMALE_HEADSHOTS = [
@@ -83,7 +97,17 @@ const FEMALE_HEADSHOTS = [
   "/assets/avatars/female_24.webp",
   "/assets/avatars/female_25.webp",
   "/assets/avatars/female_26.webp",
-  "/assets/avatars/female_27.webp"
+  "/assets/avatars/female_27.webp",
+  "/assets/avatars/female_28.webp",
+  "/assets/avatars/female_29.webp",
+  "/assets/avatars/female_30.webp",
+  "/assets/avatars/female_31.webp",
+  "/assets/avatars/female_32.webp",
+  "/assets/avatars/female_33.webp",
+  "/assets/avatars/female_34.webp",
+  "/assets/avatars/female_35.webp",
+  "/assets/avatars/female_36.webp",
+  "/assets/avatars/female_37.webp"
 ];
 
 const SCHOOL_DATA = {
@@ -124,6 +148,7 @@ const SCHOOL_DATA = {
     'Germany': [
         'Salem Community School',
         'Shepherd School',
+        'International University',
         'Fichteschule',
         'JurGrad gGmbH',
         'oeoemrang-Skuul',
@@ -180,6 +205,7 @@ const SCHOOL_DATA = {
         'École Mathieu-Martin'
     ],
     'India': [
+        'Sainik School',
         'Degloor College Degloor',
         'FEEDS College',
         'Tihu College',
@@ -211,6 +237,7 @@ const SCHOOL_DATA = {
         'Università di Napoli Federico II'
     ],
     'Ireland': [
+        'University of Life',
         'University of Limerick',
         'University of Galway',
         'National University of Ireland',
@@ -233,13 +260,8 @@ const SCHOOL_DATA = {
         'Alexandria University',
         'Sunway University'
     ],
-    'Poland': [
-        'University of Finance and Law',
-        'University of Warsaw',
-        'Jagiellonian University',
-        'AGH University of Krakow',
-        'Warsaw University of Technology',
-        'University of Wrocław'
+    'Bangladesh': [
+        'BRAC University'
     ]
 };
 
@@ -260,9 +282,11 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onAutoGenerate,
   showToast,
   setActiveTab,
-  activeTab
+  activeTab,
+  history,
+  onRestoreHistory
 }) => {
-  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' | 'Poland'>('United Kingdom');
+  const [selectedCountry, setSelectedCountry] = useState<'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia'>('United Kingdom');
   const panelRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -271,7 +295,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
     }
   }, [activeTab]);
 
-  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' | 'Poland') => {
+  const handleCountrySwitch = (country: 'United Kingdom' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia') => {
     setSelectedCountry(country);
     const firstSchool = SCHOOL_DATA[country][0].replace(/\*$/, '');
     const event = {
@@ -330,7 +354,47 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-6 mb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-bold mb-3 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Design Template</label>
-        <div className="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-11 gap-1.5">
+        <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-15 gap-1.5">
+          <button 
+            onClick={() => onTemplateChange('sainik')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'sainik' 
+                ? 'border-[#1B345D] bg-[#1B345D]/15 text-[#1B345D] dark:text-blue-300 shadow-md font-black ring-2 ring-[#1B345D]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Sainik
+          </button>
+          <button 
+            onClick={() => onTemplateChange('uoflife')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'uoflife' 
+                ? 'border-[#8B1E2D] bg-[#8B1E2D]/15 text-[#8B1E2D] dark:text-rose-300 shadow-md font-black ring-2 ring-[#8B1E2D]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            U of Life
+          </button>
+          <button 
+            onClick={() => onTemplateChange('international')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'international' 
+                ? 'border-[#0284C7] bg-[#0284C7]/15 text-[#0284C7] dark:text-sky-300 shadow-md font-black ring-2 ring-[#0284C7]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Intl Univ
+          </button>
+          <button 
+            onClick={() => onTemplateChange('t3')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 't3' 
+                ? 'border-[#0284C7] bg-[#0284C7]/15 text-[#0284C7] dark:text-sky-300 shadow-md font-black ring-2 ring-[#0284C7]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            T3
+          </button>
           <button 
             onClick={() => onTemplateChange('t2')}
             className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
@@ -512,6 +576,16 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
         </div>
       </div>
 
+      {history && history.length > 0 && onRestoreHistory && (
+        <GenerationHistory
+          history={history}
+          currentStudentInfo={studentInfo}
+          onRestore={onRestoreHistory}
+          theme={theme}
+          showToast={showToast}
+        />
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="md:col-span-2">
              <label className={`block text-sm font-bold mb-2 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Select Country</label>
@@ -587,12 +661,6 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                     className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Malaysia' ? 'bg-teal-600 border-teal-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-teal-300'}`}
                  >
                      Malaysia Schools
-                 </button>
-                 <button 
-                    onClick={() => handleCountrySwitch('Poland')}
-                    className={`flex-1 py-2 px-4 rounded-md font-bold text-xs uppercase tracking-wider transition-all border-2 ${selectedCountry === 'Poland' ? 'bg-rose-600 border-rose-600 text-white shadow-md' : isDark ? 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600' : 'bg-white border-gray-200 text-gray-500 hover:border-rose-300'}`}
-                 >
-                     Poland Schools
                  </button>
              </div>
 

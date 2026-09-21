@@ -26,4 +26,11 @@ export interface ToastMessage {
   type: ToastType;
 }
 
-export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd' | 'd1' | 'westdale' | 'd2' | 't1' | 't2';
+export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd' | 'd1' | 'westdale' | 'd2' | 't1' | 't2' | 't3' | 'sainik' | 'uoflife' | 'international';
+
+export interface GenerationHistoryItem {
+  id: string;
+  timestamp: number;
+  studentInfo: StudentInfo;
+  template?: IdCardTemplate;
+}

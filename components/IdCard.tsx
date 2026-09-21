@@ -1,6 +1,9 @@
 
 import React, { forwardRef } from 'react';
 import { StudentInfo, IdCardTemplate } from '../types';
+import { SainikTemplate } from './templates/SainikTemplate';
+import { UOfLifeTemplate } from './templates/UOfLifeTemplate';
+import { InternationalTemplate } from './templates/InternationalTemplate';
 
 interface IdCardProps {
   studentInfo: StudentInfo;
@@ -83,7 +86,16 @@ const formatToMMYYYY = (dateStr: string): string => {
 };
 
 const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant' }, ref) => {
-  
+  if (template === 'sainik') {
+    return <SainikTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
+  }
+  if (template === 'uoflife') {
+    return <UOfLifeTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
+  }
+  if (template === 'international') {
+    return <InternationalTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
+  }
+
   // Clean university name for display (remove trailing star if present)
   const displayUniversityName = studentInfo.universityName.replace(/\*$/, '');
 
@@ -443,8 +455,8 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   const CranbourneEastLogo = ({ className = "w-10 h-7" }: { className?: string }) => {
     return (
       <svg className={`object-contain flex-shrink-0 ${className}`} viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Navy blue semi-circular dome */}
-        <path d="M 92 56 A 42 42 0 0 0 8 56 L 92 56 Z" fill="#142144" />
+        {/* Navy blue semi-circular dome with cyan border for dark mode contrast */}
+        <path d="M 92 56 A 42 42 0 0 0 8 56 L 92 56 Z" fill="#1E293B" stroke="#38BDF8" strokeWidth="1.2" />
         
         {/* Subtle base cyan line */}
         <path d="M 12 55.5 L 88 55.5" stroke="#38BDF8" strokeWidth="1.2" strokeOpacity="0.8" />
@@ -465,7 +477,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   };
 
-  const T2Barcode = ({ className = "h-4 w-full" }: { className?: string }) => {
+  const T2Barcode = ({ className = "h-4 w-full", fill = "#FFFFFF" }: { className?: string; fill?: string }) => {
     const bars = [
       2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
       1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
@@ -486,7 +498,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
               y="0"
               width={w}
               height="20"
-              fill="#000000"
+              fill={fill}
             />
           );
         })}
@@ -494,12 +506,180 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   };
 
-  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd/D1/Westdale/D2/T1/T2
+  const T3BracLogo = ({ className = "w-6 h-6" }: { className?: string }) => (
+    <svg className={`object-contain flex-shrink-0 ${className}`} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Outer circle rings */}
+      <circle cx="50" cy="50" r="47" stroke="#1E293B" strokeWidth="2.8" />
+      <circle cx="50" cy="50" r="43" stroke="#475569" strokeWidth="0.8" strokeDasharray="2 1.5" />
+      <circle cx="50" cy="50" r="39" stroke="#1E293B" strokeWidth="1.2" />
+      
+      {/* Arced Text: BRAC UNIVERSITY */}
+      <path id="t3-seal-arch-top" d="M 18,50 A 32,32 0 0,1 82,50" fill="none" />
+      <text fill="#0F172A" fontSize="7.8" fontFamily="sans-serif" fontWeight="800" letterSpacing="0.09em">
+        <textPath href="#t3-seal-arch-top" startOffset="50%" textAnchor="middle">
+          BRAC UNIVERSITY
+        </textPath>
+      </text>
+
+      {/* Central Emblem: Open Book & Stylized Chevrons / Torch */}
+      <g transform="translate(50, 55)">
+        {/* Open Book Base */}
+        <path d="M -16,4 C -10,1 -4,1 0,3 C 4,1 10,1 16,4 L 16,7 C 10,4 4,4 0,6 C -4,4 -10,4 -16,7 Z" fill="#1E293B" />
+        <line x1="0" y1="3" x2="0" y2="7" stroke="#FFFFFF" strokeWidth="1" />
+
+        {/* Ascending stylized chevrons / torch layers */}
+        <path d="M -10,-3 L 0,-10 L 10,-3 L 0,-6 Z" fill="#1E293B" />
+        <path d="M -8,-9 L 0,-16 L 8,-9 L 0,-12 Z" fill="#1E293B" />
+        <path d="M -5,-15 L 0,-21 L 5,-15 L 0,-18 Z" fill="#1E293B" />
+      </g>
+
+      {/* Bottom Motto micro text: INSPIRING EXCELLENCE */}
+      <path id="t3-seal-arch-bot" d="M 82,53 A 32,32 0 0,1 18,53" fill="none" />
+      <text fill="#475569" fontSize="5" fontFamily="sans-serif" fontWeight="700" letterSpacing="0.06em">
+        <textPath href="#t3-seal-arch-bot" startOffset="50%" textAnchor="middle">
+          INSPIRING EXCELLENCE
+        </textPath>
+      </text>
+    </svg>
+  );
+
+  const T3GuillochePattern = () => (
+    <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30 mix-blend-multiply" viewBox="0 0 300 160" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#0284C7" strokeWidth="0.45" strokeOpacity="0.45">
+        <path d="M 0,20 Q 50,5 100,22 T 200,20 T 300,18" />
+        <path d="M 0,35 Q 60,15 120,38 T 240,32 T 300,34" />
+        <path d="M 0,50 Q 70,30 140,55 T 280,48 T 300,50" />
+        <path d="M 0,65 Q 50,45 100,70 T 200,62 T 300,66" />
+        <path d="M 0,80 Q 80,60 160,85 T 300,78" />
+        <path d="M 0,95 Q 60,80 120,102 T 240,94 T 300,98" />
+        <path d="M 0,110 Q 70,95 140,118 T 280,110 T 300,112" />
+        <path d="M 0,125 Q 50,110 100,132 T 200,126 T 300,130" />
+        <path d="M 0,140 Q 80,125 160,145 T 300,140" />
+        <ellipse cx="140" cy="80" rx="90" ry="50" strokeDasharray="1 1" />
+        <ellipse cx="140" cy="80" rx="120" ry="70" strokeDasharray="1 1.5" />
+        <ellipse cx="140" cy="80" rx="60" ry="35" strokeDasharray="1 1" />
+      </g>
+    </svg>
+  );
+
+  const T3HologramOverlay = () => (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      {/* Iridescent circular diffraction gradient sheen */}
+      <div 
+        className="absolute -left-8 -bottom-10 w-60 h-60 rounded-full opacity-45 mix-blend-color-dodge pointer-events-none"
+        style={{
+          background: 'conic-gradient(from 215deg at 50% 50%, rgba(255,180,180,0.45) 0deg, rgba(255,245,170,0.55) 60deg, rgba(160,255,210,0.55) 120deg, rgba(160,225,255,0.65) 180deg, rgba(225,170,255,0.55) 240deg, rgba(255,185,215,0.45) 300deg, rgba(255,180,180,0.45) 360deg)'
+        }}
+      />
+      
+      {/* Concentric diffraction interference rings & radial sheen */}
+      <svg className="absolute -left-6 -bottom-8 w-68 h-68 opacity-35 pointer-events-none" viewBox="0 0 200 200" fill="none">
+        <circle cx="100" cy="100" r="28" stroke="#FFFFFF" strokeWidth="0.6" strokeDasharray="2 2" />
+        <circle cx="100" cy="100" r="42" stroke="#FFFFFF" strokeWidth="0.8" />
+        <circle cx="100" cy="100" r="58" stroke="#FFFFFF" strokeWidth="0.6" strokeDasharray="3 1" />
+        <circle cx="100" cy="100" r="74" stroke="#FFFFFF" strokeWidth="0.9" />
+        <circle cx="100" cy="100" r="88" stroke="#FFFFFF" strokeWidth="0.7" strokeDasharray="4 2" />
+        {[...Array(24)].map((_, i) => (
+          <line
+            key={i}
+            x1="100"
+            y1="100"
+            x2={100 + 92 * Math.cos((i * 15 * Math.PI) / 180)}
+            y2={100 + 92 * Math.sin((i * 15 * Math.PI) / 180)}
+            stroke="#FFFFFF"
+            strokeWidth="0.35"
+            strokeOpacity="0.5"
+          />
+        ))}
+      </svg>
+
+      {/* Faint BRAC watermark text across center */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-[0.09] select-none pointer-events-none">
+        <span className="text-neutral-900 font-black text-6xl tracking-widest transform -rotate-12">
+          BRAC
+        </span>
+      </div>
+    </div>
+  );
+
+  const T3Barcode = ({ className = "h-4 w-full" }: { className?: string }) => {
+    const bars = [
+      2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
+      1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
+      3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1,
+      2, 3, 1, 2, 1, 1, 2, 1, 3, 2, 1, 2, 2, 1, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1
+    ];
+    let curX = 0;
+    return (
+      <svg className={className} viewBox="0 0 160 20" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {bars.map((w, idx) => {
+          const x = curX;
+          curX += w * 1.35 + (idx % 2 === 0 ? 1 : 1.1);
+          if (x > 158) return null;
+          return (
+            <rect
+              key={idx}
+              x={x}
+              y="0"
+              width={w}
+              height="20"
+              fill="#0F172A"
+            />
+          );
+        })}
+      </svg>
+    );
+  };
+
+  const formatT3Date = (dateStr: string): string => {
+    if (!dateStr) return '02-01-2023';
+    const cleaned = dateStr.trim();
+    if (/^\d{2}-\d{2}-\d{4}$/.test(cleaned)) return cleaned;
+    const ddmmyyyy = formatToDDMMYYYY(cleaned);
+    if (ddmmyyyy && ddmmyyyy.includes('/')) {
+      return ddmmyyyy.replace(/\//g, '-');
+    }
+    return cleaned;
+  };
+
+  const renderT3Course = (courseStr: string) => {
+    if (!courseStr) return (
+      <>
+        <div className="line-clamp-1">Bachelor of Science in</div>
+        <div className="line-clamp-1 font-semibold text-neutral-900">Computer Science and Engineering</div>
+      </>
+    );
+    const c = courseStr.trim();
+    const inIndex = c.indexOf(' in ');
+    if (inIndex !== -1) {
+      const part1 = c.substring(0, inIndex + 3);
+      const part2 = c.substring(inIndex + 4);
+      return (
+        <>
+          <div className="line-clamp-1">{part1}</div>
+          <div className="line-clamp-1 font-semibold text-neutral-900">{part2}</div>
+        </>
+      );
+    }
+    const words = c.split(' ');
+    if (words.length > 3) {
+      const mid = Math.ceil(words.length / 2);
+      return (
+        <>
+          <div className="line-clamp-1">{words.slice(0, mid).join(' ')}</div>
+          <div className="line-clamp-1 font-semibold text-neutral-900">{words.slice(mid).join(' ')}</div>
+        </>
+      );
+    }
+    return <div className="line-clamp-2">{c}</div>;
+  };
+
+  // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd/D1/Westdale/D2/T1/T2/T3
   if (side === 'back') {
-    if (template === 't2') {
-      const uFull = (studentInfo.universityName || 'Cranbourne East Secondary College').trim();
-      const isCranbourne = uFull.toLowerCase().includes('cranbourne');
-      const studentId = studentInfo.studentId || 'CESC-2025-481920';
+    if (template === 't3') {
+      const uFull = (studentInfo.universityName || 'BRAC University').trim();
+      const isBrac = uFull.toLowerCase().includes('brac');
+      const studentId = studentInfo.studentId || '19101164';
 
       return (
         <div 
@@ -510,46 +690,50 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           <div className="absolute inset-0 bg-gradient-to-tr from-black/[0.015] via-transparent to-white/40 pointer-events-none" />
 
           {/* Top Header Strip */}
-          <div className="px-3.5 pt-3 pb-1 border-b border-neutral-200/80 flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <CranbourneEastLogo className="w-6 h-4 flex-shrink-0" />
-              <span className="font-sans font-black text-[9px] uppercase tracking-wider text-[#142144]">
+          <div className="px-3.5 pt-2.5 pb-1 border-b border-neutral-200/80 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {studentInfo.logo ? (
+                <img src={studentInfo.logo} alt="Logo" className="w-5 h-5 object-contain flex-shrink-0" />
+              ) : (
+                <T3BracLogo className="w-5 h-5 flex-shrink-0" />
+              )}
+              <span className="font-sans font-black text-[10.5px] uppercase tracking-wider text-[#0F172A]">
                 {uFull}
               </span>
             </div>
-            <span className="font-mono text-[7px] text-neutral-500 font-semibold">
-              {studentId}
+            <span className="font-mono text-[8px] text-neutral-600 font-bold">
+              ID: {studentId}
             </span>
           </div>
 
           {/* Cardholder notice & conditions */}
-          <div className="px-3.5 py-1.5 flex-1 flex flex-col justify-between text-[7px] text-neutral-700 leading-[1.35]">
+          <div className="px-3.5 py-2 flex-1 flex flex-col justify-between text-[7.5px] sm:text-[8px] text-neutral-700 leading-[1.38]">
             <p>
-              This card is the official property of {uFull}. It is issued for identification, library borrowing, and school attendance. It is non-transferable and must be carried at all times on school grounds.
+              This card is the official property of {uFull}. It is issued for identification, library privileges, and campus access. It is non-transferable and must be carried at all times on university premises and presented upon request by authorized personnel.
             </p>
 
-            <div className="flex justify-between items-end gap-3 mt-1">
-              <div className="flex-1 bg-neutral-50 rounded border border-neutral-200 p-1.5">
-                <p className="font-bold text-neutral-800 uppercase text-[6px] tracking-wider mb-0.5">
+            <div className="flex justify-between items-end gap-3 mt-1.5">
+              <div className="flex-1 bg-neutral-50 rounded border border-neutral-200 p-2">
+                <p className="font-bold text-neutral-800 uppercase text-[7px] tracking-wider mb-0.5">
                   If found, please return to:
                 </p>
-                <p className="text-[6.5px] text-neutral-600 leading-tight">
-                  {isCranbourne ? 'General Office • 50 Hunt Club Blvd, Cranbourne East VIC 3977' : studentInfo.address}
+                <p className="text-[7px] text-neutral-700 leading-tight">
+                  {isBrac ? 'Office of the Registrar • 66 Mohakhali, Dhaka 1212, Bangladesh' : studentInfo.address}
                 </p>
-                <p className="text-[6.5px] text-neutral-500 leading-tight mt-0.5">
-                  {isCranbourne ? 'Phone: (03) 5990 0200 • Email: cranbourne.east.sc@education.vic.gov.au' : studentInfo.phone}
+                <p className="text-[7px] text-neutral-600 leading-tight mt-0.5">
+                  {isBrac ? 'Phone: +880-2-222264051 • Email: info@bracu.ac.bd • Web: www.bracu.ac.bd' : `${studentInfo.phone} • ${studentInfo.website}`}
                 </p>
               </div>
 
               {/* Student Signature Box */}
-              <div className="w-28 flex flex-col items-center flex-shrink-0">
-                <div className="w-full h-7 bg-white border border-neutral-300 rounded-[2px] flex items-center justify-center relative overflow-hidden shadow-inner">
+              <div className="w-24 flex flex-col items-center flex-shrink-0">
+                <div className="w-full h-8 bg-white border border-neutral-300 rounded-[2px] flex items-center justify-center relative overflow-hidden shadow-inner">
                   <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:4px_4px]" />
-                  <span className="font-serif italic text-[7.5px] text-neutral-400 select-none">
+                  <span className="font-serif italic text-[8px] text-neutral-400 select-none">
                     Student Signature
                   </span>
                 </div>
-                <span className="text-[5.5px] text-neutral-400 uppercase tracking-widest mt-0.5">
+                <span className="text-[6px] text-neutral-500 uppercase tracking-widest mt-0.5">
                   Cardholder Signature
                 </span>
               </div>
@@ -559,9 +743,81 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           {/* Bottom Barcode Strip */}
           <div className="px-3.5 py-1.5 bg-neutral-100/90 border-t border-neutral-200/80 flex items-center justify-between text-[6.5px]">
             <div className="flex items-center gap-2">
-              <T2Barcode className="w-28 h-3.5" />
+              <T3Barcode className="w-28 h-3.5" />
             </div>
             <span className="font-semibold text-neutral-600 uppercase tracking-wider text-[6.5px]">
+              OFFICIAL STUDENT ID
+            </span>
+          </div>
+        </div>
+      );
+    }
+    if (template === 't2') {
+      const uFull = (studentInfo.universityName || 'Cranbourne East Secondary College').trim();
+      const isCranbourne = uFull.toLowerCase().includes('cranbourne');
+      const studentId = studentInfo.studentId || 'CESC-2025-481920';
+
+      return (
+        <div 
+          ref={ref} 
+          className="id-card-container id-card-back shadow-2xl bg-[#0F172A] overflow-hidden relative rounded-xl border border-slate-700/80 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-white"
+        >
+          {/* Subtle Sheen Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.03] via-transparent to-white/[0.06] pointer-events-none" />
+
+          {/* Top Header Strip */}
+          <div className="px-3.5 pt-3 pb-1 border-b border-slate-800 flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <CranbourneEastLogo className="w-6 h-4 flex-shrink-0" />
+              <span className="font-sans font-black text-[9px] uppercase tracking-wider text-white">
+                {uFull}
+              </span>
+            </div>
+            <span className="font-mono text-[7px] text-slate-400 font-semibold">
+              {studentId}
+            </span>
+          </div>
+
+          {/* Cardholder notice & conditions */}
+          <div className="px-3.5 py-1.5 flex-1 flex flex-col justify-between text-[7px] text-slate-300 leading-[1.35]">
+            <p>
+              This card is the official property of {uFull}. It is issued for identification, library borrowing, and school attendance. It is non-transferable and must be carried at all times on school grounds.
+            </p>
+
+            <div className="flex justify-between items-end gap-3 mt-1">
+              <div className="flex-1 bg-slate-800/80 rounded border border-slate-700 p-1.5">
+                <p className="font-bold text-white uppercase text-[6px] tracking-wider mb-0.5">
+                  If found, please return to:
+                </p>
+                <p className="text-[6.5px] text-slate-300 leading-tight">
+                  {isCranbourne ? 'General Office • 50 Hunt Club Blvd, Cranbourne East VIC 3977' : studentInfo.address}
+                </p>
+                <p className="text-[6.5px] text-slate-400 leading-tight mt-0.5">
+                  {isCranbourne ? 'Phone: (03) 5990 0200 • Email: cranbourne.east.sc@education.vic.gov.au' : studentInfo.phone}
+                </p>
+              </div>
+
+              {/* Student Signature Box */}
+              <div className="w-28 flex flex-col items-center flex-shrink-0">
+                <div className="w-full h-7 bg-slate-900 border border-slate-700 rounded-[2px] flex items-center justify-center relative overflow-hidden shadow-inner">
+                  <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:4px_4px]" />
+                  <span className="font-serif italic text-[7.5px] text-slate-400 select-none">
+                    Student Signature
+                  </span>
+                </div>
+                <span className="text-[5.5px] text-slate-400 uppercase tracking-widest mt-0.5">
+                  Cardholder Signature
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Barcode Strip */}
+          <div className="px-3.5 py-1.5 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between text-[6.5px]">
+            <div className="flex items-center gap-2">
+              <T2Barcode className="w-28 h-3.5" fill="#FFFFFF" />
+            </div>
+            <span className="font-semibold text-slate-400 uppercase tracking-wider text-[6.5px]">
               OFFICIAL STUDENT CARD
             </span>
           </div>
@@ -1078,6 +1334,115 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   }
 
+  // T3 BRAC University Student ID Card Template (Front View)
+  if (template === 't3') {
+    const uFull = (studentInfo.universityName || 'BRAC University').trim();
+    const rawName = (studentInfo.studentName || 'SHAMSIL ARAFIN ULLAH').trim().toUpperCase();
+    const studentId = studentInfo.studentId || '19101164';
+    const bloodGroup = studentInfo.bloodGroup || 'AB+ve';
+    const validityFormatted = formatT3Date(studentInfo.validUntil || '02-01-2023');
+
+    return (
+      <div 
+        ref={ref} 
+        className="id-card-container shadow-xl bg-white overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 !flex-col text-neutral-900"
+      >
+        {/* Overall Card Surface Sheen Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-black/[0.015] via-transparent to-white/40 pointer-events-none z-30" />
+
+        {/* Top Header Bar: Pure White, School Logo & Name */}
+        <div className="h-[42px] w-full bg-white border-b border-neutral-200/90 px-3 flex items-center justify-between relative z-20 flex-shrink-0">
+          <div className="flex items-center gap-2.5">
+            {studentInfo.logo ? (
+              <img 
+                src={studentInfo.logo} 
+                alt="University Logo" 
+                className="w-7 h-7 object-contain flex-shrink-0"
+              />
+            ) : (
+              <T3BracLogo className="w-7 h-7 flex-shrink-0" />
+            )}
+            <span
+              className="font-sans font-black tracking-tight text-[#0F172A] leading-tight"
+              style={{ fontSize: '14px' }}
+            >
+              {uFull}
+            </span>
+          </div>
+        </div>
+
+        {/* Lower Card Body: Light Blue Pattern Background with Left White STUDENT Strip */}
+        <div className="flex-1 w-full flex flex-row relative overflow-hidden bg-gradient-to-b from-[#cae4f9] via-[#d6ebfc] to-[#bddff7]">
+          {/* Left Vertical White Strip with "STUDENT" */}
+          <div className="w-[28px] flex-shrink-0 bg-white border-r border-neutral-200/80 flex items-center justify-center relative z-20">
+            <span className="text-neutral-700 font-extrabold text-[9.5px] tracking-[0.24em] -rotate-90 origin-center whitespace-nowrap select-none uppercase">
+              {studentInfo.status?.toUpperCase().includes('STUDENT') ? 'STUDENT' : (studentInfo.status || 'STUDENT')}
+            </span>
+          </div>
+
+          {/* Center & Right Body Area */}
+          <div className="flex-1 h-full flex flex-row relative z-10 overflow-hidden">
+            {/* Background Guilloche Wave Pattern */}
+            <T3GuillochePattern />
+            {/* Holographic Iridescent Sheen & BRAC Watermark */}
+            <T3HologramOverlay />
+
+            {/* Center Student Information Column */}
+            <div className="flex-1 h-full flex flex-col justify-between py-2.5 px-3 relative z-10">
+              <div>
+                <h2 className="font-sans font-black text-[14px] sm:text-[14.5px] leading-tight text-[#0F172A] tracking-tight uppercase line-clamp-1">
+                  {rawName}
+                </h2>
+                <div className="text-[9px] sm:text-[9.5px] leading-[1.3] text-neutral-800 font-semibold mt-1 max-w-[170px]">
+                  {renderT3Course(studentInfo.course || 'Bachelor of Science in Computer Science and Engineering')}
+                </div>
+              </div>
+
+              {/* Key Student Details with uniform spacing and " : " separator */}
+              <div className="space-y-1.5 font-sans text-neutral-800 my-auto py-0.5">
+                <div className="flex items-center">
+                  <span className="font-bold text-neutral-800" style={{ width: '74px', fontSize: '11px' }}>Student ID</span>
+                  <span className="font-semibold text-neutral-700 mx-1">:</span>
+                  <span className="font-bold text-neutral-900 tracking-tight" style={{ fontSize: '10px' }}>{studentId}</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="font-bold text-neutral-800" style={{ width: '74px', fontSize: '11px' }}>Blood Group</span>
+                  <span className="font-semibold text-neutral-700 mx-1">:</span>
+                  <span className="font-bold text-neutral-900 tracking-tight" style={{ fontSize: '10px' }}>{bloodGroup}</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="font-bold text-neutral-800" style={{ width: '74px', fontSize: '11px' }}>Validity</span>
+                  <span className="font-semibold text-neutral-700 mx-1">:</span>
+                  <span className="font-bold text-neutral-900 tracking-tight" style={{ fontSize: '10px' }}>{validityFormatted}</span>
+                </div>
+              </div>
+
+              {/* Faint Bottom Motto */}
+              <div className="text-[7.5px] tracking-[0.2em] text-sky-950/50 uppercase font-extrabold text-center mt-auto pb-0.5">
+                Inspiring Excellence
+              </div>
+            </div>
+
+            {/* Right Student Photo Column */}
+            <div className="w-[33%] h-full flex items-center justify-center p-2 relative z-10 flex-shrink-0">
+              <div className="w-full h-full bg-neutral-100 rounded-[3px] overflow-hidden border border-neutral-300/90 shadow-sm relative">
+                <img
+                  src={studentInfo.photo || '/assets/avatars/t3_headshot.jpg'}
+                  alt={rawName}
+                  className="w-full h-full object-cover object-center"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/t3_headshot.jpg'; }}
+                />
+                {/* Photo inner subtle sheen */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/[0.03] via-transparent to-white/20 pointer-events-none" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // T2 Cranbourne East Secondary College Card Template (Front View)
   if (template === 't2') {
     const uFull = (studentInfo.universityName || 'Cranbourne East Secondary College').trim();
@@ -1115,21 +1480,21 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
       : 'Triciamae';
     const upperLast = rawLast.length > 0 ? rawLast.toUpperCase() : (nameParts.length === 1 ? '' : 'MALABANAN');
 
-    // DOB formatting (DD/MM/YYYY)
-    const rawDob = studentInfo.dob || '10/09/2012';
-    let formattedDob = rawDob;
-    if (/^\d{4}-\d{2}-\d{2}$/.test(rawDob)) {
-      const [y, m, d] = rawDob.split('-');
-      formattedDob = `${d}/${m}/${y}`;
-    } else if (/^\d{2}\/\d{2}\/\d{4}$/.test(rawDob)) {
-      formattedDob = rawDob;
+    // Expiry Date formatting (DD/MM/YYYY)
+    const rawExpiry = studentInfo.validUntil || '24/09/2027';
+    let formattedExpiry = rawExpiry;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(rawExpiry)) {
+      const [y, m, d] = rawExpiry.split('-');
+      formattedExpiry = `${d}/${m}/${y}`;
+    } else if (/^\d{2}[-/]\d{2}[-/]\d{4}$/.test(rawExpiry)) {
+      formattedExpiry = rawExpiry.replace(/-/g, '/');
     } else {
-      const parsedDate = new Date(rawDob);
-      if (!isNaN(parsedDate.getTime()) && rawDob.includes(' ')) {
+      const parsedDate = new Date(rawExpiry);
+      if (!isNaN(parsedDate.getTime()) && rawExpiry.includes(' ')) {
         const d = String(parsedDate.getDate()).padStart(2, '0');
         const m = String(parsedDate.getMonth() + 1).padStart(2, '0');
         const y = parsedDate.getFullYear();
-        formattedDob = `${d}/${m}/${y}`;
+        formattedExpiry = `${d}/${m}/${y}`;
       }
     }
 
@@ -1141,15 +1506,15 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     return (
       <div 
         ref={ref} 
-        className="id-card-container shadow-xl bg-white overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-row p-3.5 text-[#1F2421]"
+        className="id-card-container shadow-2xl bg-[#0F172A] overflow-hidden relative rounded-xl border border-slate-700/80 font-sans select-none animate-in fade-in duration-300 flex flex-row p-3.5 text-white"
       >
         {/* Card Surface Sheen Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-black/[0.015] via-transparent to-white/60 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.03] via-transparent to-white/[0.07] pointer-events-none" />
 
         {/* Left Column: Portrait Photo & Barcode directly below */}
-        <div className="w-[32%] h-full flex flex-col justify-between items-start flex-shrink-0 relative z-10 pr-2">
-          {/* Photo Frame with solid thin 1px black border */}
-          <div className="w-full h-[105px] border border-black bg-[#C8D8E6] overflow-hidden shadow-sm flex items-center justify-center">
+        <div className="w-[32%] h-full flex flex-col items-center justify-start flex-shrink-0 relative z-10 px-1 pt-2.5 pb-1">
+          {/* Photo Frame with clean dark slate border */}
+          <div className="w-full h-[105px] border border-slate-700 bg-slate-800 overflow-hidden shadow-sm flex items-center justify-center rounded-[2px] mx-auto">
             <img
               src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }}
               alt={rawName}
@@ -1158,21 +1523,21 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             />
           </div>
 
-          {/* Barcode directly under the photo frame */}
-          <div className="w-full mt-auto pt-1.5 flex flex-col items-center">
-            <T2Barcode className="w-full h-4" />
+          {/* Barcode directly under the photo frame - positioned closer to the image */}
+          <div className="w-full mt-2 flex flex-col items-center">
+            <T2Barcode className="w-full h-4" fill="#FFFFFF" />
           </div>
         </div>
 
-        {/* Right Column: Top Right Header + Logo, Student Name, D.O.B, Year Issued */}
+        {/* Right Column: Top Right Header + Logo, Student Name, Expiry Date, Year Issued */}
         <div className="flex-1 h-full flex flex-col justify-between pl-2 relative z-10">
           {/* Top Right Header & Logo */}
           <div className="flex justify-end items-center gap-2">
             <div className="flex flex-col text-right">
-              <span className="font-sans font-black text-[#1F2421] text-[11px] sm:text-[12px] leading-tight tracking-tight uppercase">
+              <span className="font-sans font-black text-white text-[11px] sm:text-[12px] leading-tight tracking-tight uppercase">
                 {line1}
               </span>
-              <span className="font-sans font-bold text-[#1F2421] text-[9.5px] sm:text-[10px] leading-tight tracking-tight uppercase">
+              <span className="font-sans font-bold text-slate-300 text-[9.5px] sm:text-[10px] leading-tight tracking-tight uppercase">
                 {line2}
               </span>
             </div>
@@ -1189,22 +1554,22 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
           {/* Center Student Info */}
           <div className="my-auto flex flex-col justify-center py-1">
-            <span className="font-sans font-semibold text-[#1F2421] text-[15px] sm:text-[16px] leading-none tracking-normal">
+            <span className="font-sans font-semibold text-white text-[15px] sm:text-[16px] leading-none tracking-normal">
               {titleFirst}
             </span>
             {upperLast ? (
-              <span className="font-sans font-black text-[#1F2421] text-[16px] sm:text-[17px] leading-tight tracking-tight mt-0.5">
+              <span className="font-sans font-black text-white text-[16px] sm:text-[17px] leading-tight tracking-tight mt-0.5">
                 {upperLast}
               </span>
             ) : null}
-            <div className="mt-2 font-sans font-bold text-[11px] sm:text-[11.5px] text-[#1F2421] tracking-wide">
-              D.O.B: {formattedDob}
+            <div className="mt-2 font-sans font-bold text-[11px] sm:text-[11.5px] text-white tracking-wide">
+              Expiry Date: <span className="font-semibold text-slate-200">{formattedExpiry}</span>
             </div>
           </div>
 
           {/* Bottom Right Year Issued */}
           <div className="flex justify-end items-end pb-0.5">
-            <span className="font-sans font-bold text-[10.5px] sm:text-[11px] text-[#1F2421] tracking-tight">
+            <span className="font-sans font-bold text-[10.5px] sm:text-[11px] text-slate-300 tracking-tight">
               Year Issued {yearIssued}
             </span>
           </div>

@@ -1,0 +1,84 @@
+To recreate this BRAC University student ID, you will need a container with a standard ID card aspect ratio (roughly 1.6:1 or 85.6mm x 53.98mm).
+
+### 1. Structure & Dimensions
+*   **Orientation:** Horizontal.
+*   **Aspect Ratio:** 1.6:1 (e.g., `w-[400px] h-[250px]`).
+*   **Border:** Rounded corners (e.g., `rounded-lg`).
+
+### 2. Color Palette
+*   **Header Background (Top 15%):** White (`#FFFFFF`).
+*   **Body Background:** Gradient from pale light blue (`#dbeafe`) to white.
+*   **Accent (Left Strip):** Silver-gray (`#d1d5db`).
+*   **Text:** Deep charcoal/black (`#1f2937`).
+
+### 3. Header & Logo
+*   **Layout:** Logo on the left, "BRAC University" text to the right.
+*   **Logo:** A simple circular seal icon (a tree motif inside).
+*   **Font:** Sans-serif, bold, professional (similar to Montserrat or Arial).
+*   **Text:** "BRAC University" (Black, uppercase/title case, bold).
+
+### 4. Left Accent Strip
+*   **Element:** A vertical gray bar running down the left side.
+*   **Text:** "STUDENT" written vertically, reading from bottom to top.
+*   **Styling:** Bold, uppercase, letter-spacing (tracked-widest), white or light gray text.
+
+### 5. Content Layout (The Body)
+*   **Left Side (Text):**
+    *   **Name:** "SHAMSIL ARAFIN ULLAH" (Bold, 1.25rem).
+    *   **Program:** "Bachelor of Science in Computer Science and Engineering" (Normal, 0.875rem, text wraps).
+    *   **Details:** "Student ID", "Blood Group", "Validity". These are labels followed by colons and values.
+*   **Right Side (Photo):**
+    *   **Placement:** Right-aligned box.
+    *   **Dimensions:** Approximately 30% of total width.
+    *   **Border:** Thin white border around the photo.
+
+### 6. Verbatim Transcription
+*   **Header:** BRAC University
+*   **Left Strip:** STUDENT
+*   **Name:** SHAMSIL ARAFIN ULLAH
+*   **Degree:** Bachelor of Science in Computer Science and Engineering
+*   **ID:** 19101164
+*   **Blood:** AB+ve
+*   **Validity:** 02-01-2023
+
+### 7. Decorative Elements
+*   **Hologram:** There is a circular "BRAC" watermark visible in the center-right. You can simulate this using `opacity-20` and `mix-blend-multiply` with a subtle circular path pattern in SVG.
+*   **Security:** A subtle wavy line pattern covers the light blue area.
+
+### 8. Suggested React/Tailwind Structure
+
+```jsx
+<div className="w-[400px] h-[250px] bg-white rounded-xl shadow-2xl flex border border-gray-300 overflow-hidden">
+  {/* Left Sidebar */}
+  <div className="w-8 bg-gray-300 flex items-end justify-center pb-4">
+    <span className="text-white font-bold tracking-[0.2em] -rotate-90 origin-center whitespace-nowrap">STUDENT</span>
+  </div>
+
+  {/* Main Content */}
+  <div className="flex-1 flex flex-col">
+    <div className="h-16 flex items-center px-4 border-b border-gray-200">
+      <div className="w-8 h-8 bg-gray-400 rounded-full mr-3" /> {/* Logo */}
+      <h1 className="font-bold text-xl">BRAC University</h1>
+    </div>
+    
+    <div className="flex-1 bg-gradient-to-br from-blue-50 to-white p-4 flex">
+      <div className="flex-1 space-y-2">
+        <h2 className="font-bold text-lg">{name}</h2>
+        <p className="text-xs text-gray-600">{program}</p>
+        <div className="mt-4 text-sm font-semibold">
+          <p>Student ID : {id}</p>
+          <p>Blood Group : {blood}</p>
+          <p>Validity : {validity}</p>
+        </div>
+      </div>
+      
+      {/* Photo Frame */}
+      <div className="w-24 h-32 bg-gray-200 border-2 border-white rounded shadow-sm">
+        <img src={url} alt="Student" className="w-full h-full object-cover" />
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+**Note:** This is a single-sided design. The back of such cards typically contains a barcode, signature line, and university contact information.
