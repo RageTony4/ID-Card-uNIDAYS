@@ -1,6 +1,9 @@
 
-const CACHE_NAME = 'avatar-image-cache-v10';
+const CACHE_NAME = 'avatar-image-cache-v11';
 const AVATAR_URLS = [
+  "/assets/mockups/natural_view_19.jpg",
+  "/assets/mockups/natural_view_21.jpg",
+  "/assets/eastbridge_crest_transparent.png",
   "/assets/avatars/male_1.webp",
   "/assets/avatars/male_2.webp",
   "/assets/avatars/male_3.webp",

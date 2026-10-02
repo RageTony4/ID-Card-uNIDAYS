@@ -40,9 +40,9 @@ const MOCKUP_SCENES = [
   { url: "https://any-link-me.lovable.app/f/6q2k3h3j5y.jfif", label: "Natural View 16" },
   { url: "https://any-link-me.lovable.app/f/6n6e3m654l.jfif", label: "Natural View 17" },
   { url: "https://any-link-me.lovable.app/f/0p5117681p.jfif", label: "Natural View 18" },
-  { url: "https://any-link-me.lovable.app/f/3k0t4v194f.jpg", label: "Natural View 19" },
+  { url: "/assets/mockups/natural_view_19.jpg", label: "Natural View 19" },
   { url: "https://any-link-me.lovable.app/f/1p23565p63.jfif", label: "Natural View 20" },
-  { url: "https://any-link-me.lovable.app/f/58086o0p28.png", label: "Natural View 21" }
+  { url: "/assets/mockups/natural_view_21.jpg", label: "Natural View 21" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ 
@@ -526,10 +526,17 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   };
 
   const handleGenerateMockup = async (overrideReference?: string) => {
-    const activeReference = overrideReference || referenceImage;
+    let activeReference = overrideReference || referenceImage;
     if (!activeReference) {
       showToast("Please upload or select a reference image first.", "error");
       return;
+    }
+
+    // Map known scenes with previously printed cards to clean, pristine blank-card equivalents
+    if (activeReference.includes('3k0t4v194f.jpg') || activeReference.includes('natural_view_19')) {
+      activeReference = '/assets/mockups/natural_view_19.jpg';
+    } else if (activeReference.includes('58086o0p28.png') || activeReference.includes('natural_view_21')) {
+      activeReference = '/assets/mockups/natural_view_21.jpg';
     }
 
     const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
@@ -569,14 +576,28 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
       const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash-image',
         config: {
-          temperature: 0.5,
-          topP: 0.9,
+          temperature: 0.3,
+          topP: 0.95,
         },
         contents: {
           parts: [
             { inlineData: { mimeType: referenceMimeType, data: referenceBase64 } },
             { inlineData: { mimeType: 'image/png', data: cardBase64 } },
-            { text: "The first image is a real photo of an ID card in a scene. The second image is a flat digital ID card design. Meticulously replace the visual content of the ID card in the first image with the design from the second image. Preserve the lighting, shadows, and perspective of the original scene. The result must be a realistic photo." }
+            { text: `You are an expert realistic photo compositor.
+- Image 1 is a real photograph of a physical ID card placed in an authentic real-world scene.
+- Image 2 is a flat digital ID card design.
+
+MANDATORY COMPOSITING REQUIREMENTS:
+1. TOTAL CARD REPLACEMENT:
+   - Completely replace and overwrite the ENTIRE physical surface of the card in Image 1 from corner to corner with the exact design, colors, and layout from Image 2.
+   - Absolutely ZERO elements from the card in Image 1 may remain. Do NOT blend, merge, retain, or ghost any text, names, university titles, logos, emblems, photos, barcode details, or background colors from the card in Image 1.
+   - If Image 1 shows a face or a school name, it MUST BE COMPLETELY ERASED.
+   - The resulting card must show ONLY the exact person, full name, school name, colors (preserving the exact light or dark background), photo, and layout present in Image 2.
+2. PRESERVE THE REALISTIC SCENE:
+   - Precisely project Image 2 onto the physical card location in Image 1, matching its exact position, angle, 3D perspective, rounded card corners, surface reflections, specular highlights, and natural ambient shadows.
+   - Keep the surrounding physical environment (fabric, tabletop, fingers, lighting, background texture) from Image 1 completely unchanged and photorealistic.
+3. OUTPUT:
+   - The output must be a single, seamless, high-resolution, ultra-realistic photograph.` }
           ]
         }
       });
