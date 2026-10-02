@@ -7,6 +7,8 @@ import { InternationalTemplate } from './templates/InternationalTemplate';
 import { EastbridgeTemplate } from './templates/EastbridgeTemplate';
 import { ScannableQRCode } from './ScannableQRCode';
 import { ScannableBarcode } from './ScannableBarcode';
+import { UniversityCrest } from './UniversityCrest';
+import { SingleLineText } from './SingleLineText';
 
 interface IdCardProps {
   studentInfo: StudentInfo;
@@ -1211,9 +1213,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         <div ref={ref} className="id-card-container id-card-back shadow-lg bg-[#FAFBFD] overflow-hidden relative rounded-lg border border-gray-300 font-sans select-none animate-in fade-in duration-300">
           {/* Logo Watermark back side */}
           <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-[0.05]">
-            <svg className="w-36 h-36 text-[#002B49]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M50 15 L25 25 V55 C25 72.5 50 85 50 85 C50 85 75 72.5 75 55 V25 L50 15 Z" stroke="currentColor" strokeWidth="2" />
-            </svg>
+            <UniversityCrest className="w-36 h-36 text-[#002B49]" monochrome />
           </div>
 
           {/* Magnetic Stripe */}
@@ -1223,9 +1223,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             {/* Top Corporate Branding */}
             <div className="flex items-center justify-between px-2 mb-1">
               <div className="flex items-center gap-1">
-                <svg className="w-3.5 h-3.5 text-[#002B49]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M50 15 L25 25 V55 C25 72.5 50 85 50 85 C50 85 75 72.5 75 55 V25 L50 15 Z" fill="#002B49" />
-                </svg>
+                <UniversityCrest className="w-4 h-5 flex-shrink-0 text-[#002B49]" monochrome />
                 <span className="text-[#002B49] font-serif font-black text-[7.5px] uppercase tracking-wide whitespace-nowrap overflow-hidden text-ellipsis" style={{ maxWidth: '140px' }}>
                   {displayUniversityName}
                 </span>
@@ -2180,9 +2178,9 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
         {/* BOTTOM FULL-WIDTH DEEP NAVY FOOTER BANNER */}
         <div className="w-full bg-[#0B2545] py-1 px-2.5 flex items-center justify-center relative z-10 border-t border-[#D4AF37]/40 flex-shrink-0">
-          <p className="text-[7.5px] font-bold text-[#D4AF37] tracking-wider uppercase text-center truncate">
-            Official Student Identification — Property of {displayUniversityName}
-          </p>
+          <SingleLineText className="font-bold text-[#D4AF37] tracking-wider uppercase text-center leading-[9px]">
+            {`Official Student Identification — Property of ${displayUniversityName}`}
+          </SingleLineText>
         </div>
       </div>
     );
@@ -2387,36 +2385,16 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
     return (
       <div ref={ref} className="id-card-container shadow-xl bg-[#FFFFFF] overflow-hidden relative rounded-lg border border-gray-300 flex flex-col font-sans select-none animate-in fade-in duration-300">
-        {/* Large watermark crest in background on the right */}
+        {/* Matching engraved crest watermark. */}
         <div className="absolute bottom-[4%] right-[0%] z-0 pointer-events-none opacity-[0.06] w-28 h-28 text-[#002B49]" style={{ transform: 'rotate(8deg)' }}>
-          <svg className="w-full h-full text-current" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 12 L20 22 V54 C20 72 50 86 50 86 C50 86 80 72 80 54 V22 L50 12 Z" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M50 12 V86" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" />
-            <path d="M32 30h14 M32 35h14 M32 40h10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M68 30h-14 M68 35h-14 M68 40h-10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M50 42v18" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" />
-            <path d="M50 32c-3.5 0-5 5-5 5s4-1 5-5c1 4 5 5 5 5s-1.5-5-5-5z" fill="currentColor" />
-            <path d="M22 55 C25 67, 36 74, 46 76" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M78 55 C75 67, 64 74, 54 76" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
-          </svg>
+          <UniversityCrest className="w-full h-full" monochrome />
         </div>
-
         {/* HEADER SECTION */}
         <div className="w-full h-[54px] bg-[#002B49] px-2 flex items-center justify-between relative z-10 border-b-2 border-[#C59B27]">
-          {/* Left Panel: White Crest Logo */}
-          <div className="flex items-center justify-center flex-shrink-0 w-7 h-7 mr-1.5">
-            <svg className="w-full h-full text-white" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M50 12 L20 22 V54 C20 72 50 86 50 86 C50 86 80 72 80 54 V22 L50 12 Z" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M50 12 V86" stroke="currentColor" strokeWidth="2" strokeDasharray="3 3" />
-              <path d="M32 30h14 M32 35h14 M32 40h10" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-              <path d="M68 30h-14 M68 35h-14 M68 40h-10" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-              <path d="M50 42v18" stroke="currentColor" strokeWidth="5.5" strokeLinecap="round" />
-              <path d="M50 32c-3.5 0-5 5-5 5s4-1 5-5c1 4 5 5 5 5s-1.5-5-5-5z" fill="currentColor" />
-              <path d="M22 55 C25 67, 36 74, 46 76" stroke="#C59B27" strokeWidth="3.5" strokeLinecap="round" />
-              <path d="M78 55 C75 67, 64 74, 54 76" stroke="#C59B27" strokeWidth="3.5" strokeLinecap="round" />
-            </svg>
+          {/* Detailed academic crest. */}
+          <div className="flex items-center justify-center flex-shrink-0 w-9 h-11 mr-1.5">
+            <UniversityCrest className="w-full h-full" />
           </div>
-
           {/* Center Panel: Institution Name, Address, and Student ID centered perfectly */}
           <div className="flex-1 flex flex-col justify-center items-center text-center overflow-hidden min-w-0 px-0.5">
             {/* Row 1: Entire University Name fully on first line */}
@@ -2440,7 +2418,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           </div>
 
           {/* Right Logo Symmetry/Spacer to ensure perfect centering inside the main container boundary */}
-          <div className="w-7 ml-1.5 flex-shrink-0" />
+          <div className="w-9 ml-1.5 flex-shrink-0" />
         </div>
 
         {/* DETAILS BODY AREA */}
