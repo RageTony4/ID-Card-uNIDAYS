@@ -1,5 +1,6 @@
 import React from 'react';
 import { StudentInfo } from '../../types';
+import { ScannableBarcode } from '../ScannableBarcode';
 
 interface InternationalTemplateProps {
   studentInfo: StudentInfo;
@@ -25,28 +26,16 @@ const IntlGuillochePattern = () => (
   </svg>
 );
 
-// High-precision Barcode
+// High-precision Scannable Code128 Barcode
 const IntlBarcode = ({ value }: { value: string }) => {
-  const bars = [
-    2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
-    1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
-    3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1
-  ];
-  let curX = 0;
-
   return (
-    <div className="flex flex-col items-center">
-      <svg className="h-5 w-40" viewBox="0 0 160 20" preserveAspectRatio="none" fill="currentColor">
-        {bars.map((w, idx) => {
-          const x = curX;
-          curX += w + 1;
-          return <rect key={idx} x={x} y="0" width={w} height="20" fill="#1E3A8A" />;
-        })}
-      </svg>
-      <span className="font-mono text-[7px] tracking-widest text-[#1E3A8A] font-bold mt-0.5">
-        {value}
-      </span>
-    </div>
+    <ScannableBarcode
+      value={value}
+      className="h-5 w-40"
+      fill="#1E3A8A"
+      showValue={true}
+      valueClassName="font-mono text-[7px] tracking-widest text-[#1E3A8A] font-bold mt-0.5 text-center w-full"
+    />
   );
 };
 

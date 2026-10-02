@@ -1,5 +1,6 @@
 import React from 'react';
 import { StudentInfo } from '../../types';
+import { ScannableBarcode } from '../ScannableBarcode';
 
 interface UOfLifeTemplateProps {
   studentInfo: StudentInfo;
@@ -16,28 +17,16 @@ const ContactlessIcon = ({ className = "w-5 h-5 text-white" }: { className?: str
   </svg>
 );
 
-// High-fidelity Barcode
+// High-fidelity Scannable Code128 Barcode
 const UOfLifeBarcode = ({ value }: { value: string }) => {
-  const bars = [
-    2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
-    1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
-    3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1
-  ];
-  let curX = 0;
-
   return (
-    <div className="flex flex-col items-center">
-      <svg className="h-5 w-36" viewBox="0 0 150 20" preserveAspectRatio="none" fill="currentColor">
-        {bars.map((w, idx) => {
-          const x = curX;
-          curX += w + 1;
-          return <rect key={idx} x={x} y="0" width={w} height="20" fill="#FFFFFF" />;
-        })}
-      </svg>
-      <span className="font-mono text-[6.5px] tracking-widest text-white/90 font-bold mt-0.5">
-        {value}
-      </span>
-    </div>
+    <ScannableBarcode
+      value={value}
+      className="h-5 w-36"
+      fill="#FFFFFF"
+      showValue={true}
+      valueClassName="font-mono text-[6.5px] tracking-widest text-white/90 font-bold mt-0.5 text-center w-full"
+    />
   );
 };
 

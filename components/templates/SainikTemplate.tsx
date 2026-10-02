@@ -1,5 +1,7 @@
 import React from 'react';
 import { StudentInfo } from '../../types';
+import { ScannableQRCode } from '../ScannableQRCode';
+import { ScannableBarcode } from '../ScannableBarcode';
 
 interface SainikTemplateProps {
   studentInfo: StudentInfo;
@@ -7,29 +9,16 @@ interface SainikTemplateProps {
   forwardedRef: React.ForwardedRef<HTMLDivElement>;
 }
 
-// Crisp Vector Barcode
+// Crisp Scannable Vector Barcode (Code128)
 const SainikBarcode = ({ value }: { value: string }) => {
-  const bars = [
-    2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
-    1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
-    3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1,
-    2, 3, 1, 2, 1, 1, 2, 1, 3, 2, 1, 2, 2, 1, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1
-  ];
-  let curX = 0;
-
   return (
-    <div className="flex flex-col items-start">
-      <svg className="h-4 w-36" viewBox="0 0 170 20" preserveAspectRatio="none" fill="currentColor">
-        {bars.map((w, idx) => {
-          const x = curX;
-          curX += w + 1;
-          return <rect key={idx} x={x} y="0" width={w} height="20" fill="#000000" />;
-        })}
-      </svg>
-      <span className="font-mono text-[6px] tracking-widest text-black font-semibold mt-0.5">
-        {value}
-      </span>
-    </div>
+    <ScannableBarcode
+      value={value}
+      className="h-4 w-36"
+      fill="#000000"
+      showValue={true}
+      valueClassName="font-mono text-[6px] tracking-widest text-black font-semibold mt-0.5"
+    />
   );
 };
 
@@ -236,38 +225,15 @@ export const SainikTemplate: React.FC<SainikTemplateProps> = ({ studentInfo, sid
             </div>
           </div>
 
-          {/* QR Code on Right */}
-          <div className="bg-white p-1 rounded-[2px] shadow-sm ml-2 flex-shrink-0">
-            <svg className="w-8 h-8" viewBox="0 0 45 45" fill="none">
-              <rect width="45" height="45" fill="#FFFFFF" />
-              {/* Corner Position Detection Patterns */}
-              <rect x="2" y="2" width="12" height="12" fill="#000000" />
-              <rect x="4" y="4" width="8" height="8" fill="#FFFFFF" />
-              <rect x="6" y="6" width="4" height="4" fill="#000000" />
-
-              <rect x="31" y="2" width="12" height="12" fill="#000000" />
-              <rect x="33" y="4" width="8" height="8" fill="#FFFFFF" />
-              <rect x="35" y="6" width="4" height="4" fill="#000000" />
-
-              <rect x="2" y="31" width="12" height="12" fill="#000000" />
-              <rect x="4" y="33" width="8" height="8" fill="#FFFFFF" />
-              <rect x="6" y="35" width="4" height="4" fill="#000000" />
-
-              {/* Data matrix dots */}
-              <rect x="18" y="4" width="2" height="6" fill="#000" />
-              <rect x="24" y="2" width="4" height="2" fill="#000" />
-              <rect x="22" y="8" width="6" height="2" fill="#000" />
-              <rect x="16" y="16" width="4" height="4" fill="#000" />
-              <rect x="24" y="14" width="4" height="4" fill="#000" />
-              <rect x="34" y="18" width="4" height="4" fill="#000" />
-              <rect x="6" y="18" width="4" height="4" fill="#000" />
-              <rect x="16" y="24" width="4" height="4" fill="#000" />
-              <rect x="24" y="22" width="6" height="4" fill="#000" />
-              <rect x="18" y="34" width="4" height="4" fill="#000" />
-              <rect x="26" y="32" width="4" height="6" fill="#000" />
-              <rect x="34" y="34" width="6" height="4" fill="#000" />
-            </svg>
-          </div>
+          {/* Authentic Scannable QR Code on Right */}
+          <ScannableQRCode
+            website={studentInfo.website}
+            schoolName={schoolName}
+            className="w-8 h-8"
+            showLabel={true}
+            labelText="SCAN TO VERIFY"
+            paddingClass="p-0.5"
+          />
         </div>
       </div>
     );

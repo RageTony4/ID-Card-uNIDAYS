@@ -4,11 +4,15 @@ import { StudentInfo, IdCardTemplate } from '../types';
 import { SainikTemplate } from './templates/SainikTemplate';
 import { UOfLifeTemplate } from './templates/UOfLifeTemplate';
 import { InternationalTemplate } from './templates/InternationalTemplate';
+import { EastbridgeTemplate } from './templates/EastbridgeTemplate';
+import { ScannableQRCode } from './ScannableQRCode';
+import { ScannableBarcode } from './ScannableBarcode';
 
 interface IdCardProps {
   studentInfo: StudentInfo;
   side?: 'front' | 'back';
   template?: IdCardTemplate;
+  t1Variant?: 'white' | 'dark';
 }
 
 const formatToDDMMYYYY = (dateStr: string): string => {
@@ -85,7 +89,7 @@ const formatToMMYYYY = (dateStr: string): string => {
   return cleaned;
 };
 
-const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant' }, ref) => {
+const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant', t1Variant = 'white' }, ref) => {
   if (template === 'sainik') {
     return <SainikTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
   }
@@ -94,6 +98,9 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   }
   if (template === 'international') {
     return <InternationalTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
+  }
+  if (template === 'eastbridge') {
+    return <EastbridgeTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
   }
 
   // Clean university name for display (remove trailing star if present)
@@ -122,18 +129,13 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   };
 
   const QRPlaceholder = ({ size = 40, className = "" }: { size?: number, className?: string }) => (
-    <div className={`bg-white p-0.5 border border-gray-200 shadow-sm ${className}`} style={{ width: size, height: size }}>
-      <svg viewBox="0 0 100 100" className="w-full h-full text-black">
-        <path d="M0,0 h30 v10 h-20 v20 h-10 z M70,0 h30 v30 h-10 v-20 h-20 z M0,70 h10 v20 h20 v10 h-30 z M70,100 v-10 h20 v-20 h-10 v-30 z" fill="currentColor" opacity="0.1" />
-        <rect x="15" y="15" width="20" height="20" fill="currentColor" />
-        <rect x="65" y="15" width="20" height="20" fill="currentColor" />
-        <rect x="15" y="65" width="20" height="20" fill="currentColor" />
-        <rect x="45" y="45" width="10" height="10" fill="currentColor" />
-        <rect x="55" y="55" width="10" height="10" fill="currentColor" />
-        <rect x="35" y="55" width="10" height="10" fill="currentColor" />
-        <rect x="55" y="35" width="10" height="10" fill="currentColor" />
-      </svg>
-    </div>
+    <ScannableQRCode
+      website={studentInfo.website}
+      schoolName={studentInfo.universityName}
+      size={size}
+      className={className}
+      paddingClass="p-0.5"
+    />
   );
 
   const HologramBackground = () => (
@@ -228,20 +230,14 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   );
 
   const WestdaleBarcodeGraphic = () => {
-    const bars = [
-      2, 1, 3, 1, 2, 1, 1, 3, 1, 2, 2, 1, 3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 3, 1, 2, 1,
-      1, 3, 2, 1, 2, 1, 3, 1, 1, 2, 2, 1, 1, 3, 1, 2, 3, 1, 2, 1, 1, 3, 1, 2, 1, 3,
-      2, 1, 1, 2, 3, 1, 2, 1, 1, 3, 2, 1, 2, 1, 3, 1, 1, 2, 2, 1, 1, 3, 1, 2, 3, 1
-    ];
     return (
-      <div className="w-full h-full flex items-stretch justify-center gap-[1px] overflow-hidden px-1">
-        {bars.map((width, idx) => (
-          <div
-            key={idx}
-            className="bg-black h-full flex-shrink-0"
-            style={{ width: `${width * 1.35}px` }}
-          />
-        ))}
+      <div className="w-full h-full flex items-center justify-center overflow-hidden px-1">
+        <ScannableBarcode
+          value={studentInfo.studentId || "0123456789"}
+          className="h-full w-full"
+          fill="#000000"
+          showValue={false}
+        />
       </div>
     );
   };
@@ -340,38 +336,42 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   };
 
-  const UTAustinSealSVG = ({ className = "w-9 h-9" }: { className?: string }) => {
+  const UTAustinSealSVG = ({ className = "w-9 h-9", isDark = false }: { className?: string; isDark?: boolean }) => {
+    const sealColor = isDark ? "#FF7A00" : "#BF5700";
+    const shieldBg = isDark ? "#1E293B" : "#FAF8F5";
+    const spineBg = isDark ? "#1E293B" : "#FAF8F5";
+
     return (
       <svg className={`object-contain flex-shrink-0 ${className}`} viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* Outer Circular Ring */}
-        <circle cx="60" cy="60" r="56" stroke="#BF5700" strokeWidth="2.5" />
-        <circle cx="60" cy="60" r="48" stroke="#BF5700" strokeWidth="1.2" strokeDasharray="2 2" />
-        <circle cx="60" cy="60" r="44" stroke="#BF5700" strokeWidth="0.8" />
+        <circle cx="60" cy="60" r="56" stroke={sealColor} strokeWidth="2.5" />
+        <circle cx="60" cy="60" r="48" stroke={sealColor} strokeWidth="1.2" strokeDasharray="2 2" />
+        <circle cx="60" cy="60" r="44" stroke={sealColor} strokeWidth="0.8" />
         
         {/* Decorative ring stars */}
-        <polygon points="15,60 17,56 21,58 18,61 19,65 16,62" fill="#BF5700" />
-        <polygon points="105,60 103,56 99,58 102,61 101,65 104,62" fill="#BF5700" />
+        <polygon points="15,60 17,56 21,58 18,61 19,65 16,62" fill={sealColor} />
+        <polygon points="105,60 103,56 99,58 102,61 101,65 104,62" fill={sealColor} />
         
         {/* Center Heraldic Shield */}
         <path
           d="M 32,26 L 88,26 L 88,68 C 88,96 60,110 60,110 C 60,110 32,96 32,68 Z"
-          fill="#FAF8F5"
-          stroke="#BF5700"
+          fill={shieldBg}
+          stroke={sealColor}
           strokeWidth="3"
         />
         {/* Horizontal dividing line */}
-        <line x1="33" y1="56" x2="87" y2="56" stroke="#BF5700" strokeWidth="2" />
+        <line x1="33" y1="56" x2="87" y2="56" stroke={sealColor} strokeWidth="2" />
 
         {/* Top Half: Open Book */}
         <g transform="translate(38, 30)">
           {/* Left Page */}
-          <path d="M 22,7 C 14,7 7,9 1,12 L 1,22 C 7,19 14,17 22,17 Z" fill="#BF5700" />
+          <path d="M 22,7 C 14,7 7,9 1,12 L 1,22 C 7,19 14,17 22,17 Z" fill={sealColor} />
           {/* Right Page */}
-          <path d="M 22,7 C 30,7 37,9 43,12 L 43,22 C 37,19 30,17 22,17 Z" fill="#BF5700" />
+          <path d="M 22,7 C 30,7 37,9 43,12 L 43,22 C 37,19 30,17 22,17 Z" fill={sealColor} />
           {/* Spine divider */}
-          <line x1="22" y1="7" x2="22" y2="23" stroke="#FAF8F5" strokeWidth="1.5" />
+          <line x1="22" y1="7" x2="22" y2="23" stroke={spineBg} strokeWidth="1.5" />
           {/* Ribbons */}
-          <polygon points="22,18 20,24 22,22 24,24" fill="#BF5700" />
+          <polygon points="22,18 20,24 22,22 24,24" fill={sealColor} />
         </g>
 
         {/* Bottom Half: Lone Star & Laurel Wreath */}
@@ -379,41 +379,41 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           {/* Five-Pointed Lone Star */}
           <polygon
             points="25,5 28,14 38,14 30,20 33,29 25,23 17,29 20,20 12,14 22,14"
-            fill="#BF5700"
+            fill={sealColor}
           />
           {/* Laurel Wreath */}
           <path
             d="M 10,12 C 8,24 15,34 25,37"
             fill="none"
-            stroke="#BF5700"
+            stroke={sealColor}
             strokeWidth="1.8"
             strokeLinecap="round"
           />
           <path
             d="M 40,12 C 42,24 35,34 25,37"
             fill="none"
-            stroke="#BF5700"
+            stroke={sealColor}
             strokeWidth="1.8"
             strokeLinecap="round"
           />
           {/* Laurel Leaves */}
-          <circle cx="9" cy="16" r="1.5" fill="#BF5700" />
-          <circle cx="11" cy="23" r="1.5" fill="#BF5700" />
-          <circle cx="17" cy="30" r="1.5" fill="#BF5700" />
-          <circle cx="41" cy="16" r="1.5" fill="#BF5700" />
-          <circle cx="39" cy="23" r="1.5" fill="#BF5700" />
-          <circle cx="33" cy="30" r="1.5" fill="#BF5700" />
+          <circle cx="9" cy="16" r="1.5" fill={sealColor} />
+          <circle cx="11" cy="23" r="1.5" fill={sealColor} />
+          <circle cx="17" cy="30" r="1.5" fill={sealColor} />
+          <circle cx="41" cy="16" r="1.5" fill={sealColor} />
+          <circle cx="39" cy="23" r="1.5" fill={sealColor} />
+          <circle cx="33" cy="30" r="1.5" fill={sealColor} />
         </g>
 
         {/* Arced Latin Motto: DISCIPLINA PRAESIDIUM CIVITATIS */}
         <path id="t1-seal-path-top" d="M 18,58 A 42,42 0 0,1 102,58" fill="none" />
         <path id="t1-seal-path-bot" d="M 102,62 A 42,42 0 0,1 18,62" fill="none" />
-        <text fill="#BF5700" fontSize="6.2" fontFamily="serif" fontWeight="bold" letterSpacing="0.12em">
+        <text fill={sealColor} fontSize="6.2" fontFamily="serif" fontWeight="bold" letterSpacing="0.12em">
           <textPath href="#t1-seal-path-top" startOffset="50%" textAnchor="middle">
             DISCIPLINA PRAESIDIUM
           </textPath>
         </text>
-        <text fill="#BF5700" fontSize="6" fontFamily="serif" fontWeight="bold" letterSpacing="0.14em">
+        <text fill={sealColor} fontSize="6" fontFamily="serif" fontWeight="bold" letterSpacing="0.14em">
           <textPath href="#t1-seal-path-bot" startOffset="50%" textAnchor="middle">
             CIVITATIS
           </textPath>
@@ -422,33 +422,14 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   };
 
-  const T1Barcode = ({ value, className = "h-4 w-full" }: { value: string; className?: string }) => {
-    const bars = [
-      2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
-      1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
-      3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1,
-      2, 3, 1, 2, 1, 1, 2, 1, 3, 2, 1, 2, 2, 1, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1,
-      2, 3, 1, 2, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 2
-    ];
-    let curX = 0;
+  const T1Barcode = ({ value, className = "h-4 w-full", fill = "#1F2421" }: { value: string; className?: string; fill?: string }) => {
     return (
-      <svg className={className} viewBox="0 0 180 22" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {bars.map((w, idx) => {
-          const x = curX;
-          curX += w * 1.4 + (idx % 2 === 0 ? 1 : 1.2);
-          if (x > 176) return null;
-          return (
-            <rect
-              key={idx}
-              x={x}
-              y="0"
-              width={w}
-              height="22"
-              fill="#1F2421"
-            />
-          );
-        })}
-      </svg>
+      <ScannableBarcode
+        value={value || studentInfo.studentId || "TX-2026-8812"}
+        className={className}
+        fill={fill}
+        showValue={false}
+      />
     );
   };
 
@@ -478,31 +459,13 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   };
 
   const T2Barcode = ({ className = "h-4 w-full", fill = "#FFFFFF" }: { className?: string; fill?: string }) => {
-    const bars = [
-      2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
-      1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
-      3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1,
-      2, 3, 1, 2, 1, 1, 2, 1, 3, 2, 1, 2, 2, 1, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1
-    ];
-    let curX = 0;
     return (
-      <svg className={className} viewBox="0 0 160 20" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {bars.map((w, idx) => {
-          const x = curX;
-          curX += w * 1.35 + (idx % 2 === 0 ? 1 : 1.1);
-          if (x > 158) return null;
-          return (
-            <rect
-              key={idx}
-              x={x}
-              y="0"
-              width={w}
-              height="20"
-              fill={fill}
-            />
-          );
-        })}
-      </svg>
+      <ScannableBarcode
+        value={studentInfo.studentId || "CRN-2026-9042"}
+        className={className}
+        fill={fill}
+        showValue={false}
+      />
     );
   };
 
@@ -603,31 +566,13 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   );
 
   const T3Barcode = ({ className = "h-4 w-full" }: { className?: string }) => {
-    const bars = [
-      2, 1, 1, 2, 3, 1, 1, 1, 2, 2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1, 2, 3, 1, 2,
-      1, 1, 1, 3, 2, 2, 1, 1, 3, 1, 2, 1, 2, 2, 1, 1, 3, 2, 1, 2, 1, 1, 2, 2,
-      3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 2, 2, 1, 1, 3, 1, 2, 2, 1, 2, 1, 3, 1, 1,
-      2, 3, 1, 2, 1, 1, 2, 1, 3, 2, 1, 2, 2, 1, 1, 3, 1, 2, 1, 1, 3, 2, 1, 1
-    ];
-    let curX = 0;
     return (
-      <svg className={className} viewBox="0 0 160 20" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {bars.map((w, idx) => {
-          const x = curX;
-          curX += w * 1.35 + (idx % 2 === 0 ? 1 : 1.1);
-          if (x > 158) return null;
-          return (
-            <rect
-              key={idx}
-              x={x}
-              y="0"
-              width={w}
-              height="20"
-              fill="#0F172A"
-            />
-          );
-        })}
-      </svg>
+      <ScannableBarcode
+        value={studentInfo.studentId || "02123456"}
+        className={className}
+        fill="#0F172A"
+        showValue={false}
+      />
     );
   };
 
@@ -826,6 +771,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     }
 
     if (template === 't1') {
+      const isT1Dark = (t1Variant === 'dark') || (studentInfo?.t1Variant === 'dark');
       const uFull = (studentInfo.universityName || 'The University of Texas at Austin').trim();
       const isTexas = uFull.toLowerCase().includes('texas');
       const mainTitle = isTexas ? 'TEXAS' : (uFull.split(/\s+/)[0] || 'TEXAS').toUpperCase();
@@ -846,6 +792,78 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         if (!isNaN(d.getTime())) {
           validUntil = `${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
         }
+      }
+
+      if (isT1Dark) {
+        return (
+          <div 
+            ref={ref} 
+            className="id-card-container id-card-back shadow-2xl bg-[#0F172A] overflow-hidden relative rounded-xl border border-slate-700/80 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-white"
+          >
+            {/* Subtle Sheen Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.03] via-transparent to-white/[0.06] pointer-events-none" />
+
+            {/* Magnetic Stripe */}
+            <div className="w-full h-8 bg-[#09090B] border-b border-slate-800/80 relative flex-shrink-0 flex items-center justify-end px-3">
+              <div className="h-1.5 w-16 bg-white/15 rounded-full" />
+            </div>
+
+            {/* Back Body Content */}
+            <div className="p-2.5 flex-1 flex flex-col justify-between relative z-10">
+              <div className="flex justify-between items-start gap-2">
+                <div className="flex-1 pr-1">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="font-serif font-black text-[#FF7A00] text-[10px] tracking-wider leading-none">
+                      {mainTitle}
+                    </span>
+                    <span className="font-serif text-[6.5px] text-slate-400 tracking-tight leading-none truncate max-w-[130px]">
+                      {uFull}
+                    </span>
+                  </div>
+                  <p className="text-[6.2px] text-slate-300 leading-[1.3] mb-1 font-sans">
+                    This card is the official property of the university and is non-transferable.
+                    Cardholder must carry this card while on campus and present it upon request.
+                  </p>
+                  <div className="bg-slate-800/80 rounded border border-slate-700/80 p-1 mt-0.5">
+                    <p className="text-[5.5px] font-bold text-white uppercase tracking-wide leading-tight">
+                      If found, please return to:
+                    </p>
+                    <p className="text-[5.5px] text-slate-300 leading-tight">
+                      {isTexas ? 'ID Center, Texas Union Building • P.O. Box 7556, Austin, TX 78713' : `${studentInfo.address || 'Campus ID Services'}`}
+                    </p>
+                    <p className="text-[5.5px] text-slate-400 leading-tight mt-0.5">
+                      {isTexas ? 'Emergency: (512) 471-4441 • utexas.edu' : `Phone: ${studentInfo.phone || '+1 (512) 471-4441'}`}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Signature Strip & Barcode */}
+                <div className="w-24 flex flex-col items-center flex-shrink-0">
+                  <div className="w-full h-6 bg-slate-900 border border-slate-700 rounded-[2px] flex items-center justify-center relative overflow-hidden shadow-inner">
+                    <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:4px_4px]" />
+                    <span className="font-serif italic text-[7.5px] text-slate-400 select-none">
+                      Authorized Signature
+                    </span>
+                  </div>
+                  <div className="w-full mt-1.5 flex flex-col items-center">
+                    <T1Barcode value={studentId} className="w-full h-3.5" fill="#FFFFFF" />
+                    <span className="font-mono text-[6px] tracking-widest text-slate-400 mt-0.5 leading-none">
+                      {studentId}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Footer Bar */}
+              <div className="flex justify-between items-center border-t border-slate-800 pt-1 mt-1 text-[6px] font-medium text-slate-400">
+                <span className="uppercase tracking-wider">Official Student Credential</span>
+                <span className="font-bold text-slate-200 tracking-wider">
+                  VALID THROUGH: {validUntil}
+                </span>
+              </div>
+            </div>
+          </div>
+        );
       }
 
       return (
@@ -899,7 +917,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                   </span>
                 </div>
                 <div className="w-full mt-1.5 flex flex-col items-center">
-                  <T1Barcode value={studentId} className="w-full h-3.5" />
+                  <T1Barcode value={studentId} className="w-full h-3.5" fill="#1F2421" />
                   <span className="font-mono text-[6px] tracking-widest text-neutral-600 mt-0.5 leading-none">
                     {studentId}
                   </span>
@@ -1326,7 +1344,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             </div>
 
             <div className="mt-auto mb-1 self-center w-3/4 flex flex-col items-center">
-                 <div className="barcode h-8 w-full"></div>
+                 <ScannableBarcode value={studentInfo.studentId || "CEA-26-8219"} className="h-8 w-full" fill="#000000" showValue={false} />
                  <p className="text-center text-[8px] tracking-widest mt-1 font-mono">{studentInfo.studentId}</p>
             </div>
          </div>
@@ -1580,6 +1598,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
   // T1 Texas Student ID Card Template (Front View)
   if (template === 't1') {
+    const isT1Dark = (t1Variant === 'dark') || (studentInfo?.t1Variant === 'dark');
     const uFull = (studentInfo.universityName || 'The University of Texas at Austin').trim();
     const isTexas = uFull.toLowerCase().includes('texas');
     const mainTitle = isTexas ? 'TEXAS' : (uFull.split(/\s+/)[0] || 'TEXAS').toUpperCase();
@@ -1635,6 +1654,86 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
       ? studentInfo.academicYear.trim()
       : '2026/2027';
 
+    if (isT1Dark) {
+      return (
+        <div 
+          ref={ref} 
+          className="id-card-container shadow-2xl bg-[#0F172A] overflow-hidden relative rounded-xl border border-slate-700/80 font-sans select-none animate-in fade-in duration-300 flex flex-row justify-between text-white"
+        >
+          {/* Subtle realistic sheen overlay for dark theme */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.04] via-transparent to-white/[0.07] pointer-events-none" />
+
+          {/* Left 66% Information Area */}
+          <div className="w-[66%] h-full p-3 sm:p-3.5 flex flex-col justify-between relative z-10">
+            {/* Header Row: Seal + Texas Wordmark */}
+            <div className="flex items-center gap-2">
+              {studentInfo.logo ? (
+                <img 
+                  src={studentInfo.logo} 
+                  alt="University Seal" 
+                  className="w-9 h-9 object-contain flex-shrink-0"
+                />
+              ) : (
+                <UTAustinSealSVG className="w-9 h-9 flex-shrink-0" isDark={true} />
+              )}
+              <div className="flex flex-col min-w-0 pr-1">
+                <span className="font-serif font-black text-[#FF7A00] text-[22px] sm:text-[23px] leading-none tracking-wider uppercase">
+                  {mainTitle}
+                </span>
+                <span className="font-serif text-[8.5px] text-slate-300 leading-tight font-medium tracking-normal mt-0.5 truncate">
+                  {uFull}
+                </span>
+              </div>
+            </div>
+
+            {/* Student Information - proportioned and evenly distributed vertically */}
+            <div className="flex-1 flex flex-col justify-evenly py-1 my-0.5">
+              <div>
+                <h2 className={`font-sans font-black text-[#FF7A00] ${nameSizeClass} tracking-wide uppercase break-words`}>
+                  {rawName}
+                </h2>
+                <p className="font-sans font-bold text-[10px] sm:text-[10.5px] text-slate-200 uppercase tracking-widest mt-0.5">
+                  {statusText}
+                </p>
+              </div>
+
+              <div className="font-mono text-[10px] sm:text-[10.5px] font-bold text-white tracking-wider flex items-center gap-2.5">
+                <span>{campusCode}</span>
+                <span>{displayStudentId}</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 text-[9px] sm:text-[9.5px] font-sans font-bold text-slate-200 leading-tight">
+                <span className="tracking-wider text-slate-400 font-semibold">VALID THROUGH:</span>
+                <span className="font-mono font-bold text-white">{validThroughFormatted}</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 text-[9px] sm:text-[9.5px] font-sans font-bold text-slate-200 leading-tight">
+                <span className="tracking-wider text-slate-400 font-semibold">ACADEMIC YEAR:</span>
+                <span className="font-mono font-bold text-white">{academicYearFormatted}</span>
+              </div>
+            </div>
+
+            {/* Barcode at bottom left */}
+            <div className="pt-1 w-[98%]">
+              <T1Barcode value={displayStudentId} className="w-full h-5" fill="#FFFFFF" />
+            </div>
+          </div>
+
+          {/* Right 34% Portrait Photo Area */}
+          <div className="w-[34%] h-full p-2.5 sm:p-3 pl-0 flex items-center justify-center relative z-10">
+            <div className="w-full h-full max-h-[115px] sm:max-h-[120px] max-w-[85px] sm:max-w-[90px] rounded-[3px] overflow-hidden bg-slate-800 border border-slate-700 shadow-md">
+              <img
+                src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }}
+                alt={rawName}
+                className="w-full h-full object-cover object-center"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div 
         ref={ref} 
@@ -1654,7 +1753,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 className="w-9 h-9 object-contain flex-shrink-0"
               />
             ) : (
-              <UTAustinSealSVG className="w-9 h-9 flex-shrink-0" />
+              <UTAustinSealSVG className="w-9 h-9 flex-shrink-0" isDark={false} />
             )}
             <div className="flex flex-col min-w-0 pr-1">
               <span className="font-serif font-black text-[#BF5700] text-[22px] sm:text-[23px] leading-none tracking-wider uppercase">
@@ -1695,7 +1794,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
 
           {/* Barcode at bottom left */}
           <div className="pt-1 w-[98%]">
-            <T1Barcode value={displayStudentId} className="w-full h-5" />
+            <T1Barcode value={displayStudentId} className="w-full h-5" fill="#1F2421" />
           </div>
         </div>
 
@@ -2226,40 +2325,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         {/* BOTTOM FOOTER BARCODE */}
         <div className="w-full px-4 pb-2 pt-1 flex flex-col items-center justify-center relative z-10">
           <div className="w-full h-[22px] flex items-center justify-center overflow-hidden bg-transparent">
-            <svg className="w-full h-full" viewBox="0 0 200 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0" width="3" height="30" fill="#000000" />
-              <rect x="5" width="2" height="30" fill="#000000" />
-              <rect x="10" width="5" height="30" fill="#000000" />
-              <rect x="18" width="2" height="30" fill="#000000" />
-              <rect x="23" width="4" height="30" fill="#000000" />
-              <rect x="30" width="2" height="30" fill="#000000" />
-              <rect x="35" width="6" height="30" fill="#000000" />
-              <rect x="44" width="2" height="30" fill="#000000" />
-              <rect x="49" width="3" height="30" fill="#000000" />
-              <rect x="55" width="5" height="30" fill="#000000" />
-              <rect x="63" width="2" height="30" fill="#000000" />
-              <rect x="68" width="4" height="30" fill="#000000" />
-              <rect x="75" width="3" height="30" fill="#000000" />
-              <rect x="81" width="2" height="30" fill="#000000" />
-              <rect x="86" width="6" height="30" fill="#000000" />
-              <rect x="95" width="2" height="30" fill="#000000" />
-              <rect x="100" width="4" height="30" fill="#000000" />
-              <rect x="107" width="2" height="30" fill="#000000" />
-              <rect x="112" width="5" height="30" fill="#000000" />
-              <rect x="120" width="3" height="30" fill="#000000" />
-              <rect x="126" width="2" height="30" fill="#000000" />
-              <rect x="131" width="6" height="30" fill="#000000" />
-              <rect x="140" width="2" height="30" fill="#000000" />
-              <rect x="145" width="4" height="30" fill="#000000" />
-              <rect x="152" width="3" height="30" fill="#000000" />
-              <rect x="158" width="2" height="30" fill="#000000" />
-              <rect x="163" width="5" height="30" fill="#000000" />
-              <rect x="171" width="3" height="30" fill="#000000" />
-              <rect x="177" width="2" height="30" fill="#000000" />
-              <rect x="182" width="4" height="30" fill="#000000" />
-              <rect x="189" width="2" height="30" fill="#000000" />
-              <rect x="194" width="5" height="30" fill="#000000" />
-            </svg>
+            <ScannableBarcode value={studentInfo.studentId || "SHP-2026-7711"} className="w-full h-[22px]" fill="#000000" showValue={false} />
           </div>
         </div>
       </div>
@@ -2392,27 +2458,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             </div>
             {/* Barcode perfectly aligned below */}
             <div className="w-[64px] h-[13px] mt-[4px] flex items-center justify-center overflow-hidden flex-shrink-0 bg-white">
-              <svg className="w-full h-[13px]" viewBox="0 0 100 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" width="4" height="20" fill="black" />
-                <rect x="8" width="2" height="20" fill="black" />
-                <rect x="12" width="6" height="20" fill="black" />
-                <rect x="20" width="3" height="20" fill="black" />
-                <rect x="25" width="2" height="20" fill="black" />
-                <rect x="29" width="5" height="20" fill="black" />
-                <rect x="36" width="3" height="20" fill="black" />
-                <rect x="41" width="1" height="20" fill="black" />
-                <rect x="44" width="4" height="20" fill="black" />
-                <rect x="50" width="2" height="20" fill="black" />
-                <rect x="54" width="6" height="20" fill="black" />
-                <rect x="62" width="3" height="20" fill="black" />
-                <rect x="67" width="2" height="20" fill="black" />
-                <rect x="71" width="5" height="20" fill="black" />
-                <rect x="78" width="3" height="20" fill="black" />
-                <rect x="83" width="1" height="20" fill="black" />
-                <rect x="86" width="4" height="20" fill="black" />
-                <rect x="92" width="2" height="20" fill="black" />
-                <rect x="96" width="2" height="20" fill="black" />
-              </svg>
+              <ScannableBarcode value={studentInfo.studentId || "NF-2026-1029"} className="w-full h-[13px]" fill="#000000" showValue={false} />
             </div>
             {/* Student ID Code under barcode */}
             <div className="text-[5.5px] font-bold font-mono tracking-widest text-[#002B49] text-center mt-[3px] uppercase leading-none">

@@ -4,11 +4,14 @@ import { StudentInfo, IdCardTemplate, ToastType, GenerationHistoryItem } from '.
 import InputField from './InputField';
 import { getRandomValidUntilDate } from '../lib/sampleData';
 import { GenerationHistory } from './GenerationHistory';
+import { QRCodeGenerator } from './QRCodeGenerator';
 
 interface EditorPanelProps {
   studentInfo: StudentInfo;
   template: IdCardTemplate;
   theme: 'light' | 'dark';
+  t1Variant?: 'white' | 'dark';
+  onT1VariantChange?: (variant: 'white' | 'dark') => void;
   isNameLocked?: boolean;
   onToggleNameLock?: () => void;
   isDateLocked?: boolean;
@@ -67,7 +70,27 @@ const MALE_HEADSHOTS = [
   "/assets/avatars/male_36.webp",
   "/assets/avatars/male_37.webp",
   "/assets/avatars/male_38.webp",
-  "/assets/avatars/male_39.webp"
+  "/assets/avatars/male_39.webp",
+  "/assets/avatars/male_40.webp",
+  "/assets/avatars/male_41.webp",
+  "/assets/avatars/male_42.webp",
+  "/assets/avatars/male_43.webp",
+  "/assets/avatars/male_44.webp",
+  "/assets/avatars/male_45.webp",
+  "/assets/avatars/male_46.webp",
+  "/assets/avatars/male_47.webp",
+  "/assets/avatars/male_48.webp",
+  "/assets/avatars/male_49.webp",
+  "/assets/avatars/male_50.webp",
+  "/assets/avatars/male_51.webp",
+  "/assets/avatars/male_52.webp",
+  "/assets/avatars/male_53.webp",
+  "/assets/avatars/male_54.webp",
+  "/assets/avatars/male_55.webp",
+  "/assets/avatars/male_56.webp",
+  "/assets/avatars/male_57.webp",
+  "/assets/avatars/male_58.webp",
+  "/assets/avatars/male_59.webp"
 ];
 
 const FEMALE_HEADSHOTS = [
@@ -107,7 +130,79 @@ const FEMALE_HEADSHOTS = [
   "/assets/avatars/female_34.webp",
   "/assets/avatars/female_35.webp",
   "/assets/avatars/female_36.webp",
-  "/assets/avatars/female_37.webp"
+  "/assets/avatars/female_37.webp",
+  "/assets/avatars/female_38.webp",
+  "/assets/avatars/female_39.webp",
+  "/assets/avatars/female_40.webp",
+  "/assets/avatars/female_41.webp",
+  "/assets/avatars/female_42.webp",
+  "/assets/avatars/female_43.webp",
+  "/assets/avatars/female_44.webp",
+  "/assets/avatars/female_45.webp",
+  "/assets/avatars/female_46.webp",
+  "/assets/avatars/female_47.webp",
+  "/assets/avatars/female_48.webp",
+  "/assets/avatars/female_49.webp",
+  "/assets/avatars/female_50.webp",
+  "/assets/avatars/female_51.webp",
+  "/assets/avatars/female_52.webp",
+  "/assets/avatars/female_53.webp",
+  "/assets/avatars/female_54.webp",
+  "/assets/avatars/female_55.webp",
+  "/assets/avatars/female_56.webp",
+  "/assets/avatars/female_57.webp",
+  "/assets/avatars/female_58.webp",
+  "/assets/avatars/female_59.webp",
+  "/assets/avatars/female_60.webp",
+  "/assets/avatars/female_61.webp",
+  "/assets/avatars/female_62.webp",
+  "/assets/avatars/female_63.webp",
+  "/assets/avatars/female_64.webp",
+  "/assets/avatars/female_65.webp",
+  "/assets/avatars/female_66.webp",
+  "/assets/avatars/female_67.webp",
+  "/assets/avatars/female_68.webp",
+  "/assets/avatars/female_69.webp",
+  "/assets/avatars/female_70.webp",
+  "/assets/avatars/female_71.webp",
+  "/assets/avatars/female_72.webp",
+  "/assets/avatars/female_73.webp",
+  "/assets/avatars/female_74.webp",
+  "/assets/avatars/female_75.webp",
+  "/assets/avatars/female_76.webp",
+  "/assets/avatars/female_77.webp",
+  "/assets/avatars/female_78.webp",
+  "/assets/avatars/female_79.webp",
+  "/assets/avatars/female_80.webp",
+  "/assets/avatars/female_81.webp",
+  "/assets/avatars/female_82.webp",
+  "/assets/avatars/female_83.webp",
+  "/assets/avatars/female_84.webp",
+  "/assets/avatars/female_85.webp",
+  "/assets/avatars/female_86.webp",
+  "/assets/avatars/female_87.webp",
+  "/assets/avatars/female_88.webp",
+  "/assets/avatars/female_89.webp",
+  "/assets/avatars/female_90.webp",
+  "/assets/avatars/female_91.webp",
+  "/assets/avatars/female_92.webp",
+  "/assets/avatars/female_93.webp",
+  "/assets/avatars/female_94.webp",
+  "/assets/avatars/female_95.webp",
+  "/assets/avatars/female_96.webp",
+  "/assets/avatars/female_97.webp",
+  "/assets/avatars/female_98.webp",
+  "/assets/avatars/female_99.webp",
+  "/assets/avatars/female_100.webp",
+  "/assets/avatars/female_101.webp",
+  "/assets/avatars/female_102.webp",
+  "/assets/avatars/female_103.webp",
+  "/assets/avatars/female_104.webp",
+  "/assets/avatars/female_105.webp",
+  "/assets/avatars/female_106.webp",
+  "/assets/avatars/female_107.webp",
+  "/assets/avatars/female_108.webp",
+  "/assets/avatars/female_109.webp"
 ];
 
 const SCHOOL_DATA = {
@@ -167,11 +262,14 @@ const SCHOOL_DATA = {
         'Cornerstone Community'
     ],
     'USA': [
+        'Eastbridge University',
+        'Air University',
+        'Air University (US)',
         'The University of Texas at Austin',
         'Northwood Academy',
         'Hudson County Community College',
+        'Mercer County Community College',
         'Lee University',
-        'Air University',
         'Ross University',
         'ADEN University',
         'Duke University',
@@ -269,6 +367,8 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   studentInfo, 
   template, 
   theme,
+  t1Variant = 'white',
+  onT1VariantChange,
   isNameLocked = true,
   onToggleNameLock,
   isDateLocked = true,
@@ -354,7 +454,17 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-6 mb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-bold mb-3 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Design Template</label>
-        <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-15 gap-1.5">
+        <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-16 gap-1.5">
+          <button 
+            onClick={() => onTemplateChange('eastbridge')}
+            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'eastbridge' 
+                ? 'border-[#242831] bg-[#242831]/20 text-[#1E2229] dark:text-slate-200 shadow-md font-black ring-2 ring-[#242831]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Eastbridge
+          </button>
           <button 
             onClick={() => onTemplateChange('sainik')}
             className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
@@ -506,6 +616,51 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             Northfield
           </button>
         </div>
+
+        {/* Selectable Dark and White Design Options for T1 */}
+        {template === 't1' && (
+          <div className={`mt-3 p-3 rounded-xl border flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in duration-200 ${
+            isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-orange-50/70 border-orange-200'
+          }`}>
+            <div className="flex items-center gap-2.5">
+              <span className="w-3 h-3 rounded-full bg-[#BF5700] ring-2 ring-[#BF5700]/30 flex-shrink-0" />
+              <div>
+                <span className={`text-xs font-black uppercase tracking-wider block ${isDark ? 'text-zinc-200' : 'text-zinc-900'}`}>
+                  T1 Design Theme
+                </span>
+                <span className={`text-[10.5px] block ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                  Selectable White (Classic) or Dark design option
+                </span>
+              </div>
+            </div>
+            <div className={`flex rounded-lg p-1 border ${isDark ? 'bg-zinc-950 border-zinc-800' : 'bg-white border-orange-200/80 shadow-xs'}`}>
+              <button
+                type="button"
+                onClick={() => onT1VariantChange && onT1VariantChange('white')}
+                className={`px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all ${
+                  t1Variant === 'white'
+                    ? 'bg-[#FAF8F5] text-neutral-900 border border-neutral-300 shadow-xs font-black ring-1 ring-orange-500/20'
+                    : isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full border border-neutral-400 bg-white" />
+                White Design
+              </button>
+              <button
+                type="button"
+                onClick={() => onT1VariantChange && onT1VariantChange('dark')}
+                className={`px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all ${
+                  t1Variant === 'dark'
+                    ? 'bg-[#0F172A] text-white border border-slate-700 shadow-xs font-black ring-1 ring-orange-500/30'
+                    : isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-[#0F172A] border border-slate-600" />
+                Dark Design
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className={`border-b pb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
@@ -884,6 +1039,94 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           onChange={onInputChange}
           isDark={isDark}
         />
+
+        {/* Dynamic QR Code Generator Card */}
+        <div className={`p-3 rounded-lg border flex flex-col gap-2.5 transition-colors duration-300 ${
+          isDark ? 'bg-zinc-800/80 border-zinc-700/80' : 'bg-slate-50 border-slate-200'
+        }`}>
+          <div className="flex items-center justify-between">
+            <span className={`text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 ${
+              isDark ? 'text-zinc-300' : 'text-slate-700'
+            }`}>
+              <svg className="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+              </svg>
+              Dynamic QR Code
+            </span>
+            <span className="text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+              Live Encoded
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="bg-white p-1 rounded-md shadow-xs border border-neutral-200 flex-shrink-0">
+              <QRCodeGenerator
+                website={studentInfo.website}
+                universityName={studentInfo.universityName}
+                size={54}
+                fgColor="#0F172A"
+                bgColor="#FFFFFF"
+                margin={1}
+                interactive={true}
+              />
+            </div>
+            <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <span className={`text-[11px] font-medium leading-tight truncate ${
+                isDark ? 'text-zinc-300' : 'text-slate-800'
+              }`}>
+                {studentInfo.website ? (
+                  <span className="font-mono text-indigo-500">{studentInfo.website}</span>
+                ) : (
+                  <span className="italic text-zinc-400">Resolves to institution default</span>
+                )}
+              </span>
+              <p className={`text-[10px] mt-0.5 leading-snug ${isDark ? 'text-zinc-400' : 'text-slate-500'}`}>
+                Dynamically renders QR code encoding this URL on your student ID card. Scan with any camera or click to open.
+              </p>
+            </div>
+          </div>
+
+          {/* Code Format Switcher */}
+          <div className="pt-2 border-t border-dashed border-zinc-300/40 dark:border-zinc-700/60 flex items-center justify-between">
+            <span className={`text-[11px] font-medium ${isDark ? 'text-zinc-400' : 'text-slate-600'}`}>
+              Card Display:
+            </span>
+            <div className={`inline-flex rounded-md p-0.5 border ${
+              isDark ? 'bg-zinc-900 border-zinc-700' : 'bg-white border-slate-200 shadow-xs'
+            }`}>
+              <button
+                type="button"
+                onClick={() => {
+                  onInputChange({
+                    target: { name: 'codeType', value: 'qr' }
+                  } as any);
+                }}
+                className={`px-2.5 py-1 rounded text-xs font-semibold transition-all ${
+                  studentInfo.codeType !== 'barcode'
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                QR Code (Default)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onInputChange({
+                    target: { name: 'codeType', value: 'barcode' }
+                  } as any);
+                }}
+                className={`px-2.5 py-1 rounded text-xs font-semibold transition-all ${
+                  studentInfo.codeType === 'barcode'
+                    ? 'bg-indigo-600 text-white shadow-xs'
+                    : isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                Barcode (Code 128)
+              </button>
+            </div>
+          </div>
+        </div>
         <InputField 
           label="Blood Group:" 
           name="bloodGroup" 

@@ -11,6 +11,8 @@ interface PreviewPanelProps {
   studentInfo: StudentInfo;
   template: IdCardTemplate;
   theme: 'light' | 'dark';
+  t1Variant?: 'white' | 'dark';
+  onT1VariantChange?: (variant: 'white' | 'dark') => void;
   showToast: (message: string, type: ToastType) => void;
   autoTrigger?: number;
   setActiveTab: (tab: 'edit' | 'preview') => void;
@@ -39,10 +41,21 @@ const MOCKUP_SCENES = [
   { url: "https://any-link-me.lovable.app/f/6n6e3m654l.jfif", label: "Natural View 17" },
   { url: "https://any-link-me.lovable.app/f/0p5117681p.jfif", label: "Natural View 18" },
   { url: "https://any-link-me.lovable.app/f/3k0t4v194f.jpg", label: "Natural View 19" },
-  { url: "https://any-link-me.lovable.app/f/1p23565p63.jfif", label: "Natural View 20" }
+  { url: "https://any-link-me.lovable.app/f/1p23565p63.jfif", label: "Natural View 20" },
+  { url: "https://any-link-me.lovable.app/f/58086o0p28.png", label: "Natural View 21" }
 ];
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, theme, showToast, autoTrigger = 0, setActiveTab, activeTab }) => {
+const PreviewPanel: React.FC<PreviewPanelProps> = ({ 
+  studentInfo, 
+  template, 
+  theme, 
+  t1Variant = 'white', 
+  onT1VariantChange, 
+  showToast, 
+  autoTrigger = 0, 
+  setActiveTab, 
+  activeTab 
+}) => {
   const frontCardRef = useRef<HTMLDivElement>(null);
   const backCardRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -596,16 +609,74 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ studentInfo, template, them
 
   return (
     <div ref={panelRef} className={`w-full p-6 md:p-8 flex flex-col items-center overflow-y-auto transition-colors duration-300 ${isDark ? 'bg-zinc-950' : 'bg-gray-200'} lg:max-h-[90vh] pb-24 lg:pb-8`}>
-      <h2 className={`text-3xl font-bold mb-6 text-center transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-800'}`}>Live ID Card Preview</h2>
+      <h2 className={`text-3xl font-bold mb-4 text-center transition-colors duration-300 ${isDark ? 'text-white' : 'text-gray-800'}`}>Live ID Card Preview</h2>
       
+      {/* T1 Design Option Quick Switcher */}
+      {template === 't1' && (
+        <div className={`mb-5 p-1.5 px-3 rounded-full border flex items-center gap-2.5 shadow-xs transition-all animate-in fade-in duration-200 ${
+          isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-white/90 border-neutral-300 backdrop-blur-sm'
+        }`}>
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#BF5700] dark:text-orange-400 flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#BF5700] dark:bg-orange-500" />
+            T1 Style:
+          </span>
+          <div className="flex gap-1">
+            <button
+              type="button"
+              onClick={() => onT1VariantChange && onT1VariantChange('white')}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+                t1Variant === 'white'
+                  ? 'bg-[#FAF8F5] text-neutral-900 border border-neutral-300 shadow-xs font-black ring-2 ring-[#BF5700]/20'
+                  : isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-zinc-500 hover:text-zinc-800'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full border border-neutral-400 bg-white" />
+              White Design
+            </button>
+            <button
+              type="button"
+              onClick={() => onT1VariantChange && onT1VariantChange('dark')}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 ${
+                t1Variant === 'dark'
+                  ? 'bg-[#0F172A] text-white border border-slate-700 shadow-xs font-black ring-2 ring-orange-500/30'
+                  : isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-zinc-500 hover:text-zinc-800'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-full bg-[#0F172A] border border-slate-600" />
+              Dark Design
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="space-y-6 w-full flex flex-col items-center">
         <div>
            <p className={`font-bold mb-2 text-center text-sm uppercase tracking-wide transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Front Side</p>
-           <IdCard ref={frontCardRef} studentInfo={studentInfo} side="front" template={template} />
+           <IdCard ref={frontCardRef} studentInfo={studentInfo} side="front" template={template} t1Variant={t1Variant} />
         </div>
         <div>
            <p className={`font-bold mb-2 text-center text-sm uppercase tracking-wide transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Back Side</p>
-           <IdCard ref={backCardRef} studentInfo={studentInfo} side="back" template={template} />
+           <IdCard ref={backCardRef} studentInfo={studentInfo} side="back" template={template} t1Variant={t1Variant} />
+        </div>
+
+        {/* Scannable Code Status Pill */}
+        <div className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+          isDark 
+            ? 'bg-zinc-900/90 border-zinc-800 text-zinc-300' 
+            : 'bg-white border-gray-200 text-gray-700 shadow-xs'
+        }`}>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+          <span>
+            {studentInfo.codeType === 'barcode' ? (
+              <>
+                <strong className="font-semibold text-emerald-600 dark:text-emerald-400">Code 128 Barcode:</strong> Scan with phone camera/scanner or click to open website.
+              </>
+            ) : (
+              <>
+                <strong className="font-semibold text-emerald-600 dark:text-emerald-400">Dynamic QR Code:</strong> Encodes student website (<span className="font-mono text-indigo-500">{studentInfo.website || 'institution site'}</span>). Scan with phone camera or click to open.
+              </>
+            )}
+          </span>
         </div>
       </div>
 

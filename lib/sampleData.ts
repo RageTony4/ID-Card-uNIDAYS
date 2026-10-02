@@ -41,7 +41,27 @@ const MALE_AVATARS = [
   "/assets/avatars/male_36.webp",
   "/assets/avatars/male_37.webp",
   "/assets/avatars/male_38.webp",
-  "/assets/avatars/male_39.webp"
+  "/assets/avatars/male_39.webp",
+  "/assets/avatars/male_40.webp",
+  "/assets/avatars/male_41.webp",
+  "/assets/avatars/male_42.webp",
+  "/assets/avatars/male_43.webp",
+  "/assets/avatars/male_44.webp",
+  "/assets/avatars/male_45.webp",
+  "/assets/avatars/male_46.webp",
+  "/assets/avatars/male_47.webp",
+  "/assets/avatars/male_48.webp",
+  "/assets/avatars/male_49.webp",
+  "/assets/avatars/male_50.webp",
+  "/assets/avatars/male_51.webp",
+  "/assets/avatars/male_52.webp",
+  "/assets/avatars/male_53.webp",
+  "/assets/avatars/male_54.webp",
+  "/assets/avatars/male_55.webp",
+  "/assets/avatars/male_56.webp",
+  "/assets/avatars/male_57.webp",
+  "/assets/avatars/male_58.webp",
+  "/assets/avatars/male_59.webp"
 ];
 
 const FEMALE_AVATARS = [
@@ -81,7 +101,79 @@ const FEMALE_AVATARS = [
   "/assets/avatars/female_34.webp",
   "/assets/avatars/female_35.webp",
   "/assets/avatars/female_36.webp",
-  "/assets/avatars/female_37.webp"
+  "/assets/avatars/female_37.webp",
+  "/assets/avatars/female_38.webp",
+  "/assets/avatars/female_39.webp",
+  "/assets/avatars/female_40.webp",
+  "/assets/avatars/female_41.webp",
+  "/assets/avatars/female_42.webp",
+  "/assets/avatars/female_43.webp",
+  "/assets/avatars/female_44.webp",
+  "/assets/avatars/female_45.webp",
+  "/assets/avatars/female_46.webp",
+  "/assets/avatars/female_47.webp",
+  "/assets/avatars/female_48.webp",
+  "/assets/avatars/female_49.webp",
+  "/assets/avatars/female_50.webp",
+  "/assets/avatars/female_51.webp",
+  "/assets/avatars/female_52.webp",
+  "/assets/avatars/female_53.webp",
+  "/assets/avatars/female_54.webp",
+  "/assets/avatars/female_55.webp",
+  "/assets/avatars/female_56.webp",
+  "/assets/avatars/female_57.webp",
+  "/assets/avatars/female_58.webp",
+  "/assets/avatars/female_59.webp",
+  "/assets/avatars/female_60.webp",
+  "/assets/avatars/female_61.webp",
+  "/assets/avatars/female_62.webp",
+  "/assets/avatars/female_63.webp",
+  "/assets/avatars/female_64.webp",
+  "/assets/avatars/female_65.webp",
+  "/assets/avatars/female_66.webp",
+  "/assets/avatars/female_67.webp",
+  "/assets/avatars/female_68.webp",
+  "/assets/avatars/female_69.webp",
+  "/assets/avatars/female_70.webp",
+  "/assets/avatars/female_71.webp",
+  "/assets/avatars/female_72.webp",
+  "/assets/avatars/female_73.webp",
+  "/assets/avatars/female_74.webp",
+  "/assets/avatars/female_75.webp",
+  "/assets/avatars/female_76.webp",
+  "/assets/avatars/female_77.webp",
+  "/assets/avatars/female_78.webp",
+  "/assets/avatars/female_79.webp",
+  "/assets/avatars/female_80.webp",
+  "/assets/avatars/female_81.webp",
+  "/assets/avatars/female_82.webp",
+  "/assets/avatars/female_83.webp",
+  "/assets/avatars/female_84.webp",
+  "/assets/avatars/female_85.webp",
+  "/assets/avatars/female_86.webp",
+  "/assets/avatars/female_87.webp",
+  "/assets/avatars/female_88.webp",
+  "/assets/avatars/female_89.webp",
+  "/assets/avatars/female_90.webp",
+  "/assets/avatars/female_91.webp",
+  "/assets/avatars/female_92.webp",
+  "/assets/avatars/female_93.webp",
+  "/assets/avatars/female_94.webp",
+  "/assets/avatars/female_95.webp",
+  "/assets/avatars/female_96.webp",
+  "/assets/avatars/female_97.webp",
+  "/assets/avatars/female_98.webp",
+  "/assets/avatars/female_99.webp",
+  "/assets/avatars/female_100.webp",
+  "/assets/avatars/female_101.webp",
+  "/assets/avatars/female_102.webp",
+  "/assets/avatars/female_103.webp",
+  "/assets/avatars/female_104.webp",
+  "/assets/avatars/female_105.webp",
+  "/assets/avatars/female_106.webp",
+  "/assets/avatars/female_107.webp",
+  "/assets/avatars/female_108.webp",
+  "/assets/avatars/female_109.webp"
 ];
 
 export const cleanDiacritics = (str: string): string => {
@@ -219,11 +311,20 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'The University of Texas at Austin': { city: 'Austin, TX, USA', address: '110 Inner Campus Dr, Austin, TX', postcode: '78712', country: 'USA' },
   'University of Texas at Austin': { city: 'Austin, TX, USA', address: '110 Inner Campus Dr, Austin, TX', postcode: '78712', country: 'USA' },
   'Park University': { city: 'Parkville, MO', address: '8700 NW River Park Dr', postcode: '64152', country: 'USA' },
+  'Eastbridge University': { city: 'Cambridge, MA, USA', address: '100 University Bridge Way, Cambridge, MA', postcode: '02138', country: 'USA' },
   'Hudson County Community College': { city: 'Jersey City, NJ, USA', address: '70 Sip Ave, Jersey City, NJ', postcode: '07306', country: 'USA' },
+  'Mercer County Community College': { city: 'West Windsor, NJ, USA', address: '1200 Old Trenton Rd, West Windsor, NJ', postcode: '08550', country: 'USA' },
+  'Mercer county Community college': { city: 'West Windsor, NJ, USA', address: '1200 Old Trenton Rd, West Windsor, NJ', postcode: '08550', country: 'USA' },
   'University of Houston': { city: 'Houston, TX, USA', address: '4800 Calhoun Rd, Houston, TX', postcode: '77004', country: 'USA' },
   'University of Guam': { city: 'Mangilao, GU, USA', address: '303 University Dr, Mangilao, GU', postcode: '96923', country: 'USA' },
   'Lee University': { city: 'Cleveland, TN, USA', address: '1120 N Ocoee St, Cleveland, TN', postcode: '37311', country: 'USA' },
   'Air University': { city: 'Montgomery, AL, USA', address: '55 LeMay Plaza, Montgomery, AL', postcode: '36112', country: 'USA' },
+  'Air University (US)': { city: 'Montgomery, AL, USA', address: '55 LeMay Plaza, Montgomery, AL', postcode: '36112', country: 'USA' },
+  'AIR University': { city: 'Montgomery, AL, USA', address: '55 LeMay Plaza, Montgomery, AL', postcode: '36112', country: 'USA' },
+  'AIR University (US)': { city: 'Montgomery, AL, USA', address: '55 LeMay Plaza, Montgomery, AL', postcode: '36112', country: 'USA' },
+  'Air University (USA)': { city: 'Montgomery, AL, USA', address: '55 LeMay Plaza, Montgomery, AL', postcode: '36112', country: 'USA' },
+  'United States Air Force Air University': { city: 'Montgomery, AL, USA', address: '55 LeMay Plaza, Montgomery, AL', postcode: '36112', country: 'USA' },
+  'Air University - Maxwell AFB': { city: 'Montgomery, AL, USA', address: '55 LeMay Plaza, Montgomery, AL', postcode: '36112', country: 'USA' },
   'Ross University': { city: 'North Brunswick, NJ, USA', address: '630 US-1, North Brunswick, NJ', postcode: '08902', country: 'USA' },
   'ADEN University': { city: 'Miami, FL, USA', address: '2121 Ponce de Leon Blvd, Coral Gables, FL', postcode: '33134', country: 'USA' },
   'Duke University': { city: 'Durham, NC, USA', address: '2020 Campus Dr, Durham, NC', postcode: '27708', country: 'USA' },
@@ -383,10 +484,12 @@ const getRandomId = (university: string): string => {
   if (university === 'Park University') return `PU-US-${year}-${randomNum}`;
   if (university.toLowerCase().includes('texas')) return `9008${Math.floor(100000 + Math.random() * 900000)}`;
   if (university === 'Hudson County Community College') return `HCCC-US-${year}-${randomNum}`;
+  if (university.toLowerCase().includes('eastbridge')) return `2026 ${String(Math.floor(Math.random() * 9000) + 1000).padStart(4, '0')}`;
+  if (university === 'Mercer County Community College' || university.toLowerCase().includes('mercer')) return `MCCC-US-${year}-${randomNum}`;
   if (university === 'University of Houston') return `UH-US-${year}-${randomNum}`;
   if (university === 'University of Guam') return `UOG-US-${year}-${randomNum}`;
   if (university === 'Lee University') return `LU-US-${year}-${randomNum}`;
-  if (university === 'Air University') return `AU-US-${year}-${randomNum}`;
+  if (university.toLowerCase().includes('air') && (university.toLowerCase().includes('univ') || university.toLowerCase().includes('us'))) return `AU-US-${year}-${randomNum}`;
   if (university === 'Ross University') return `RU-US-${year}-${randomNum}`;
   if (university === 'ADEN University') return `ADEN-US-${year}-${randomNum}`;
   if (university === 'Duke University') return `DU-US-${year}-${randomNum}`;
@@ -465,7 +568,18 @@ export const getRandomValidUntilDate = (): string => {
 
 export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo => {
   const university = fixedUniversity || getRandomElement(Object.keys(SCHOOL_ADDRESS_MAP));
-  const details = SCHOOL_ADDRESS_MAP[university] || { city: 'London', address: 'High Street, London', postcode: 'SW1A 1AA', country: 'UK' };
+  
+  // Robust case-insensitive and alias matching for school address
+  const uniClean = (university || '').trim().toLowerCase();
+  let details = SCHOOL_ADDRESS_MAP[university];
+  if (!details) {
+    if (uniClean.includes('air') && (uniClean.includes('univ') || uniClean.includes('us'))) {
+      details = SCHOOL_ADDRESS_MAP['Air University'];
+    } else {
+      const matchKey = Object.keys(SCHOOL_ADDRESS_MAP).find(k => k.toLowerCase() === uniClean);
+      details = matchKey ? SCHOOL_ADDRESS_MAP[matchKey] : { city: 'London', address: 'High Street, London', postcode: 'SW1A 1AA', country: 'UK' };
+    }
+  }
   
   const countryType = details.country;
   const gender = Math.random() > 0.5 ? 'male' : 'female';
@@ -495,6 +609,16 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   
   const phone = getRandomPhoneNumber(countryType);
 
+  const isAirUni = uniClean.includes('air') && (uniClean.includes('univ') || uniClean.includes('us'));
+  const airUniCourses = [
+    'Air & Space Power Strategy',
+    'Master of Military Operational Art & Science',
+    'Aerospace Studies & Leadership',
+    'Cyber Warfare & Security Operations',
+    'National Security & Strategic Studies',
+    'Aeronautical Science & Flight Operations'
+  ];
+
   return {
     universityName: university,
     studentName: fullName,
@@ -504,13 +628,31 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     address: `${details.address}, ${details.postcode}, ${countryType === 'UK' ? 'UK' : countryType === 'USA' ? 'USA' : countryType === 'Canada' ? 'Canada' : countryType === 'India' ? 'India' : countryType === 'France' ? 'France' : countryType === 'Italy' ? 'Italy' : countryType}`,
     location: details.city,
     academicYear: '2026/2027',
-    course: getRandomElement(COURSES),
+    course: isAirUni ? getRandomElement(airUniCourses) : getRandomElement(COURSES),
     status: 'Currently Enrolled',
     issueDate: '01 Sep 2026',
     validUntil: getRandomValidUntilDate(),
-    website: university.toLowerCase().includes('cranbourne') ? 'cesc.vic.edu.au' : university.toLowerCase().includes('texas') ? 'www.utexas.edu' : university.includes('Masinde Muliro') ? 'www.mmust.ac.ke' : university === 'Hudson County Community College' ? 'www.hccc.edu' : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
+    website: isAirUni
+      ? 'www.airuniversity.af.edu'
+      : university.toLowerCase().includes('cranbourne')
+      ? 'cesc.vic.edu.au'
+      : university.toLowerCase().includes('texas')
+      ? 'www.utexas.edu'
+      : university.includes('Masinde Muliro')
+      ? 'www.mmust.ac.ke'
+      : university === 'Hudson County Community College'
+      ? 'www.hccc.edu'
+      : university.toLowerCase().includes('mercer')
+      ? 'www.mccc.edu'
+      : university.toLowerCase().includes('eastbridge')
+      ? 'www.eastbridge.edu'
+      : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
     photo: photo,
-    logo: null,
+    logo: isAirUni 
+      ? '/assets/air_university_logo.svg' 
+      : university.toLowerCase().includes('eastbridge')
+      ? '/assets/eastbridge_crest_transparent.png'
+      : null,
     bloodGroup: getRandomElement(bloodGroups),
     emergencyContact: getRandomPhoneNumber(countryType),
   };

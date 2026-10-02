@@ -17,6 +17,8 @@ export interface StudentInfo {
   logo: string | null;
   bloodGroup: string;
   emergencyContact: string;
+  t1Variant?: 'white' | 'dark';
+  codeType?: 'qr' | 'barcode';
 }
 
 export type ToastType = 'info' | 'success' | 'error';
@@ -26,11 +28,12 @@ export interface ToastMessage {
   type: ToastType;
 }
 
-export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd' | 'd1' | 'westdale' | 'd2' | 't1' | 't2' | 't3' | 'sainik' | 'uoflife' | 'international';
+export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd' | 'd1' | 'westdale' | 'd2' | 't1' | 't2' | 't3' | 'sainik' | 'uoflife' | 'international' | 'eastbridge';
 
 export interface GenerationHistoryItem {
   id: string;
   timestamp: number;
   studentInfo: StudentInfo;
   template?: IdCardTemplate;
+  t1Variant?: 'white' | 'dark';
 }
