@@ -6,7 +6,7 @@ import PreviewPanel from './components/PreviewPanel';
 import Toast from './components/Toast';
 import { generateRandomStudentInfo, getRandomValidUntilDate } from './lib/sampleData';
 import { copyTextToClipboard } from './lib/clipboard';
-import { GoogleGenAI } from "@google/genai";
+import { AvatarBgOption, GeneratedAvatarItem, generateUniqueStudentAvatar } from './lib/avatarGenerator';
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -69,6 +69,32 @@ const App: React.FC = () => {
     return saved !== null ? saved === 'true' : true;
   });
 
+  // AI Avatar Generator Toggle & Settings (Default OFF so it only generates when turned ON)
+  const [isAiAvatarEnabled, setIsAiAvatarEnabled] = useState<boolean>(() => {
+    const saved = localStorage.getItem('id_gen_ai_avatar_enabled');
+    return saved === 'true';
+  });
+
+  const [aiAvatarBg, setAiAvatarBg] = useState<AvatarBgOption>(() => {
+    const saved = localStorage.getItem('id_gen_ai_avatar_bg');
+    return (saved === 'white' || saved === 'blue' || saved === 'random') ? saved : 'white';
+  });
+
+  const [isGeneratingAvatar, setIsGeneratingAvatar] = useState<boolean>(false);
+
+  const [generatedAvatars, setGeneratedAvatars] = useState<GeneratedAvatarItem[]>(() => {
+    const saved = localStorage.getItem('id_gen_generated_avatars');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed.slice(0, 12);
+      } catch (e) {
+        console.error('Failed to parse saved generated avatars', e);
+      }
+    }
+    return [];
+  });
+
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const [autoTrigger, setAutoTrigger] = useState(0);
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
@@ -95,7 +121,11 @@ const App: React.FC = () => {
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem('id_gen_student_info', JSON.stringify(studentInfo));
+    try {
+      localStorage.setItem('id_gen_student_info', JSON.stringify(studentInfo));
+    } catch (e) {
+      console.warn('Could not save studentInfo to localStorage', e);
+    }
   }, [studentInfo]);
 
   useEffect(() => {
@@ -115,7 +145,27 @@ const App: React.FC = () => {
   }, [isDateLocked]);
 
   useEffect(() => {
-    localStorage.setItem('id_gen_history', JSON.stringify(history));
+    localStorage.setItem('id_gen_ai_avatar_enabled', String(isAiAvatarEnabled));
+  }, [isAiAvatarEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('id_gen_ai_avatar_bg', aiAvatarBg);
+  }, [aiAvatarBg]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('id_gen_generated_avatars', JSON.stringify(generatedAvatars.slice(0, 6)));
+    } catch (e) {
+      console.warn('Could not persist generated avatars in localStorage', e);
+    }
+  }, [generatedAvatars]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('id_gen_history', JSON.stringify(history));
+    } catch (e) {
+      console.warn('Could not persist history in localStorage', e);
+    }
   }, [history]);
 
   // Seed history with initial profile if empty
@@ -144,7 +194,12 @@ const App: React.FC = () => {
           top.universityName === newInfo.universityName &&
           top.issueDate === newInfo.issueDate
         ) {
-          return prev;
+          const updatedTop = {
+            ...prev[0],
+            studentInfo: { ...newInfo },
+            template: tpl || prev[0].template
+          };
+          return [updatedTop, ...prev.slice(1)];
         }
       }
       const newItem: GenerationHistoryItem = {
@@ -367,6 +422,51 @@ const App: React.FC = () => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
+  const triggerAiAvatarForStudent = async (targetStudent: StudentInfo, tpl?: IdCardTemplate): Promise<StudentInfo> => {
+    setIsGeneratingAvatar(true);
+    try {
+      const generated = await generateUniqueStudentAvatar(targetStudent, aiAvatarBg);
+      const updatedWithFace: StudentInfo = {
+        ...targetStudent,
+        photo: generated.url
+      };
+      setGeneratedAvatars(prev => [generated, ...prev].slice(0, 12));
+      setStudentInfo(prev => ({
+        ...prev,
+        photo: generated.url
+      }));
+      recordGeneration(updatedWithFace, tpl || template);
+      return updatedWithFace;
+    } catch (e) {
+      console.error('AI Avatar generation failed:', e);
+      return targetStudent;
+    } finally {
+      setIsGeneratingAvatar(false);
+    }
+  };
+
+  const handleToggleAiAvatar = () => {
+    setIsAiAvatarEnabled(prev => {
+      const next = !prev;
+      showToast(
+        next
+          ? 'AI Avatar Generator ON: A new unique face will be generated automatically when you randomize data!'
+          : 'AI Avatar Generator OFF: Using standard selectable avatars when randomizing.',
+        'info'
+      );
+      return next;
+    });
+  };
+
+  const handleGenerateAiAvatarNow = async () => {
+    if (isGeneratingAvatar) return;
+    showToast('Generating unique AI student portrait...', 'info');
+    const updated = await triggerAiAvatarForStudent(studentInfo, template);
+    if (updated.photo !== studentInfo.photo) {
+      showToast('New unique AI avatar generated and selected!', 'success');
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
@@ -396,6 +496,10 @@ const App: React.FC = () => {
 
       setStudentInfo(updatedInfo);
       recordGeneration(updatedInfo, targetTemplate);
+
+      if (isAiAvatarEnabled) {
+        triggerAiAvatarForStudent(updatedInfo, targetTemplate);
+      }
     } else {
       setStudentInfo(prev => ({ ...prev, [name]: value }));
     }
@@ -482,19 +586,28 @@ const App: React.FC = () => {
     if (finalName) {
       const copied = await copyTextToClipboard(finalName);
       if (copied) {
-        showToast(`Randomized & "${finalName}" copied to clipboard!${lockNotice}`, 'success');
+        showToast(
+          isAiAvatarEnabled
+            ? `Randomized "${finalName}" & generating new AI face...${lockNotice}`
+            : `Randomized & "${finalName}" copied to clipboard!${lockNotice}`,
+          'success'
+        );
       } else {
         showToast(`Student details randomized${lockNotice}!`, 'success');
       }
     } else {
       showToast(`Student details randomized${lockNotice}!`, 'success');
     }
+
+    if (isAiAvatarEnabled) {
+      await triggerAiAvatarForStudent(finalInfo, template);
+    }
   };
 
   const handleAutoTrigger = async () => {
     const newInfo = generateRandomStudentInfo(studentInfo.universityName);
     const finalName = isNameLocked ? studentInfo.studentName : newInfo.studentName;
-    const finalInfo: StudentInfo = { 
+    let finalInfo: StudentInfo = { 
       ...newInfo, 
       studentName: finalName,
       issueDate: isDateLocked ? studentInfo.issueDate : newInfo.issueDate,
@@ -505,13 +618,23 @@ const App: React.FC = () => {
 
     setStudentInfo(finalInfo);
     recordGeneration(finalInfo, template);
-    setAutoTrigger(prev => prev + 1);
-    
+
     // Copy the name to clipboard
     if (finalName) {
       await copyTextToClipboard(finalName);
-      showToast(`Name "${finalName}" copied to clipboard!`, 'success');
+      showToast(
+        isAiAvatarEnabled
+          ? `Name "${finalName}" copied! Generating AI face before mockup...`
+          : `Name "${finalName}" copied to clipboard!`,
+        'success'
+      );
     }
+
+    if (isAiAvatarEnabled) {
+      finalInfo = await triggerAiAvatarForStudent(finalInfo, template);
+    }
+
+    setAutoTrigger(prev => prev + 1);
   };
 
   const handleRestoreHistory = async (item: GenerationHistoryItem) => {
@@ -568,6 +691,13 @@ const App: React.FC = () => {
             onToggleNameLock={toggleNameLock}
             isDateLocked={isDateLocked}
             onToggleDateLock={toggleDateLock}
+            isAiAvatarEnabled={isAiAvatarEnabled}
+            onToggleAiAvatar={handleToggleAiAvatar}
+            aiAvatarBg={aiAvatarBg}
+            onAiAvatarBgChange={setAiAvatarBg}
+            isGeneratingAvatar={isGeneratingAvatar}
+            onGenerateAiAvatarNow={handleGenerateAiAvatarNow}
+            generatedAvatars={generatedAvatars}
             onToggleTheme={toggleTheme}
             onTemplateChange={handleTemplateChange}
             onInputChange={handleInputChange}

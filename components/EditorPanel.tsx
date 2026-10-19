@@ -5,6 +5,7 @@ import InputField from './InputField';
 import { getRandomValidUntilDate } from '../lib/sampleData';
 import { GenerationHistory } from './GenerationHistory';
 import { QRCodeGenerator } from './QRCodeGenerator';
+import { AvatarBgOption, GeneratedAvatarItem } from '../lib/avatarGenerator';
 
 interface EditorPanelProps {
   studentInfo: StudentInfo;
@@ -16,6 +17,13 @@ interface EditorPanelProps {
   onToggleNameLock?: () => void;
   isDateLocked?: boolean;
   onToggleDateLock?: () => void;
+  isAiAvatarEnabled?: boolean;
+  onToggleAiAvatar?: () => void;
+  aiAvatarBg?: AvatarBgOption;
+  onAiAvatarBgChange?: (bg: AvatarBgOption) => void;
+  isGeneratingAvatar?: boolean;
+  onGenerateAiAvatarNow?: () => void;
+  generatedAvatars?: GeneratedAvatarItem[];
   onToggleTheme: () => void;
   onTemplateChange: (template: IdCardTemplate) => void;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
@@ -373,6 +381,13 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onToggleNameLock,
   isDateLocked = true,
   onToggleDateLock,
+  isAiAvatarEnabled = false,
+  onToggleAiAvatar,
+  aiAvatarBg = 'white',
+  onAiAvatarBgChange,
+  isGeneratingAvatar = false,
+  onGenerateAiAvatarNow,
+  generatedAvatars = [],
   onToggleTheme,
   onTemplateChange, 
   onInputChange, 
@@ -665,6 +680,191 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-medium mb-2 ${isDark ? 'text-zinc-300' : 'text-gray-700'}`}>Controls</label>
+
+        {/* AI Avatar Image Generator Control Card (ON / OFF Toggle + Background + Generate Now) */}
+        <div className={`mb-4 p-3.5 rounded-xl border transition-all duration-200 ${
+          isAiAvatarEnabled
+            ? isDark
+              ? 'bg-purple-950/30 border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.12)]'
+              : 'bg-purple-50/80 border-purple-300 shadow-xs'
+            : isDark
+              ? 'bg-zinc-900/70 border-zinc-800'
+              : 'bg-gray-50 border-gray-200'
+        }`}>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="flex items-start sm:items-center gap-2.5">
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${
+                isAiAvatarEnabled
+                  ? 'bg-purple-600 text-white shadow-sm'
+                  : isDark ? 'bg-zinc-800 text-zinc-400' : 'bg-gray-200 text-gray-600'
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`text-xs font-black uppercase tracking-wider ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    AI Avatar Face Generator
+                  </span>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                    isAiAvatarEnabled
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      : isDark ? 'bg-zinc-800 text-zinc-400 border border-zinc-700' : 'bg-gray-200 text-gray-600'
+                  }`}>
+                    {isAiAvatarEnabled ? 'ON • Auto-Generate on Randomize' : 'OFF • Using Selectable Avatars'}
+                  </span>
+                </div>
+                <p className={`text-[11px] mt-0.5 leading-snug ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
+                  {isAiAvatarEnabled
+                    ? 'Generates a brand-new face, race & outfit matching randomized student data and selects it automatically.'
+                    : 'Turn ON to generate a unique AI face on every randomize, or keep OFF to use the standard selectable avatars below.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Master ON / OFF Switch */}
+            <div className="flex items-center gap-2 self-end sm:self-center flex-shrink-0">
+              <button
+                type="button"
+                role="switch"
+                aria-checked={isAiAvatarEnabled}
+                onClick={onToggleAiAvatar}
+                className={`relative inline-flex h-7 w-14 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  isAiAvatarEnabled ? 'bg-purple-600' : isDark ? 'bg-zinc-700' : 'bg-gray-300'
+                }`}
+                title={isAiAvatarEnabled ? 'Turn OFF AI Avatar Generator' : 'Turn ON AI Avatar Generator'}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                    isAiAvatarEnabled ? 'translate-x-7' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+              <span
+                onClick={onToggleAiAvatar}
+                className={`text-xs font-black uppercase cursor-pointer select-none min-w-[28px] ${
+                  isAiAvatarEnabled
+                    ? isDark ? 'text-purple-300' : 'text-purple-700'
+                    : isDark ? 'text-zinc-500' : 'text-gray-500'
+                }`}
+              >
+                {isAiAvatarEnabled ? 'ON' : 'OFF'}
+              </span>
+            </div>
+          </div>
+
+          {/* Background Selector (White / Blue / Mix) + Generate Now Action */}
+          <div className={`mt-3 pt-2.5 border-t flex flex-wrap items-center justify-between gap-2 ${
+            isDark ? 'border-zinc-800/80' : 'border-gray-200/80'
+          }`}>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className={`text-[10.5px] font-bold uppercase tracking-wider mr-1 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
+                Backdrop:
+              </span>
+              <button
+                type="button"
+                onClick={() => onAiAvatarBgChange && onAiAvatarBgChange('white')}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1.5 border transition-all ${
+                  aiAvatarBg === 'white'
+                    ? 'bg-white text-zinc-900 border-purple-500 ring-1 ring-purple-500/30 shadow-xs'
+                    : isDark ? 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-zinc-200' : 'bg-white/60 text-gray-600 border-gray-200 hover:text-gray-900'
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-white border border-gray-400" />
+                White BG
+              </button>
+              <button
+                type="button"
+                onClick={() => onAiAvatarBgChange && onAiAvatarBgChange('blue')}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1.5 border transition-all ${
+                  aiAvatarBg === 'blue'
+                    ? 'bg-sky-100 text-sky-950 border-sky-500 ring-1 ring-sky-500/30 shadow-xs'
+                    : isDark ? 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-zinc-200' : 'bg-white/60 text-gray-600 border-gray-200 hover:text-gray-900'
+                }`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full bg-[#93C5FD] border border-sky-600" />
+                Blue BG
+              </button>
+              <button
+                type="button"
+                onClick={() => onAiAvatarBgChange && onAiAvatarBgChange('random')}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1.5 border transition-all ${
+                  aiAvatarBg === 'random'
+                    ? 'bg-purple-600 text-white border-purple-500 shadow-xs'
+                    : isDark ? 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-zinc-200' : 'bg-white/60 text-gray-600 border-gray-200 hover:text-gray-900'
+                }`}
+              >
+                White / Blue Mix
+              </button>
+            </div>
+
+            <button
+              type="button"
+              disabled={isGeneratingAvatar}
+              onClick={onGenerateAiAvatarNow}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
+                isGeneratingAvatar
+                  ? 'bg-purple-600/50 text-white cursor-wait'
+                  : 'bg-purple-600 hover:bg-purple-500 text-white shadow-sm active:scale-95'
+              }`}
+              title="Generate a brand-new unique AI face for the current student right now"
+            >
+              {isGeneratingAvatar ? (
+                <>
+                  <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  <span>Generating Face...</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span>Generate New Face Now</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Generated AI Avatars Selectable Strip */}
+          {generatedAvatars.length > 0 && (
+            <div className={`mt-3 pt-2.5 border-t ${isDark ? 'border-zinc-800/80' : 'border-gray-200/80'}`}>
+              <label className={`block text-[10px] font-bold mb-1.5 uppercase tracking-wider ${isDark ? 'text-purple-300' : 'text-purple-700'}`}>
+                Generated AI Avatars ({generatedAvatars.length}) — Click to Select
+              </label>
+              <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                {generatedAvatars.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => onPhotoSelect(item.url)}
+                    title={`${item.studentName} (${item.ethnicity}, ${item.bgType} BG)`}
+                    className={`relative w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 transition-all ${
+                      studentInfo.photo === item.url
+                        ? 'border-purple-500 ring-2 ring-purple-400/50 scale-110'
+                        : isDark ? 'border-zinc-700 hover:border-purple-400' : 'border-gray-300 hover:border-purple-500'
+                    }`}
+                  >
+                    <img
+                      src={item.url}
+                      alt={item.studentName}
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                    <span
+                      className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border border-black/30 ${
+                        item.bgType === 'blue' ? 'bg-sky-400' : 'bg-white'
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
         
         <div className="mb-4">
             <label className={`block text-xs font-bold mb-2 uppercase tracking-wide ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Select Avatar (Male)</label>
@@ -708,11 +908,11 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-wrap gap-2 w-full mb-2">
-            <button onClick={handleAutoGenerate} className="modern-button-blue">
-                Auto
+            <button onClick={handleAutoGenerate} disabled={isGeneratingAvatar} className="modern-button-blue">
+                {isGeneratingAvatar ? 'Generating...' : 'Auto'}
             </button>
-            <button onClick={handleRandomize} className="modern-button-green">
-                Randomize Data
+            <button onClick={handleRandomize} disabled={isGeneratingAvatar} className="modern-button-green">
+                {isGeneratingAvatar ? 'Generating AI Face...' : 'Randomize Data'}
             </button>
           </div>
 
