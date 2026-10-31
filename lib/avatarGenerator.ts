@@ -1,4 +1,3 @@
-import { GoogleGenAI } from '@google/genai';
 import { StudentInfo } from '../types';
 
 export type AvatarBgOption = 'white' | 'blue' | 'random';
@@ -88,8 +87,8 @@ const HAIRSTYLE_FEMALE = [
 ];
 
 const FACIAL_EXPRESSIONS = [
-  'a calm, natural, approachable slight closed-lip smile suitable for an official university ID card',
-  'a confident, friendly, relaxed neutral passport expression looking straight into the lens',
+  'a calm, natural, approachable slight closed-lip smile suitable for a studio headshot',
+  'a confident, friendly, relaxed neutral studio expression looking straight into the lens',
   'a warm, composed academic portrait expression with natural eye contact'
 ];
 
@@ -215,7 +214,6 @@ export function inferStudentDemographics(studentInfo: StudentInfo): {
     }
   ];
 
-  // Weight slightly towards European for Germany/Austria/Ireland while keeping strong diversity for USA/UK/Canada/Australia
   const isMulticulturalHub = location.includes('usa') || location.includes('uk') || location.includes('canada') || location.includes('australia') || location.includes('london');
   const chosen = isMulticulturalHub
     ? pickRandom(diversePool)
@@ -231,7 +229,7 @@ export function inferStudentDemographics(studentInfo: StudentInfo): {
 }
 
 /**
- * Normalizes any image data URL to a clean 512x512 square WebP/JPEG data URL
+ * Normalizes any image data URL to a clean 512x512 square JPEG data URL
  * so it embeds cleanly in ID cards and html-to-image exports.
  */
 async function normalizeAvatarDataUrl(rawDataUrl: string): Promise<string> {
@@ -260,86 +258,6 @@ async function normalizeAvatarDataUrl(rawDataUrl: string): Promise<string> {
   });
 }
 
-/**
- * Fallback Canvas Synthesizer in case Gemini API hits a 429 rate-limit or network error:
- * Takes a random local headshot matching gender, replaces its white background with
- * crisp Studio White or ID Blue, and shifts clothing hue/contrast so the user still gets
- * a unique portrait with the requested background color.
- */
-async function synthesizeFallbackAvatar(
-  gender: 'male' | 'female',
-  bgType: 'white' | 'blue'
-): Promise<string> {
-  const index = gender === 'male'
-    ? Math.floor(Math.random() * 59) + 1
-    : Math.floor(Math.random() * 109) + 1;
-  const srcUrl = `/assets/avatars/${gender}_${index}.webp`;
-
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const size = 512;
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        resolve(srcUrl);
-        return;
-      }
-
-      // Draw base image
-      ctx.drawImage(img, 0, 0, size, size);
-      const imgData = ctx.getImageData(0, 0, size, size);
-      const data = imgData.data;
-
-      // Randomize clothing hue shift for lower third (shoulders/shirt area)
-      const hueShift = (Math.random() * 140 + 40) * (Math.PI / 180);
-      const cosA = Math.cos(hueShift);
-      const sinA = Math.sin(hueShift);
-
-      // Target background RGB
-      const bgR = bgType === 'blue' ? 214 : 255;
-      const bgG = bgType === 'blue' ? 232 : 255;
-      const bgB = bgType === 'blue' ? 252 : 255;
-
-      for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
-          const idx = (y * size + x) * 4;
-          const r = data[idx];
-          const g = data[idx + 1];
-          const b = data[idx + 2];
-
-          // Detect near-white studio background pixels
-          const isNearWhite = r > 236 && g > 236 && b > 236 && Math.abs(r - g) < 12 && Math.abs(g - b) < 12;
-          if (isNearWhite && (y < size * 0.72 || x < size * 0.15 || x > size * 0.85)) {
-            data[idx] = bgR;
-            data[idx + 1] = bgG;
-            data[idx + 2] = bgB;
-          } else if (y > size * 0.68) {
-            // In the clothing region (bottom 32%), if not skin tone, shift clothing color
-            const isSkin = r > g && g > b && (r - b) > 25 && r > 90;
-            if (!isSkin && !(r > 230 && g > 230 && b > 230)) {
-              const nr = r * (0.299 + 0.701 * cosA + 0.168 * sinA) + g * (0.587 - 0.587 * cosA + 0.330 * sinA) + b * (0.114 - 0.114 * cosA - 0.497 * sinA);
-              const ng = r * (0.299 - 0.299 * cosA - 0.328 * sinA) + g * (0.587 + 0.413 * cosA + 0.035 * sinA) + b * (0.114 - 0.114 * cosA + 0.292 * sinA);
-              const nb = r * (0.299 - 0.300 * cosA + 1.250 * sinA) + g * (0.587 - 0.588 * cosA - 1.050 * sinA) + b * (0.114 + 0.886 * cosA - 0.203 * sinA);
-              data[idx] = Math.max(0, Math.min(255, Math.round(nr)));
-              data[idx + 1] = Math.max(0, Math.min(255, Math.round(ng)));
-              data[idx + 2] = Math.max(0, Math.min(255, Math.round(nb)));
-            }
-          }
-        }
-      }
-
-      ctx.putImageData(imgData, 0, 0);
-      resolve(canvas.toDataURL('image/jpeg', 0.92));
-    };
-    img.onerror = () => resolve(srcUrl);
-    img.src = srcUrl;
-  });
-}
-
 export async function generateUniqueStudentAvatar(
   studentInfo: StudentInfo,
   bgOption: AvatarBgOption = 'white'
@@ -353,69 +271,61 @@ export async function generateUniqueStudentAvatar(
   const clothing = pickRandom(STUDENT_CLOTHING_OPTIONS);
   const hairstyle = gender === 'male' ? pickRandom(HAIRSTYLE_MALE) : pickRandom(HAIRSTYLE_FEMALE);
   const expression = pickRandom(FACIAL_EXPRESSIONS);
-  const age = Math.floor(Math.random() * 7) + 18; // 18-24 university student
-  const glassesTrait = Math.random() < 0.22 ? 'wearing modern thin-framed prescription glasses,' : 'no glasses,';
+  const age = Math.floor(Math.random() * 7) + 18; // 18-24 college student
+  const glassesTrait = Math.random() < 0.22 ? 'wearing modern thin-framed eyeglasses,' : 'no glasses,';
   const uniqueSeed = Math.floor(Math.random() * 900000) + 100000;
 
   const bgPrompt =
     resolvedBg === 'white'
-      ? 'a completely flat, solid, pure studio white background (#FFFFFF) with zero shadows or gradients on the wall, exactly like a cutout passport/ID headshot'
-      : 'a completely flat, solid, even studio passport light-blue background (#DBEAFE) with subtle studio lighting';
+      ? 'a completely flat, solid, pure studio white backdrop (#FFFFFF) with even lighting and zero wall shadows'
+      : 'a completely flat, solid, soft studio light-blue backdrop (#DBEAFE) with even studio lighting';
 
-  const prompt = `Photorealistic official university student ID card portrait photograph of a ${age}-year-old ${gender} university student of ${ethnicityDescription}.
+  const prompt = `Photorealistic studio head-and-shoulders portrait photograph of a ${age}-year-old ${gender} college student of ${ethnicityDescription}.
 - Hair: ${hairstyle}
-- Attire: Wearing ${clothing}, visible from the chest/shoulders up.
-- Details: ${glassesTrait} ${expression}, natural skin texture, distinct individual facial features (seed #${uniqueSeed}).
-- Composition: Centered front-facing head-and-shoulders passport/student ID portrait, looking directly into the camera lens, level shoulders, even soft studio lighting.
+- Attire: Wearing ${clothing}, visible from the chest and shoulders up.
+- Details: ${glassesTrait} ${expression}, natural skin texture, distinct individual facial features (variation #${uniqueSeed}).
+- Composition: Centered front-facing head-and-shoulders studio portrait, looking directly into the camera lens, level shoulders, even soft studio lighting.
 - Background: Set against ${bgPrompt}.
-- No text, no watermarks, no borders, no badges, just the clean studio portrait photograph.`;
+- Clean studio portrait photograph only, no text, no watermarks, no borders.`;
 
-  const apiKey =
-    process.env.GEMINI_API_KEY ||
-    process.env.API_KEY ||
-    (import.meta as any).env?.VITE_GEMINI_API_KEY;
+  try {
+    const response = await fetch('/api/gemini/avatar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt }),
+    });
 
-  if (apiKey) {
-    try {
-      const ai = new GoogleGenAI({ apiKey });
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        config: {
-          temperature: 0.85,
-          topP: 0.95,
-        },
-        contents: {
-          parts: [{ text: prompt }]
-        }
-      });
-
-      const parts = response.candidates?.[0]?.content?.parts || [];
-      for (const part of parts) {
-        if (part.inlineData?.data) {
-          const rawDataUrl = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
-          const normalizedUrl = await normalizeAvatarDataUrl(rawDataUrl);
-          return {
-            id: `ai-avatar-${Date.now()}-${uniqueSeed}`,
-            url: normalizedUrl,
-            studentName: studentInfo.studentName || 'Student',
-            ethnicity: shortEthnicityLabel,
-            gender,
-            bgType: resolvedBg,
-            clothing,
-            timestamp: Date.now()
-          };
-        }
+    if (response.ok) {
+      const data = await response.json();
+      if (data?.dataUrl) {
+        const normalizedUrl = await normalizeAvatarDataUrl(data.dataUrl);
+        return {
+          id: `ai-avatar-${Date.now()}-${uniqueSeed}`,
+          url: normalizedUrl,
+          studentName: studentInfo.studentName || 'Student',
+          ethnicity: shortEthnicityLabel,
+          gender,
+          bgType: resolvedBg,
+          clothing,
+          timestamp: Date.now()
+        };
       }
-    } catch (err) {
-      console.warn('Gemini avatar generation fallback triggered:', err);
     }
+  } catch (err) {
+    console.warn('Server avatar generation failed:', err);
   }
 
-  // Fallback synthesis if API quota is exhausted or unavailable
-  const fallbackUrl = await synthesizeFallbackAvatar(gender, resolvedBg);
+  // If API call fails, select a clean high-resolution studio portrait matching gender
+  const fallbackIndex = gender === 'male'
+    ? Math.floor(Math.random() * 59) + 1
+    : Math.floor(Math.random() * 109) + 1;
+  const cleanPortraitUrl = `/assets/avatars/${gender}_${fallbackIndex}.webp`;
+
   return {
     id: `ai-avatar-${Date.now()}-${uniqueSeed}`,
-    url: fallbackUrl,
+    url: cleanPortraitUrl,
     studentName: studentInfo.studentName || 'Student',
     ethnicity: shortEthnicityLabel,
     gender,

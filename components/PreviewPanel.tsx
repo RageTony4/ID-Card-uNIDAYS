@@ -2,9 +2,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { StudentInfo, ToastType, IdCardTemplate } from '../types';
 import IdCard from './IdCard';
-import { GoogleGenAI } from "@google/genai";
 import * as htmlToImage from 'html-to-image';
 import { canvasToIPhoneJpeg, imageUrlToIPhoneJpeg } from '../lib/exifUtils';
+import { compositeCalibratedMockup, resolveLocalSceneUrl } from '../lib/mockupCompositor';
 
 // Defining the missing props interface for PreviewPanel
 interface PreviewPanelProps {
@@ -20,28 +20,28 @@ interface PreviewPanelProps {
 }
 
 const MOCKUP_SCENES = [
-  { url: "https://files.catbox.moe/021b0u.png", label: "Table Lanyard" },
-  { url: "https://files.catbox.moe/6rjppv.jfif", label: "Hand Held" },
-  { url: "https://files.catbox.moe/j9s890.png", label: "Natural View 1" },
-  { url: "https://files.catbox.moe/0nk6tf.png", label: "Natural View 2" },
-  { url: "https://files.catbox.moe/jkxmsd.png", label: "Natural View 3" },
-  { url: "https://files.catbox.moe/mdd3ye.png", label: "Natural View 4" },
-  { url: "https://any-link-me.lovable.app/f/2n4y4c1h3m.png", label: "Natural View 5" },
-  { url: "https://any-link-me.lovable.app/f/5p6r5h5n01.webp", label: "Natural View 6" },
-  { url: "https://any-link-me.lovable.app/f/000v4c1d4e.jpg", label: "Natural View 7" },
-  { url: "https://any-link-me.lovable.app/f/6l3b513840.webp", label: "Natural View 8" },
-  { url: "https://any-link-me.lovable.app/f/243o6m301q.jpg", label: "Natural View 9" },
-  { url: "https://any-link-me.lovable.app/f/4n6f2g4720.jpeg", label: "Natural View 10" },
-  { url: "https://any-link-me.lovable.app/f/5e27000y3s.webp", label: "Natural View 11" },
-  { url: "https://any-link-me.lovable.app/f/3y512p0g01.png", label: "Natural View 12" },
-  { url: "https://any-link-me.lovable.app/f/2i55155k27.jfif", label: "Natural View 13" },
-  { url: "https://any-link-me.lovable.app/f/4e411e195u.jfif", label: "Natural View 14" },
-  { url: "https://any-link-me.lovable.app/f/30416n5j5f.jfif", label: "Natural View 15" },
-  { url: "https://any-link-me.lovable.app/f/6q2k3h3j5y.jfif", label: "Natural View 16" },
-  { url: "https://any-link-me.lovable.app/f/6n6e3m654l.jfif", label: "Natural View 17" },
-  { url: "https://any-link-me.lovable.app/f/0p5117681p.jfif", label: "Natural View 18" },
+  { url: "/assets/mockups/scene_01.png", label: "Table Lanyard" },
+  { url: "/assets/mockups/scene_02.jpg", label: "Hand Held" },
+  { url: "/assets/mockups/scene_03.png", label: "Natural View 1" },
+  { url: "/assets/mockups/scene_04.png", label: "Natural View 2" },
+  { url: "/assets/mockups/scene_05.png", label: "Natural View 3" },
+  { url: "/assets/mockups/scene_06.png", label: "Natural View 4" },
+  { url: "/assets/mockups/scene_07.png", label: "Natural View 5" },
+  { url: "/assets/mockups/scene_08.webp", label: "Natural View 6" },
+  { url: "/assets/mockups/scene_09.jpg", label: "Natural View 7" },
+  { url: "/assets/mockups/scene_10.webp", label: "Natural View 8" },
+  { url: "/assets/mockups/scene_11.jpg", label: "Natural View 9" },
+  { url: "/assets/mockups/scene_12.jpg", label: "Natural View 10" },
+  { url: "/assets/mockups/scene_13.webp", label: "Natural View 11" },
+  { url: "/assets/mockups/scene_14.png", label: "Natural View 12" },
+  { url: "/assets/mockups/scene_15.jpg", label: "Natural View 13" },
+  { url: "/assets/mockups/scene_16.jpg", label: "Natural View 14" },
+  { url: "/assets/mockups/scene_17.jpg", label: "Natural View 15" },
+  { url: "/assets/mockups/scene_18.jpg", label: "Natural View 16" },
+  { url: "/assets/mockups/scene_19.jpg", label: "Natural View 17" },
+  { url: "/assets/mockups/scene_20.jpg", label: "Natural View 18" },
   { url: "/assets/mockups/natural_view_19.jpg", label: "Natural View 19" },
-  { url: "https://any-link-me.lovable.app/f/1p23565p63.jfif", label: "Natural View 20" },
+  { url: "/assets/mockups/scene_22.jpg", label: "Natural View 20" },
   { url: "/assets/mockups/natural_view_21.jpg", label: "Natural View 21" }
 ];
 
@@ -72,6 +72,8 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   const [isGenerating, setIsGenerating] = useState(false);
   const [mockupSide, setMockupSide] = useState<'front' | 'back'>('front');
   const [lockScene, setLockScene] = useState(false);
+  const [mockupEngine, setMockupEngine] = useState<'3d_fit' | 'gemini_ai'>('3d_fit');
+  const [lightingBlendLevel, setLightingBlendLevel] = useState<'subtle' | 'natural' | 'deep'>('natural');
 
   // Cropper Modal State
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -431,23 +433,27 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         return;
       }
 
-      // 1. Data URLs and Blob URLs don't need CORS proxies or crossOrigin
-      if (sourceUrl.startsWith('data:') || sourceUrl.startsWith('blob:')) {
+      const cleanUrl = sourceUrl.trim();
+
+      // 1. Data URLs, Blob URLs, and same-origin relative paths (/assets/...) don't need external CORS proxies
+      if (cleanUrl.startsWith('data:') || cleanUrl.startsWith('blob:') || cleanUrl.startsWith('/')) {
         const img = new Image();
+        if (cleanUrl.startsWith('/')) {
+          img.crossOrigin = 'anonymous';
+        }
         img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error('Failed to load local data/blob image'));
-        img.src = sourceUrl;
+        img.onerror = () => reject(new Error('Failed to load local image'));
+        img.src = cleanUrl;
         return;
       }
 
-      const cleanUrl = sourceUrl.trim();
       const noProtoUrl = cleanUrl.replace(/^https?:\/\//, '');
 
       // List candidate URLs to try in order (direct CORS first, then image proxy fallbacks)
       const candidates = [
         cleanUrl,
-        `https://wsrv.nl/?url=${encodeURIComponent(noProtoUrl)}`,
-        `https://images.weserv.nl/?url=${encodeURIComponent(noProtoUrl)}`,
+        `https://wsrv.nl/?url=${encodeURIComponent(noProtoUrl)}&output=jpg`,
+        `https://images.weserv.nl/?url=${encodeURIComponent(noProtoUrl)}&output=jpg`,
         `https://corsproxy.io/?${encodeURIComponent(cleanUrl)}`,
         `https://api.allorigins.win/raw?url=${encodeURIComponent(cleanUrl)}`
       ];
@@ -463,7 +469,13 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         const currentCandidate = candidates[index++];
         const img = new Image();
         img.crossOrigin = 'anonymous';
-        img.onload = () => resolve(img);
+        img.onload = () => {
+          if ((img.naturalWidth || img.width) > 1 && (img.naturalHeight || img.height) > 1) {
+            resolve(img);
+          } else {
+            tryCandidate();
+          }
+        };
         img.onerror = () => {
           console.warn(`Failed loading image from candidate: ${currentCandidate}. Trying fallback...`);
           tryCandidate();
@@ -484,8 +496,8 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
     }
 
     const canvas = document.createElement('canvas');
-    let width = isCanvas ? (source as HTMLCanvasElement).width : img!.width;
-    let height = isCanvas ? (source as HTMLCanvasElement).height : img!.height;
+    let width = isCanvas ? (source as HTMLCanvasElement).width : (img!.naturalWidth || img!.width);
+    let height = isCanvas ? (source as HTMLCanvasElement).height : (img!.naturalHeight || img!.height);
 
     if (width === 0 || height === 0) {
       throw new Error('Image has no dimensions');
@@ -493,15 +505,18 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
 
     if (width > height) {
       if (width > maxWidth) {
-        height *= maxWidth / width;
+        height = Math.round(height * (maxWidth / width));
         width = maxWidth;
       }
     } else {
       if (height > maxWidth) {
-        width *= maxWidth / height;
+        width = Math.round(width * (maxWidth / height));
         height = maxWidth;
       }
     }
+
+    width = Math.max(1, Math.round(width));
+    height = Math.max(1, Math.round(height));
 
     canvas.width = width;
     canvas.height = height;
@@ -516,13 +531,17 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
       ctx.drawImage(img!, 0, 0, width, height);
     }
 
-    const dataURL = canvas.toDataURL(mimeType, mimeType === 'image/png' ? undefined : 0.7);
+    const dataURL = canvas.toDataURL(mimeType, mimeType === 'image/png' ? undefined : 0.85);
     const parts = dataURL.split(',');
     if (parts.length < 2 || !parts[1]) {
       throw new Error('Generated image data is empty');
     }
 
-    return { base64: parts[1], mimeType };
+    const actualMimeMatch = parts[0].match(/data:(.*?);base64/);
+    const resolvedMime = actualMimeMatch?.[1] || mimeType;
+    const cleanBase64 = parts[1].replace(/\s/g, '');
+
+    return { base64: cleanBase64, mimeType: resolvedMime };
   };
 
   const handleGenerateMockup = async (overrideReference?: string) => {
@@ -532,97 +551,86 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
       return;
     }
 
-    // Map known scenes with previously printed cards to clean, pristine blank-card equivalents
-    if (activeReference.includes('3k0t4v194f.jpg') || activeReference.includes('natural_view_19')) {
-      activeReference = '/assets/mockups/natural_view_19.jpg';
-    } else if (activeReference.includes('58086o0p28.png') || activeReference.includes('natural_view_21')) {
-      activeReference = '/assets/mockups/natural_view_21.jpg';
-    }
-
-    const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
-    if (!apiKey) {
-       showToast("API Key not found.", "error");
-       return;
-    }
+    // Resolve any default scene URL to its local mirror for fast, CORS-free loading
+    activeReference = resolveLocalSceneUrl(activeReference);
 
     setIsGenerating(true);
     try {
       showToast(`Capturing ${mockupSide} of ID card...`, "info");
       const refToCapture = mockupSide === 'front' ? frontCardRef : backCardRef;
-      const cardCanvas = await captureCard(refToCapture, 1.5);
+      const cardCanvas = await captureCard(refToCapture, 2.5);
       if (!cardCanvas || cardCanvas.width === 0 || cardCanvas.height === 0) {
          throw new Error("Failed to capture ID card image. Please ensure the card is visible.");
       }
-      
-      showToast("Processing images...", "info");
-      
-      // Process ID card design (PNG for quality)
-      const { base64: cardBase64 } = await processImage(cardCanvas, 768, 'image/png');
-      
-      // Process reference scene (JPEG for speed/size)
-      const { base64: referenceBase64, mimeType: referenceMimeType } = await processImage(activeReference, 768, 'image/jpeg');
 
-      if (!referenceBase64 || referenceBase64.length < 100) {
-        throw new Error("Reference image data is incomplete. Please try a different scene.");
+      const blendStrength =
+        lightingBlendLevel === 'subtle' ? 0.65 : lightingBlendLevel === 'deep' ? 1.22 : 1.0;
+
+      // Mode 1: Calibrated 3D Holder Fit (exact live preview perspective homography + photometric lighting match)
+      if (mockupEngine === '3d_fit') {
+        showToast("Fitting & matching scene lighting...", "info");
+        const sceneImg = await loadImage(activeReference);
+        const compositeUrl = compositeCalibratedMockup(sceneImg, cardCanvas, activeReference, blendStrength);
+        setMockupImage(compositeUrl);
+        showToast("Mockup generated with Studio Lighting Blend!", "success");
+        setIsEditModalOpen(true);
+        return;
       }
-      if (!cardBase64 || cardBase64.length < 100) {
-        throw new Error("ID card design data is incomplete. Please try again.");
-      }
 
-      showToast("AI processing... this may take a few seconds.", "info");
+      // Mode 2: Gemini AI Image Editing via server-side route with automatic fallback to Calibrated 3D Holder Fit
+      let generatedImageUrl: string | null = null;
 
-      const ai = new GoogleGenAI({ apiKey });
-      
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        config: {
-          temperature: 0.3,
-          topP: 0.95,
-        },
-        contents: {
-          parts: [
-            { inlineData: { mimeType: referenceMimeType, data: referenceBase64 } },
-            { inlineData: { mimeType: 'image/png', data: cardBase64 } },
-            { text: `You are an expert realistic photo compositor.
-- Image 1 is a real photograph of a physical ID card placed in an authentic real-world scene.
-- Image 2 is a flat digital ID card design.
+      try {
+        showToast("Processing images for Gemini AI...", "info");
+        const { base64: cardBase64, mimeType: cardMimeType } = await processImage(cardCanvas, 768, 'image/png');
+        const { base64: referenceBase64, mimeType: referenceMimeType } = await processImage(activeReference, 768, 'image/jpeg');
 
-MANDATORY COMPOSITING REQUIREMENTS:
-1. TOTAL CARD REPLACEMENT:
-   - Completely replace and overwrite the ENTIRE physical surface of the card in Image 1 from corner to corner with the exact design, colors, and layout from Image 2.
-   - Absolutely ZERO elements from the card in Image 1 may remain. Do NOT blend, merge, retain, or ghost any text, names, university titles, logos, emblems, photos, barcode details, or background colors from the card in Image 1.
-   - If Image 1 shows a face or a school name, it MUST BE COMPLETELY ERASED.
-   - The resulting card must show ONLY the exact person, full name, school name, colors (preserving the exact light or dark background), photo, and layout present in Image 2.
-2. PRESERVE THE REALISTIC SCENE:
-   - Precisely project Image 2 onto the physical card location in Image 1, matching its exact position, angle, 3D perspective, rounded card corners, surface reflections, specular highlights, and natural ambient shadows.
-   - Keep the surrounding physical environment (fabric, tabletop, fingers, lighting, background texture) from Image 1 completely unchanged and photorealistic.
-3. OUTPUT:
-   - The output must be a single, seamless, high-resolution, ultra-realistic photograph.` }
-          ]
-        }
-      });
+        if (referenceBase64 && referenceBase64.length >= 100 && cardBase64 && cardBase64.length >= 100) {
+          showToast("AI processing... this may take a few seconds.", "info");
+          const studioPrompt = "The first image is a real photograph containing a rectangular plastic ID card in a natural environment. The second image is a flat digital ID card design. Replace 100% of the surface graphic of the card in the first image with the exact design from the second image. CRITICAL LIGHTING INSTRUCTION: Do not leave the new card looking overly bright or digitally pasted. Match the exact ambient exposure, white balance, color temperature, shadow falloff, surface reflections, and subtle camera grain of the surrounding scene so the card blends naturally as if photographed in that exact lighting.";
 
-      let generatedImageUrl = null;
-      if (response.candidates && response.candidates[0].content && response.candidates[0].content.parts) {
-        for (const part of response.candidates[0].content.parts) {
-          if (part.inlineData) {
-            generatedImageUrl = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-            break;
+          const response = await fetch('/api/gemini/mockup', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              referenceBase64,
+              referenceMimeType,
+              cardBase64,
+              cardMimeType,
+              prompt: studioPrompt,
+            }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data?.dataUrl) {
+              generatedImageUrl = data.dataUrl;
+            }
+          } else {
+            console.warn("Server /api/gemini/mockup returned status:", response.status);
           }
         }
+      } catch (geminiPrepErr) {
+        console.warn("Gemini server request error, using 3D Holder Fit fallback:", geminiPrepErr);
       }
 
       if (generatedImageUrl) {
         setMockupImage(generatedImageUrl);
-        showToast("Mockup generated successfully!", "success");
+        showToast("Mockup generated with Gemini AI!", "success");
         setIsEditModalOpen(true);
       } else {
-        throw new Error("AI returned no image. The model might have filtered the content or failed to generate a result. Try a different scene.");
+        // Automatic fallback to Calibrated 3D Holder Fit when Gemini API quota/error occurs
+        const sceneImg = await loadImage(activeReference);
+        const compositeUrl = compositeCalibratedMockup(sceneImg, cardCanvas, activeReference, blendStrength);
+        setMockupImage(compositeUrl);
+        showToast("Rendered with Calibrated 3D Holder Fit & Lighting Blend!", "success");
+        setIsEditModalOpen(true);
       }
     } catch (error: any) {
-      console.error("AI Mockup Error:", error);
-      const errorMessage = error?.message || "An unexpected error occurred during generation.";
-      showToast(errorMessage, "error");
+      console.error("Mockup Generation Error:", error);
+      showToast(error?.message || "An unexpected error occurred during generation.", "error");
     } finally {
       setIsGenerating(false);
     }
@@ -826,6 +834,56 @@ MANDATORY COMPOSITING REQUIREMENTS:
                          </button>
                      ))}
                  </div>
+            </div>
+
+            <div className={`p-2 rounded-lg flex items-center justify-between transition-colors duration-300 ${isDark ? 'bg-zinc-800' : 'bg-gray-50'}`}>
+                <div className="flex flex-col">
+                    <span className={`text-xs font-bold transition-colors duration-300 ${isDark ? 'text-zinc-300' : 'text-gray-700'}`}>Mockup Engine:</span>
+                    <span className={`text-[10px] ${isDark ? 'text-zinc-500' : 'text-gray-400'}`}>
+                        {mockupEngine === '3d_fit' ? 'Exact live preview 3D perspective fit' : 'Gemini AI (auto-falls back to 3D Fit)'}
+                    </span>
+                </div>
+                <div className={`flex rounded-md shadow-sm border p-0.5 transition-colors duration-300 ${isDark ? 'bg-zinc-900 border-zinc-700' : 'bg-white border-gray-200'}`}>
+                    <button 
+                        type="button"
+                        onClick={() => setMockupEngine('3d_fit')}
+                        className={`text-xs px-2.5 py-1 rounded-sm font-bold transition-colors ${mockupEngine === '3d_fit' ? 'bg-purple-600 text-white shadow-xs' : isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                        3D Holder Fit
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={() => setMockupEngine('gemini_ai')}
+                        className={`text-xs px-2.5 py-1 rounded-sm font-bold transition-colors ${mockupEngine === 'gemini_ai' ? 'bg-purple-600 text-white shadow-xs' : isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                        Gemini AI
+                    </button>
+                </div>
+            </div>
+
+            <div className={`p-2 rounded-lg flex items-center justify-between transition-colors duration-300 ${isDark ? 'bg-zinc-800' : 'bg-gray-50'}`}>
+                <div className="flex flex-col">
+                    <span className={`text-xs font-bold transition-colors duration-300 ${isDark ? 'text-zinc-300' : 'text-gray-700'}`}>Scene Lighting Blend:</span>
+                    <span className={`text-[10px] ${isDark ? 'text-zinc-500' : 'text-gray-400'}`}>
+                        Matches ambient exposure, shadows & grain
+                    </span>
+                </div>
+                <div className={`flex rounded-md shadow-sm border p-0.5 transition-colors duration-300 ${isDark ? 'bg-zinc-900 border-zinc-700' : 'bg-white border-gray-200'}`}>
+                    {(['subtle', 'natural', 'deep'] as const).map((lvl) => (
+                        <button
+                            key={lvl}
+                            type="button"
+                            onClick={() => setLightingBlendLevel(lvl)}
+                            className={`text-[11px] px-2 py-1 rounded-sm font-bold capitalize transition-colors ${
+                                lightingBlendLevel === lvl
+                                    ? 'bg-purple-600 text-white shadow-xs'
+                                    : isDark ? 'text-zinc-400 hover:text-zinc-200' : 'text-gray-500 hover:text-gray-700'
+                            }`}
+                        >
+                            {lvl}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div className={`p-2 rounded-lg flex items-center justify-between transition-colors duration-300 ${isDark ? 'bg-zinc-800' : 'bg-gray-50'}`}>
