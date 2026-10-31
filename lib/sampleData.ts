@@ -252,6 +252,8 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Giggleswick School': { city: 'Settle, UK', address: 'Settle, North Yorkshire', postcode: 'BD24 0DE', country: 'UK' },
   'Carlton Keighley': { city: 'Keighley, UK', address: 'Undercliffe Lane, Keighley', postcode: 'BD21 4RN', country: 'UK' },
   'Community-Ed Academy': { city: 'London, UK', address: '42 High Street, Kensington, London', postcode: 'SW7 2AZ', country: 'UK' },
+  'Brunel University London': { city: 'Uxbridge, London, UK', address: 'Kingston Lane, Uxbridge, Middlesex', postcode: 'UB8 3PH', country: 'UK' },
+  'Durham University': { city: 'Durham, UK', address: 'The Palatine Centre, Stockton Road, Durham', postcode: 'DH1 3LE', country: 'UK' },
   'CommunityNI': { city: 'Belfast, UK', address: '35 Donegall St, Belfast', postcode: 'BT1 2FG', country: 'UK' },
   'University of Warwick': { city: 'Coventry, UK', address: 'University Road, Coventry', postcode: 'CV4 7AL', country: 'UK' },
   'University of Leeds': { city: 'Leeds, UK', address: 'Woodhouse Lane, Leeds', postcode: 'LS2 9JT', country: 'UK' },
@@ -297,11 +299,17 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Cranbourne East Secondary College': { city: 'Cranbourne East, VIC, Australia', address: '50 Hunt Club Blvd', postcode: '3977', country: 'Australia' },
   'Bond University': { city: 'Gold Coast, QLD, Australia', address: '14 University Dr, Robina', postcode: '4226', country: 'Australia' },
   'University of Tasmania': { city: 'Hobart, TAS, Australia', address: 'Churchill Ave, Hobart', postcode: '7005', country: 'Australia' },
+  'Curtin University': { city: 'Bentley, WA, Australia', address: 'Kent St, Bentley', postcode: '6102', country: 'Australia' },
   'University of Canberra': { city: 'Canberra, ACT, Australia', address: '11 Kirinari St, Bruce', postcode: '2617', country: 'Australia' },
   'University of murdoch': { city: 'Perth, WA, Australia', address: '90 South St, Murdoch', postcode: '6150', country: 'Australia' },
   'University of Wollongong': { city: 'Wollongong, NSW, Australia', address: 'Northfields Ave, Wollongong', postcode: '2522', country: 'Australia' },
   'Mini Bambini Early Learning Centre': { city: 'Sydney, NSW, Australia', address: '15 Bambini Way, Sydney', postcode: '2000', country: 'Australia' },
   'Northfield University': { city: 'Boston, MA, USA', address: '750 University Avenue, Boston, MA', postcode: '02115', country: 'USA' },
+  'Harvard University': { city: 'Cambridge, MA, USA', address: 'Massachusetts Hall, Cambridge, MA', postcode: '02138', country: 'USA' },
+  'Brigham Young University': { city: 'Provo, UT, USA', address: 'Campus Dr, Provo, UT', postcode: '84602', country: 'USA' },
+  'Utah State University': { city: 'Logan, UT, USA', address: 'Old Main Hill, Logan, UT', postcode: '84322', country: 'USA' },
+  'Hobart and William Smith Colleges': { city: 'Geneva, NY, USA', address: '300 Pulteney St, Geneva, NY', postcode: '14456', country: 'USA' },
+  'Elizabeth Seton High School': { city: 'Bladensburg, MD, USA', address: '5715 Emerson Street, Bladensburg, MD', postcode: '20710', country: 'USA' },
   'Cole Co. R-I Middle': { city: 'Russellville, MO, USA', address: '13600 Route C, Russellville, MO', postcode: '65074', country: 'USA' },
   'Commack Middle School': { city: 'Commack, NY, USA', address: '700 Townline Rd, Commack, NY', postcode: '11725', country: 'USA' },
   'Cohagen School': { city: 'Cohagen, MT, USA', address: '100 School St, Cohagen, MT', postcode: '59322', country: 'USA' },
@@ -469,7 +477,15 @@ const getRandomId = (university: string): string => {
   if (university === 'Cornerstone Community') return `CC-AU-${year}-${randomNum}`;
   if (university.toLowerCase().includes('cranbourne')) return `CESC-AU-${year}-${randomNum}`;
   if (university === 'Bond University') return `BU-AU-${year}-${randomNum}`;
-  if (university === 'University of Tasmania') return `UTAS-AU-${year}-${randomNum}`;
+  if (university === 'University of Tasmania') return `${Math.floor(200000 + Math.random() * 799999)}`;
+  if (university === 'Curtin University') return `176${Math.floor(10000 + Math.random() * 89999)}`;
+  if (university === 'Brunel University London') return `204${Math.floor(1000 + Math.random() * 8999)}`;
+  if (university === 'Durham University') return `000${Math.floor(200000 + Math.random() * 799999)}`;
+  if (university === 'Elizabeth Seton High School') return `23${Math.floor(100 + Math.random() * 899)}`;
+  if (university === 'Harvard University') return `9078${Math.floor(1000 + Math.random() * 8999)} 0`;
+  if (university === 'Brigham Young University') return `879${Math.floor(100000 + Math.random() * 899999)} 01`;
+  if (university === 'Utah State University') return `A014${Math.floor(10000 + Math.random() * 89999)}`;
+  if (university === 'Hobart and William Smith Colleges') return `1019${Math.floor(1000 + Math.random() * 8999)}`;
   if (university === 'University of Canberra') return `UC-AU-${year}-${randomNum}`;
   if (university === 'University of murdoch') return `MU-AU-${year}-${randomNum}`;
   if (university === 'University of Wollongong') return `UOW-AU-${year}-${randomNum}`;

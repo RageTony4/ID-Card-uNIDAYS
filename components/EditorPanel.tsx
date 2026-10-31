@@ -216,6 +216,8 @@ const FEMALE_HEADSHOTS = [
 const SCHOOL_DATA = {
     'United Kingdom': [
         'Community-Ed Academy',
+        'Brunel University London',
+        'Durham University',
         'Birmingham City FC Community Trust',
         'Communicate School',
         'Manchester Communication Academy',
@@ -261,8 +263,9 @@ const SCHOOL_DATA = {
     ],
     'Australia': [
         'Cranbourne East Secondary College',
-        'Bond University',
         'University of Tasmania',
+        'Curtin University',
+        'Bond University',
         'University of Canberra',
         'University of murdoch',
         'University of Wollongong',
@@ -271,6 +274,11 @@ const SCHOOL_DATA = {
     ],
     'USA': [
         'Eastbridge University',
+        'Harvard University',
+        'Brigham Young University',
+        'Utah State University',
+        'Hobart and William Smith Colleges',
+        'Elizabeth Seton High School',
         'Air University',
         'Air University (US)',
         'The University of Texas at Austin',
@@ -469,10 +477,100 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
 
       <div className={`border-b pb-6 mb-4 ${isDark ? 'border-zinc-800' : 'border-gray-200'}`}>
         <label className={`block text-sm font-bold mb-3 uppercase tracking-wide ${isDark ? 'text-zinc-400' : 'text-gray-700'}`}>Design Template</label>
-        <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-8 xl:grid-cols-16 gap-1.5">
+        <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-7 xl:grid-cols-9 gap-1.5">
+          <button 
+            onClick={() => onTemplateChange('utas')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'utas' 
+                ? 'border-[#B91C1C] bg-[#B91C1C]/15 text-[#B91C1C] dark:text-red-300 shadow-md font-black ring-2 ring-[#B91C1C]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            UTAS
+          </button>
+          <button 
+            onClick={() => onTemplateChange('brunel')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'brunel' 
+                ? 'border-[#0B1F3A] bg-[#0B1F3A]/15 text-[#0B1F3A] dark:text-blue-300 shadow-md font-black ring-2 ring-[#0B1F3A]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Brunel
+          </button>
+          <button 
+            onClick={() => onTemplateChange('curtin')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'curtin' 
+                ? 'border-[#CA9A1C] bg-[#CA9A1C]/15 text-[#8A6508] dark:text-amber-300 shadow-md font-black ring-2 ring-[#CA9A1C]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Curtin
+          </button>
+          <button 
+            onClick={() => onTemplateChange('durham')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'durham' 
+                ? 'border-[#68246D] bg-[#68246D]/15 text-[#68246D] dark:text-purple-300 shadow-md font-black ring-2 ring-[#68246D]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Durham
+          </button>
+          <button 
+            onClick={() => onTemplateChange('seton')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'seton' 
+                ? 'border-[#C53030] bg-[#C53030]/15 text-[#C53030] dark:text-rose-300 shadow-md font-black ring-2 ring-[#C53030]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Seton HS
+          </button>
+          <button 
+            onClick={() => onTemplateChange('harvard')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'harvard' 
+                ? 'border-[#9E1B32] bg-[#9E1B32]/15 text-[#9E1B32] dark:text-red-300 shadow-md font-black ring-2 ring-[#9E1B32]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Harvard
+          </button>
+          <button 
+            onClick={() => onTemplateChange('byu')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'byu' 
+                ? 'border-[#181C24] bg-[#181C24]/20 text-[#181C24] dark:text-amber-200 shadow-md font-black ring-2 ring-[#B68D40]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            BYU
+          </button>
+          <button 
+            onClick={() => onTemplateChange('usu')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'usu' 
+                ? 'border-[#0A1E46] bg-[#6EA1D4]/20 text-[#0A1E46] dark:text-sky-300 shadow-md font-black ring-2 ring-[#6EA1D4]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            USU Card
+          </button>
+          <button 
+            onClick={() => onTemplateChange('hws')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'hws' 
+                ? 'border-[#1E296B] bg-[#1E296B]/15 text-[#1E296B] dark:text-indigo-300 shadow-md font-black ring-2 ring-[#1E296B]/30' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Hobart & WS
+          </button>
           <button 
             onClick={() => onTemplateChange('eastbridge')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'eastbridge' 
                 ? 'border-[#242831] bg-[#242831]/20 text-[#1E2229] dark:text-slate-200 shadow-md font-black ring-2 ring-[#242831]/40' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -482,7 +580,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('sainik')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'sainik' 
                 ? 'border-[#1B345D] bg-[#1B345D]/15 text-[#1B345D] dark:text-blue-300 shadow-md font-black ring-2 ring-[#1B345D]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -492,7 +590,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('uoflife')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'uoflife' 
                 ? 'border-[#8B1E2D] bg-[#8B1E2D]/15 text-[#8B1E2D] dark:text-rose-300 shadow-md font-black ring-2 ring-[#8B1E2D]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -502,7 +600,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('international')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'international' 
                 ? 'border-[#0284C7] bg-[#0284C7]/15 text-[#0284C7] dark:text-sky-300 shadow-md font-black ring-2 ring-[#0284C7]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -512,7 +610,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('t3')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 't3' 
                 ? 'border-[#0284C7] bg-[#0284C7]/15 text-[#0284C7] dark:text-sky-300 shadow-md font-black ring-2 ring-[#0284C7]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -522,7 +620,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('t2')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 't2' 
                 ? 'border-[#142144] bg-[#142144]/15 text-[#142144] dark:text-amber-300 shadow-md font-black ring-2 ring-[#142144]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -532,7 +630,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('t1')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 't1' 
                 ? 'border-[#BF5700] bg-[#BF5700]/15 text-[#BF5700] dark:text-orange-400 shadow-md font-black ring-2 ring-[#BF5700]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -542,7 +640,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('d2')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'd2' 
                 ? 'border-[#24304A] bg-[#24304A]/15 text-[#24304A] dark:text-blue-300 shadow-md font-black ring-2 ring-[#24304A]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -552,7 +650,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('d1')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'd1' 
                 ? 'border-[#0B2545] bg-[#0B2545]/10 text-[#0B2545] shadow-md font-black ring-2 ring-[#0B2545]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -562,7 +660,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('westdale')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'westdale' 
                 ? 'border-[#7b0d1e] bg-[#7b0d1e]/15 text-[#7b0d1e] dark:text-red-400 shadow-md font-black ring-2 ring-[#7b0d1e]/30' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -572,7 +670,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('shepherd')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'shepherd' 
                 ? 'border-[#2B5842] bg-[#F8F6ED] text-[#2B5842] shadow-md' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -582,7 +680,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('elegant')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'elegant' 
                 ? 'border-purple-600 bg-purple-50 text-purple-700 shadow-md' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -592,7 +690,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('modern')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'modern' 
                 ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-md' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -602,7 +700,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('official')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'official' 
                 ? isDark ? 'border-zinc-400 bg-zinc-700 text-white' : 'border-gray-800 bg-gray-100 text-gray-900 shadow-md' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -612,7 +710,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('classic')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'classic' 
                 ? 'border-orange-600 bg-orange-50 text-orange-700 shadow-md' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
@@ -622,7 +720,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </button>
           <button 
             onClick={() => onTemplateChange('northfield')}
-            className={`py-3 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'northfield' 
                 ? 'border-[#002B49] bg-[#E2EAF4] text-[#002B49] shadow-md' 
                 : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'

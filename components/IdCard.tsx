@@ -5,6 +5,7 @@ import { SainikTemplate } from './templates/SainikTemplate';
 import { UOfLifeTemplate } from './templates/UOfLifeTemplate';
 import { InternationalTemplate } from './templates/InternationalTemplate';
 import { EastbridgeTemplate } from './templates/EastbridgeTemplate';
+import { NewReferenceTemplates } from './templates/NewReferenceTemplates';
 import { ScannableQRCode } from './ScannableQRCode';
 import { ScannableBarcode } from './ScannableBarcode';
 import { UniversityCrest } from './UniversityCrest';
@@ -92,6 +93,19 @@ const formatToMMYYYY = (dateStr: string): string => {
 };
 
 const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant', t1Variant = 'white' }, ref) => {
+  if (
+    template === 'utas' ||
+    template === 'brunel' ||
+    template === 'curtin' ||
+    template === 'durham' ||
+    template === 'seton' ||
+    template === 'harvard' ||
+    template === 'byu' ||
+    template === 'usu' ||
+    template === 'hws'
+  ) {
+    return <NewReferenceTemplates studentInfo={studentInfo} side={side} template={template} forwardedRef={ref} />;
+  }
   if (template === 'sainik') {
     return <SainikTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
   }

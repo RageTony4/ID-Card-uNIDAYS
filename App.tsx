@@ -470,20 +470,9 @@ const App: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
-    // If the university is changed, auto-populate details but NEVER change the student's name (or dates if locked)
+    // If the university is changed, auto-populate details for the selected school while keeping the student's name (and dates if locked)
     if (name === 'universityName') {
       const newInfo = generateRandomStudentInfo(value);
-      let targetTemplate = template;
-      if (value === 'Shepherd School') {
-        targetTemplate = 'official';
-        setTemplate('official');
-      } else if (value === 'BRAC University') {
-        targetTemplate = 't3';
-        setTemplate('t3');
-      } else if (value === 'Eastbridge University') {
-        targetTemplate = 'eastbridge';
-        setTemplate('eastbridge');
-      }
 
       const updatedInfo: StudentInfo = { 
         ...newInfo, 
@@ -491,14 +480,15 @@ const App: React.FC = () => {
         issueDate: isDateLocked ? studentInfo.issueDate : newInfo.issueDate,
         validUntil: isDateLocked ? studentInfo.validUntil : newInfo.validUntil,
         dob: isDateLocked ? studentInfo.dob : newInfo.dob,
+        photo: studentInfo.photo || newInfo.photo,
         logo: newInfo.logo !== null ? newInfo.logo : studentInfo.logo 
       };
 
       setStudentInfo(updatedInfo);
-      recordGeneration(updatedInfo, targetTemplate);
+      recordGeneration(updatedInfo, template);
 
       if (isAiAvatarEnabled) {
-        triggerAiAvatarForStudent(updatedInfo, targetTemplate);
+        triggerAiAvatarForStudent(updatedInfo, template);
       }
     } else {
       setStudentInfo(prev => ({ ...prev, [name]: value }));
@@ -529,34 +519,7 @@ const App: React.FC = () => {
 
   const handleTemplateChange = (newTemplate: IdCardTemplate) => {
     setTemplate(newTemplate);
-    if (newTemplate === 'eastbridge') {
-      if (!studentInfo.universityName || studentInfo.universityName.includes('Cranbourne') || studentInfo.universityName.includes('Texas') || studentInfo.universityName === 'Community-Ed Academy' || studentInfo.universityName === 'BRAC University') {
-        setStudentInfo(prev => ({
-          ...prev,
-          universityName: 'Eastbridge University',
-          studentName: isNameLocked ? prev.studentName : 'MAYA N. OKELLO',
-          course: 'Bachelor of Arts in International Relations',
-          studentId: '2026 0148',
-          validUntil: isDateLocked ? prev.validUntil : '31 DEC 2029',
-          website: 'www.eastbridge.edu',
-          photo: prev.photo || '/assets/avatars/female_1.webp',
-          logo: '/assets/eastbridge_crest_transparent.png'
-        }));
-      }
-    } else if (newTemplate === 't3') {
-      if (!studentInfo.universityName || studentInfo.universityName.includes('Cranbourne') || studentInfo.universityName.includes('Texas') || studentInfo.universityName === 'Community-Ed Academy') {
-        setStudentInfo(prev => ({
-          ...prev,
-          universityName: 'BRAC University',
-          studentName: isNameLocked ? prev.studentName : 'SHAMSIL ARAFIN ULLAH',
-          course: 'Bachelor of Science in Computer Science and Engineering',
-          studentId: '19101164',
-          bloodGroup: 'AB+ve',
-          validUntil: isDateLocked ? prev.validUntil : '02-01-2023',
-          photo: prev.photo && !prev.photo.includes('female_1') ? prev.photo : '/assets/avatars/t3_headshot.jpg'
-        }));
-      }
-    }
+    recordGeneration(studentInfo, newTemplate);
   };
 
   const handlePhotoSelect = (url: string) => {

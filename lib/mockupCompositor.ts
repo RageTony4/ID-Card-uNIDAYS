@@ -437,6 +437,123 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     maskExpand: 0.004,
     hasPlasticSleeve: true,
     lightingBlend: 0.06
+  },
+  {
+    id: 'scene_seton_656u69492z',
+    matchKeys: ['656u69492z', 'scene_seton'],
+    tl: [0.1375, 0.1780],
+    tr: [0.8115, 0.1675],
+    br: [0.8225, 0.4910],
+    bl: [0.1410, 0.4960],
+    cornerRadius: 0.046,
+    maskExpand: 0.006,
+    hasPlasticSleeve: false,
+    lightingBlend: 0.12,
+    foregroundPolygons: [
+      {
+        // Left thumb with French manicure overlapping left edge of card
+        points: [
+          [0.132, 0.285],
+          [0.158, 0.292],
+          [0.173, 0.308],
+          [0.171, 0.342],
+          [0.162, 0.376],
+          [0.146, 0.402],
+          [0.132, 0.415]
+        ],
+        castShadow: true,
+        featherPx: 2.5
+      }
+    ]
+  },
+  {
+    id: 'scene_byu_6o4f1c3r4o',
+    matchKeys: ['6o4f1c3r4o', 'scene_byu'],
+    tl: [0.0245, 0.2375],
+    tr: [0.9380, 0.2315],
+    br: [0.9355, 0.7955],
+    bl: [0.0355, 0.8065],
+    cornerRadius: 0.046,
+    maskExpand: 0.006,
+    hasPlasticSleeve: false,
+    lightingBlend: 0.12,
+    foregroundPolygons: [
+      {
+        // Bottom-right thumb overlapping lower-right edge
+        points: [
+          [0.668, 0.804],
+          [0.715, 0.774],
+          [0.790, 0.764],
+          [0.875, 0.764],
+          [0.942, 0.775],
+          [0.942, 0.808]
+        ],
+        castShadow: true,
+        featherPx: 2.5
+      }
+    ]
+  },
+  {
+    id: 'scene_durham_303r4n681v',
+    matchKeys: ['303r4n681v', 'scene_durham'],
+    tl: [0.1775, 0.2475],
+    tr: [0.8585, 0.2555],
+    br: [0.8695, 0.8225],
+    bl: [0.1775, 0.8525],
+    cornerRadius: 0.046,
+    maskExpand: 0.006,
+    hasPlasticSleeve: false,
+    lightingBlend: 0.12
+  },
+  {
+    id: 'scene_hws_170p6e501a',
+    matchKeys: ['170p6e501a', 'scene_hws'],
+    tl: [0.0375, 0.2155],
+    tr: [0.9985, 0.2075],
+    br: [0.9985, 0.8185],
+    bl: [0.0485, 0.8265],
+    cornerRadius: 0.044,
+    maskExpand: 0.006,
+    hasPlasticSleeve: false,
+    lightingBlend: 0.14,
+    foregroundPolygons: [
+      {
+        // Bottom-left thumb edge
+        points: [
+          [0.042, 0.785],
+          [0.115, 0.792],
+          [0.185, 0.808],
+          [0.215, 0.830],
+          [0.042, 0.830]
+        ],
+        castShadow: true,
+        featherPx: 2.5
+      }
+    ]
+  },
+  {
+    id: 'scene_utas_1i5g121y6m',
+    matchKeys: ['1i5g121y6m', 'scene_utas'],
+    tl: [0.1245, 0.1175],
+    tr: [0.8185, 0.0615],
+    br: [0.8195, 0.7025],
+    bl: [0.1375, 0.6785],
+    cornerRadius: 0.046,
+    maskExpand: 0.006,
+    hasPlasticSleeve: false,
+    lightingBlend: 0.14
+  },
+  {
+    id: 'scene_usu_3350531a5z',
+    matchKeys: ['3350531a5z', 'scene_usu'],
+    tl: [0.0555, 0.2175],
+    tr: [0.9785, 0.2315],
+    br: [0.9745, 0.8085],
+    bl: [0.0485, 0.8085],
+    cornerRadius: 0.046,
+    maskExpand: 0.006,
+    hasPlasticSleeve: false,
+    lightingBlend: 0.12
   }
 ];
 
@@ -471,7 +588,13 @@ export function resolveLocalSceneUrl(sceneUrl: string): string {
     ['natural_view_19', '/assets/mockups/natural_view_19.jpg'],
     ['1p23565p63', '/assets/mockups/scene_22.jpg'],
     ['58086o0p28', '/assets/mockups/natural_view_21.jpg'],
-    ['natural_view_21', '/assets/mockups/natural_view_21.jpg']
+    ['natural_view_21', '/assets/mockups/natural_view_21.jpg'],
+    ['656u69492z', '/assets/mockups/scene_seton_656u69492z.jpg'],
+    ['6o4f1c3r4o', '/assets/mockups/scene_byu_6o4f1c3r4o.jpg'],
+    ['303r4n681v', '/assets/mockups/scene_durham_303r4n681v.jpg'],
+    ['170p6e501a', '/assets/mockups/scene_hws_170p6e501a.jpg'],
+    ['1i5g121y6m', '/assets/mockups/scene_utas_1i5g121y6m.jpg'],
+    ['3350531a5z', '/assets/mockups/scene_usu_3350531a5z.jpg']
   ];
   for (const [key, localPath] of map) {
     if (clean.includes(key)) return localPath;

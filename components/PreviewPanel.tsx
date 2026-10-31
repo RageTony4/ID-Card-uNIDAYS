@@ -42,7 +42,13 @@ const MOCKUP_SCENES = [
   { url: "/assets/mockups/scene_20.jpg", label: "Natural View 18" },
   { url: "/assets/mockups/natural_view_19.jpg", label: "Natural View 19" },
   { url: "/assets/mockups/scene_22.jpg", label: "Natural View 20" },
-  { url: "/assets/mockups/natural_view_21.jpg", label: "Natural View 21" }
+  { url: "/assets/mockups/natural_view_21.jpg", label: "Natural View 21" },
+  { url: "/assets/mockups/scene_seton_656u69492z.jpg", label: "Natural View 22" },
+  { url: "/assets/mockups/scene_byu_6o4f1c3r4o.jpg", label: "Natural View 23" },
+  { url: "/assets/mockups/scene_durham_303r4n681v.jpg", label: "Natural View 24" },
+  { url: "/assets/mockups/scene_hws_170p6e501a.jpg", label: "Natural View 25" },
+  { url: "/assets/mockups/scene_utas_1i5g121y6m.jpg", label: "Natural View 26" },
+  { url: "/assets/mockups/scene_usu_3350531a5z.jpg", label: "Natural View 27" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ 

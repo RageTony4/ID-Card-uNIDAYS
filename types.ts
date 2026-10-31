@@ -28,7 +28,7 @@ export interface ToastMessage {
   type: ToastType;
 }
 
-export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd' | 'd1' | 'westdale' | 'd2' | 't1' | 't2' | 't3' | 'sainik' | 'uoflife' | 'international' | 'eastbridge';
+export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd' | 'd1' | 'westdale' | 'd2' | 't1' | 't2' | 't3' | 'sainik' | 'uoflife' | 'international' | 'eastbridge' | 'utas' | 'brunel' | 'curtin' | 'durham' | 'seton' | 'harvard' | 'byu' | 'usu' | 'hws';
 
 export interface GenerationHistoryItem {
   id: string;
