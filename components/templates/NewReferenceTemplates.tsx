@@ -1,6 +1,7 @@
 import React from 'react';
 import { StudentInfo, IdCardTemplate } from '../../types';
 import { ScannableBarcode } from '../ScannableBarcode';
+import { SingleLineText } from '../SingleLineText';
 
 interface NewReferenceTemplateProps {
   studentInfo: StudentInfo;
@@ -456,11 +457,13 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         {/* Back Body Content */}
         <div className="px-4 py-2 flex-1 flex flex-col justify-between text-left">
           <div>
-            <div className="flex items-center justify-between border-b border-neutral-200 pb-1 mb-1">
-              <span className="font-bold text-[9.5px] uppercase tracking-wider text-neutral-900 truncate max-w-[205px]">
-                {cleanUniName}
-              </span>
-              <span className="font-mono text-[8px] font-bold text-neutral-700">
+            <div className="flex items-center justify-between border-b border-neutral-200 pb-1 mb-1 gap-2">
+              <div className="flex-1 min-w-0">
+                <SingleLineText fontSize={9.5} className="font-bold uppercase tracking-wider text-neutral-900 text-left">
+                  {cleanUniName}
+                </SingleLineText>
+              </div>
+              <span className="font-mono text-[8px] font-bold text-neutral-700 flex-shrink-0">
                 EXPIRES: {expStr}
               </span>
             </div>
@@ -468,9 +471,9 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               This card is the property of <span className="font-semibold text-neutral-800">{cleanUniName}</span> and is non-transferable. It must be carried at all times while on campus and presented to authorized officials upon request.
             </p>
             {studentInfo.course && (
-              <p className="text-[6.4px] font-semibold text-neutral-700 mt-0.5 truncate">
-                Program: {studentInfo.course} {studentInfo.academicYear ? `• Session: ${studentInfo.academicYear}` : ''}
-              </p>
+              <SingleLineText fontSize={6.4} className="font-semibold text-neutral-700 mt-0.5 text-left">
+                {`Program: ${studentInfo.course}${studentInfo.academicYear ? ` • Session: ${studentInfo.academicYear}` : ''}`}
+              </SingleLineText>
             )}
           </div>
 
@@ -479,19 +482,19 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               <p className="text-[6px] font-bold uppercase tracking-wider text-neutral-700">
                 If found, please return to:
               </p>
-              <p className="text-[6.2px] text-neutral-600 truncate">
+              <SingleLineText fontSize={6.2} className="text-neutral-600 text-left">
                 {studentInfo.address || 'Student Administration & Campus Security Office'}
-              </p>
-              <p className="text-[6px] text-neutral-500 truncate">
-                Tel: {studentInfo.phone || '+1 (800) 555-0199'} • {studentInfo.website || 'www.university.edu'}
-              </p>
+              </SingleLineText>
+              <SingleLineText fontSize={6} className="text-neutral-500 text-left">
+                {`Tel: ${studentInfo.phone || '+1 (800) 555-0199'} • ${studentInfo.website || 'www.university.edu'}`}
+              </SingleLineText>
             </div>
 
             <div className="w-24 flex flex-col items-center flex-shrink-0">
-              <div className="w-full h-6 bg-white border border-neutral-300 rounded-[2px] flex items-center justify-center">
-                <span className="font-serif italic text-[9px] text-neutral-600 truncate px-1">
-                  {firstNames.charAt(0)}. {toTitleCase(lastName)}
-                </span>
+              <div className="w-full h-6 bg-white border border-neutral-300 rounded-[2px] flex items-center justify-center px-1">
+                <SingleLineText fontSize={9} className="font-serif italic text-neutral-600 text-center">
+                  {`${firstNames.charAt(0)}. ${toTitleCase(lastName)}`}
+                </SingleLineText>
               </div>
               <span className="text-[5.5px] uppercase tracking-widest text-neutral-400 mt-0.5">
                 Cardholder Signature
@@ -500,16 +503,18 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           </div>
 
           {/* Bottom Scannable Barcode */}
-          <div className="pt-1 border-t border-neutral-200 flex items-center justify-between">
+          <div className="pt-1 border-t border-neutral-200 flex items-center justify-between gap-2">
             <ScannableBarcode
               value={rawId}
-              className="h-4 w-36"
+              className="h-4 w-36 flex-shrink-0"
               fill="#111827"
               showValue={false}
             />
-            <span className="font-mono text-[7px] font-bold text-neutral-700 truncate max-w-[155px]">
-              ID: {rawId} • VALID {expStr}
-            </span>
+            <div className="flex-1 min-w-0 text-right">
+              <SingleLineText fontSize={7} className="font-mono font-bold text-neutral-700 text-right">
+                {`ID: ${rawId} • VALID ${expStr}`}
+              </SingleLineText>
+            </div>
           </div>
         </div>
       </div>
@@ -581,20 +586,20 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
 
             {/* Student ID, Last Name, First Name */}
             <div className="pt-2 text-left leading-[1.22] space-y-0.5">
-              <div className="font-sans font-bold text-[10.5px] text-neutral-900 tracking-wide truncate">
+              <SingleLineText fontSize={10.5} className="font-sans font-bold text-neutral-900 tracking-wide text-left">
                 {displayId}
-              </div>
-              <div className="font-sans font-medium text-[10.5px] text-neutral-800 uppercase tracking-wide truncate">
+              </SingleLineText>
+              <SingleLineText fontSize={10.5} className="font-sans font-medium text-neutral-800 uppercase tracking-wide text-left">
                 {lastName}
-              </div>
-              <div className="font-sans font-normal text-[10px] text-neutral-800 truncate">
+              </SingleLineText>
+              <SingleLineText fontSize={10} className="font-sans font-normal text-neutral-800 text-left">
                 {firstNames}
-              </div>
+              </SingleLineText>
             </div>
           </div>
 
           {/* Right Side: Framed Portrait + Status */}
-          <div className="flex flex-col items-center flex-shrink-0">
+          <div className="flex flex-col items-center flex-shrink-0 w-[86px]">
             <div className="w-[82px] h-[88px] border-[1.5px] border-neutral-800 bg-neutral-200 overflow-hidden shadow-xs">
               <img
                 src={photoUrl}
@@ -604,18 +609,20 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                 onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }}
               />
             </div>
-            <div className="text-[9.5px] font-bold text-[#991B1B] tracking-tight leading-tight mt-1 text-center max-w-[90px] truncate">
+            <SingleLineText fontSize={9.5} className="font-bold text-[#991B1B] tracking-tight leading-tight mt-1 text-center">
               {statusLabel}
-            </div>
+            </SingleLineText>
           </div>
         </div>
 
         {/* Middle Row: Course String on Left + Matching Expiry Date on Right */}
         <div className="relative z-10 flex items-baseline justify-between gap-2 pb-1 border-b-[1.5px] border-neutral-700 -mt-1">
-          <span className="font-sans font-semibold text-[9.5px] text-neutral-900 truncate max-w-[185px] text-left">
-            {courseLabel}
-          </span>
-          <span className="font-sans font-bold text-[9.5px] text-neutral-900 whitespace-nowrap">
+          <div className="flex-1 min-w-0 text-left">
+            <SingleLineText fontSize={9.5} className="font-sans font-semibold text-neutral-900 text-left">
+              {courseLabel}
+            </SingleLineText>
+          </div>
+          <span className="font-sans font-bold text-[9.5px] text-neutral-900 whitespace-nowrap flex-shrink-0">
             Expiry: {expiryFormatted}
           </span>
         </div>
@@ -743,17 +750,17 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         <div className="flex-1 flex justify-between items-end pt-1 gap-2">
           {/* Left Column */}
           <div className="flex flex-col justify-between h-full flex-1 min-w-0">
-            <div className="pl-6 pt-0.5 text-center max-w-[185px]">
-              <div className="font-sans font-bold text-[13px] text-neutral-950 uppercase tracking-wide leading-tight truncate">
+            <div className="pl-2 pr-1 pt-0.5 text-center w-full min-w-0">
+              <SingleLineText fontSize={13} className="font-sans font-bold text-neutral-950 uppercase tracking-wide leading-tight text-center">
                 {lastName}
-              </div>
-              <div className="font-sans font-medium text-[11px] text-neutral-900 leading-tight mt-0.5 truncate">
+              </SingleLineText>
+              <SingleLineText fontSize={11} className="font-sans font-medium text-neutral-900 leading-tight mt-0.5 text-center">
                 {firstNames}
-              </div>
+              </SingleLineText>
               {studentInfo.course && (
-                <div className="font-sans font-semibold text-[8px] text-[#0B1F3A]/80 leading-tight mt-0.5 truncate">
+                <SingleLineText fontSize={8.5} className="font-sans font-semibold text-[#0B1F3A]/85 leading-tight mt-0.5 text-center">
                   {studentInfo.course}
-                </div>
+                </SingleLineText>
               )}
             </div>
 
@@ -843,38 +850,34 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                   )}
                 </div>
                 <div className="flex-1 bg-[#18181B] flex items-center px-2 min-w-0">
-                  <span
-                    className={`font-sans font-normal text-white tracking-wide truncate ${
-                      cleanUniName.length > 22 ? 'text-[10.5px]' : 'text-[13px]'
-                    }`}
-                  >
+                  <SingleLineText fontSize={cleanUniName.length > 22 ? 10.5 : 13} className="font-sans font-normal text-white tracking-wide text-left">
                     {cleanUniName}
-                  </span>
+                  </SingleLineText>
                 </div>
               </div>
 
               {/* Bold STUDENT label */}
-              <div className="font-sans font-black text-[14px] text-neutral-950 uppercase tracking-wide mt-1 leading-none truncate">
+              <SingleLineText fontSize={14} className="font-sans font-black text-neutral-950 uppercase tracking-wide mt-1 leading-none text-left">
                 {statusRole}
-              </div>
+              </SingleLineText>
             </div>
 
             {/* Name, Course, ID & Matching Expiry Date */}
-            <div className="leading-[1.16] mt-1">
-              <div className="font-sans font-bold text-[10.5px] text-neutral-950 truncate">
+            <div className="leading-[1.16] mt-1 min-w-0">
+              <SingleLineText fontSize={10.5} className="font-sans font-bold text-neutral-950 text-left">
                 {firstNames}
-              </div>
-              <div className="font-sans font-extrabold text-[11px] text-neutral-950 uppercase tracking-tight truncate">
+              </SingleLineText>
+              <SingleLineText fontSize={11} className="font-sans font-extrabold text-neutral-950 uppercase tracking-tight text-left">
                 {lastName}
-              </div>
+              </SingleLineText>
               {studentInfo.course && (
-                <div className="font-sans font-semibold text-[8px] text-neutral-700 truncate mt-0.5">
+                <SingleLineText fontSize={8.5} className="font-sans font-semibold text-neutral-700 mt-0.5 text-left">
                   {studentInfo.course}
-                </div>
+                </SingleLineText>
               )}
-              <div className="font-sans font-extrabold text-[10.5px] text-neutral-950 tabular-nums mt-0.5 truncate">
+              <SingleLineText fontSize={10.5} className="font-sans font-extrabold text-neutral-950 tabular-nums mt-0.5 text-left">
                 {displayId}
-              </div>
+              </SingleLineText>
               <div className="font-sans font-bold text-[8.5px] text-neutral-700 mt-0.5">
                 EXPIRES: <span className="text-neutral-950 tabular-nums">{expiryFormatted}</span>
               </div>
@@ -991,19 +994,19 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           <div className="flex-1 flex flex-col justify-between min-w-0">
             {/* Indigo Name Bar */}
             <div className="w-full bg-[#241973] py-0.5 px-2 text-center shadow-2xs">
-              <span className="font-sans font-medium text-[10.5px] text-white uppercase tracking-wider truncate block">
+              <SingleLineText fontSize={10.5} className="font-sans font-medium text-white uppercase tracking-wider text-center">
                 {fullName.toUpperCase()}
-              </span>
+              </SingleLineText>
             </div>
 
             {/* College / Program Name & Student Number / Login Row */}
-            <div className="text-center leading-tight my-0.5">
-              <div className="font-sans font-semibold text-[9.5px] text-neutral-900 truncate">
+            <div className="text-center leading-tight my-0.5 min-w-0">
+              <SingleLineText fontSize={9.5} className="font-sans font-semibold text-neutral-900 text-center">
                 {collegeOrProgram}
-              </div>
-              <div className="flex justify-between items-center text-[9.5px] font-sans font-medium text-neutral-900 px-0.5 mt-0.5">
-                <span className="tabular-nums truncate max-w-[130px]">{displayId}</span>
-                <span>{loginCode}</span>
+              </SingleLineText>
+              <div className="flex justify-between items-center text-[9.5px] font-sans font-medium text-neutral-900 px-0.5 mt-0.5 gap-2">
+                <span className="tabular-nums">{displayId}</span>
+                <span className="flex-shrink-0">{loginCode}</span>
               </div>
             </div>
 
@@ -1166,8 +1169,8 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           </div>
 
           {/* Right Column: Portrait Photo on Blue Studio Backdrop + Grade / Course */}
-          <div className="w-[92px] flex flex-col items-center justify-between flex-shrink-0">
-            <div className="w-[90px] h-[112px] bg-[#1E6091] overflow-hidden border border-neutral-300 shadow-xs">
+          <div className="w-[96px] flex flex-col items-center justify-between flex-shrink-0">
+            <div className="w-[90px] h-[108px] bg-[#1E6091] overflow-hidden border border-neutral-300 shadow-xs">
               <img
                 src={photoUrl}
                 alt={fullName}
@@ -1176,7 +1179,12 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                 onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_3.webp'; }}
               />
             </div>
-            <div className="font-sans font-semibold text-[8.5px] text-neutral-800 leading-tight pt-1 text-center w-full truncate">
+            <div
+              className="font-sans font-semibold text-neutral-800 leading-[1.08] pt-0.5 text-center w-full break-words"
+              style={{
+                fontSize: gradeOrProgram.length > 26 ? '6.4px' : gradeOrProgram.length > 16 ? '7.2px' : '8.5px'
+              }}
+            >
               {gradeOrProgram}
             </div>
           </div>
@@ -1255,25 +1263,25 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             >
               {subTitle}
             </div>
-            <div className="font-sans font-bold text-[15.5px] text-neutral-900 tracking-[0.06em] mt-2 leading-none truncate w-full">
+            <SingleLineText fontSize={15.5} className="font-sans font-bold text-neutral-900 tracking-[0.06em] mt-2 leading-none text-center">
               {roleLabel}
-            </div>
+            </SingleLineText>
             {studentInfo.course && (
-              <div className="font-sans font-semibold text-[8px] text-neutral-700 mt-1 truncate w-full">
+              <SingleLineText fontSize={8.5} className="font-sans font-semibold text-neutral-700 mt-1 text-center">
                 {studentInfo.course}
-              </div>
+              </SingleLineText>
             )}
           </div>
         </div>
 
         {/* Middle Section: Full Uppercase Serif Name + Student ID + SP + VALID THRU ▶ MM/DD/YYYY */}
-        <div className="relative z-10 text-left mt-1">
-          <div className="font-serif font-bold text-[12px] text-neutral-950 uppercase tracking-wide truncate">
+        <div className="relative z-10 text-left mt-1 min-w-0">
+          <SingleLineText fontSize={12} className="font-serif font-bold text-neutral-950 uppercase tracking-wide text-left">
             {fullName.toUpperCase()}
-          </div>
+          </SingleLineText>
           <div className="flex items-center justify-between mt-0.5 pr-2 gap-2">
             <div className="flex items-center gap-3 font-serif font-bold text-[11.5px] text-neutral-950 tabular-nums min-w-0">
-              <span className="truncate">{displayId}</span>
+              <span>{displayId}</span>
               <span className="flex-shrink-0">SP</span>
             </div>
             <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -1391,23 +1399,22 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           </span>
         </div>
 
-        {/* Bottom Body Details: Name, Student/Course, ID & EXP Date */}
+        {/* Bottom Body Details: Name, Student/Course (Full Width), ID & EXP Date */}
         <div className="flex-1 flex flex-col justify-end px-4 pb-2.5 pt-14 relative z-10">
-          <div className="flex items-end justify-between pr-5 gap-2">
-            <div className="text-left leading-[1.18] min-w-0 flex-1">
-              <div className="font-sans font-bold text-[11.5px] text-neutral-950 truncate">
-                {toTitleCase(fullName)}
-              </div>
-              <div className="font-sans font-bold text-[10px] text-[#6B4E23] truncate">
-                {roleLabel} {studentInfo.course ? `• ${studentInfo.course}` : ''}
-              </div>
-              <div className="font-sans font-bold text-[10.5px] text-neutral-950 tabular-nums truncate">
+          <div className="text-left leading-[1.18] min-w-0 w-full pr-4">
+            <SingleLineText fontSize={11.5} className="font-sans font-bold text-neutral-950 text-left">
+              {toTitleCase(fullName)}
+            </SingleLineText>
+            <SingleLineText fontSize={10} className="font-sans font-bold text-[#6B4E23] text-left">
+              {studentInfo.course ? `${roleLabel} • ${studentInfo.course}` : roleLabel}
+            </SingleLineText>
+            <div className="flex items-baseline justify-between gap-2 mt-0.5">
+              <span className="font-sans font-bold text-[10.5px] text-neutral-950 tabular-nums">
                 {displayId}
-              </div>
-            </div>
-
-            <div className="font-sans font-extrabold text-[11px] text-neutral-950 tabular-nums flex-shrink-0">
-              EXP {expiryFormatted}
+              </span>
+              <span className="font-sans font-extrabold text-[11px] text-neutral-950 tabular-nums flex-shrink-0">
+                EXP {expiryFormatted}
+              </span>
             </div>
           </div>
         </div>
@@ -1488,51 +1495,54 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           </div>
         </div>
 
-        {/* Bottom Section: Student Details & Signature on Left + University Tower Mark on Right */}
-        <div className="relative z-10 flex items-end justify-between pt-1 gap-2">
-          <div className="text-left leading-[1.16] min-w-0 flex-1">
-            <div className="font-sans font-bold text-[9.5px] text-neutral-950 uppercase truncate">
-              {roleLabel} {studentInfo.course ? `• ${studentInfo.course}` : ''}
-            </div>
-            <div className="font-sans font-bold text-[10px] text-neutral-950 tabular-nums truncate">
-              {displayId}
-            </div>
-            <div className="font-sans font-bold text-[10px] text-neutral-950 truncate">
-              {toTitleCase(fullName)}
-            </div>
-            <div className="flex items-center gap-3 mt-0.5">
-              <span className="font-serif italic text-[11px] text-neutral-900 truncate">
-                {firstNames} {lastName.charAt(0)}.
-              </span>
-              <span className="font-sans font-bold text-[8px] text-[#0A1E46] tabular-nums flex-shrink-0">
-                EXP: {expiryFormatted}
-              </span>
-            </div>
-            <div className="font-sans italic text-[6.2px] text-neutral-500 mt-0.5 truncate">
-              For {cleanUniName} Purposes Only
-            </div>
-          </div>
+        {/* Bottom Section: Full-Width Role/Course Line + Lower Row (Details & Signature on Left + University Tower Mark on Right) */}
+        <div className="relative z-10 flex flex-col justify-end pt-1 min-w-0 w-full">
+          <SingleLineText fontSize={9.5} className="font-sans font-bold text-neutral-950 uppercase text-left leading-[1.16]">
+            {studentInfo.course ? `${roleLabel} • ${studentInfo.course}` : roleLabel}
+          </SingleLineText>
 
-          {/* Bottom-Right University Tower Mark */}
-          <div className="flex items-end gap-1 text-right flex-shrink-0 max-w-[115px]">
-            {studentInfo.logo ? (
-              <img src={studentInfo.logo} alt="Logo" className="w-8 h-8 object-contain flex-shrink-0" />
-            ) : (
-              <svg className="w-8 h-8 text-[#1E293B] flex-shrink-0" viewBox="0 0 48 48" fill="currentColor">
-                <polygon points="24,4 36,18 12,18" />
-                <rect x="14" y="19" width="20" height="24" />
-                <rect x="18" y="23" width="3" height="8" fill="#FFFFFF" />
-                <rect x="23" y="23" width="3" height="8" fill="#FFFFFF" />
-                <rect x="28" y="23" width="3" height="8" fill="#FFFFFF" />
-              </svg>
-            )}
-            <div className="flex flex-col leading-none pb-0.5 text-left min-w-0">
-              <span className="font-sans font-extrabold text-[10px] text-neutral-800 tracking-tight truncate">
-                {bottomLogoLine1}
-              </span>
-              <span className="font-sans font-light text-[9px] text-neutral-600 tracking-wide truncate">
-                {bottomLogoLine2}
-              </span>
+          <div className="flex items-end justify-between gap-2 w-full">
+            <div className="text-left leading-[1.16] min-w-0 flex-1">
+              <SingleLineText fontSize={10} className="font-sans font-bold text-neutral-950 tabular-nums text-left">
+                {displayId}
+              </SingleLineText>
+              <SingleLineText fontSize={10} className="font-sans font-bold text-neutral-950 text-left">
+                {toTitleCase(fullName)}
+              </SingleLineText>
+              <div className="flex items-center gap-3 mt-0.5 min-w-0">
+                <span className="font-serif italic text-[11px] text-neutral-900 whitespace-nowrap">
+                  {firstNames} {lastName.charAt(0)}.
+                </span>
+                <span className="font-sans font-bold text-[8px] text-[#0A1E46] tabular-nums flex-shrink-0">
+                  EXP: {expiryFormatted}
+                </span>
+              </div>
+              <SingleLineText fontSize={6.2} className="font-sans italic text-neutral-500 mt-0.5 text-left">
+                {`For ${cleanUniName} Purposes Only`}
+              </SingleLineText>
+            </div>
+
+            {/* Bottom-Right University Tower Mark */}
+            <div className="flex items-end gap-1 text-right flex-shrink-0 max-w-[120px]">
+              {studentInfo.logo ? (
+                <img src={studentInfo.logo} alt="Logo" className="w-8 h-8 object-contain flex-shrink-0" />
+              ) : (
+                <svg className="w-8 h-8 text-[#1E293B] flex-shrink-0" viewBox="0 0 48 48" fill="currentColor">
+                  <polygon points="24,4 36,18 12,18" />
+                  <rect x="14" y="19" width="20" height="24" />
+                  <rect x="18" y="23" width="3" height="8" fill="#FFFFFF" />
+                  <rect x="23" y="23" width="3" height="8" fill="#FFFFFF" />
+                  <rect x="28" y="23" width="3" height="8" fill="#FFFFFF" />
+                </svg>
+              )}
+              <div className="flex flex-col leading-none pb-0.5 text-left min-w-0">
+                <SingleLineText fontSize={10} className="font-sans font-extrabold text-neutral-800 tracking-tight text-left">
+                  {bottomLogoLine1}
+                </SingleLineText>
+                <SingleLineText fontSize={9} className="font-sans font-light text-neutral-600 tracking-wide text-left">
+                  {bottomLogoLine2}
+                </SingleLineText>
+              </div>
             </div>
           </div>
         </div>
@@ -1628,21 +1638,21 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         {/* Left Column */}
         <div className="flex-1 flex flex-col justify-between h-full min-w-0">
           <div
-            className="text-left pl-1 pt-0.5 leading-[1.18]"
+            className="text-left pl-1 pt-0.5 leading-[1.18] min-w-0"
             style={{
               textShadow: '0 0 5px rgba(255,255,255,0.95), 0 0 2px rgba(255,255,255,0.9)'
             }}
           >
-            <div className="font-serif font-bold text-[12px] text-neutral-950 truncate">
+            <SingleLineText fontSize={12} className="font-serif font-bold text-neutral-950 text-left">
               {toTitleCase(fullName)}
-            </div>
-            <div className="font-serif font-bold text-[11.5px] text-neutral-950 tabular-nums truncate">
-              ID#{displayId}
-            </div>
+            </SingleLineText>
+            <SingleLineText fontSize={11.5} className="font-serif font-bold text-neutral-950 tabular-nums text-left">
+              {`ID#${displayId}`}
+            </SingleLineText>
             {studentInfo.course && (
-              <div className="font-sans font-bold text-[8.5px] text-[#1E296B] truncate mt-0.5">
+              <SingleLineText fontSize={8.5} className="font-sans font-bold text-[#1E296B] mt-0.5 text-left">
                 {studentInfo.course}
-              </div>
+              </SingleLineText>
             )}
             <div className="font-serif font-bold text-[9.5px] text-neutral-900 tabular-nums mt-0.5">
               EXP: {expiryFormatted}

@@ -606,8 +606,8 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
   const renderT3Course = (courseStr: string) => {
     if (!courseStr) return (
       <>
-        <div className="line-clamp-1">Bachelor of Science in</div>
-        <div className="line-clamp-1 font-semibold text-neutral-900">Computer Science and Engineering</div>
+        <SingleLineText fontSize={9.2} className="text-left">Bachelor of Science in</SingleLineText>
+        <SingleLineText fontSize={9.2} className="font-semibold text-neutral-900 text-left">Computer Science and Engineering</SingleLineText>
       </>
     );
     const c = courseStr.trim();
@@ -617,8 +617,8 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
       const part2 = c.substring(inIndex + 4);
       return (
         <>
-          <div className="line-clamp-1">{part1}</div>
-          <div className="line-clamp-1 font-semibold text-neutral-900">{part2}</div>
+          <SingleLineText fontSize={9.2} className="text-left">{part1}</SingleLineText>
+          <SingleLineText fontSize={9.2} className="font-semibold text-neutral-900 text-left">{part2}</SingleLineText>
         </>
       );
     }
@@ -627,12 +627,12 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
       const mid = Math.ceil(words.length / 2);
       return (
         <>
-          <div className="line-clamp-1">{words.slice(0, mid).join(' ')}</div>
-          <div className="line-clamp-1 font-semibold text-neutral-900">{words.slice(mid).join(' ')}</div>
+          <SingleLineText fontSize={9.2} className="text-left">{words.slice(0, mid).join(' ')}</SingleLineText>
+          <SingleLineText fontSize={9.2} className="font-semibold text-neutral-900 text-left">{words.slice(mid).join(' ')}</SingleLineText>
         </>
       );
     }
-    return <div className="line-clamp-2">{c}</div>;
+    return <SingleLineText fontSize={9.5} className="font-semibold text-neutral-900 text-left">{c}</SingleLineText>;
   };
 
   // Common Back Side for Classic/Elegant/Modern/Official/Northfield/Shepherd/D1/Westdale/D2/T1/T2/T3
@@ -2174,9 +2174,11 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 <p className="text-[8.5px] font-bold text-[#0B2545] leading-none">{studentInfo.academicYear || '2026-2027'}</p>
               </div>
 
-              <div className="col-span-2">
+              <div className="col-span-2 min-w-0">
                 <span className="text-[6px] font-bold text-[#0B2545]/70 tracking-wider uppercase block leading-none mb-0.5">GRADE / PROGRAM</span>
-                <p className="text-[8.5px] font-bold text-[#0B2545] leading-none truncate">{studentInfo.course || 'Grade 10'}</p>
+                <SingleLineText fontSize={8.5} className="font-bold text-[#0B2545] leading-none text-left">
+                  {studentInfo.course || 'Grade 10'}
+                </SingleLineText>
               </div>
             </div>
 

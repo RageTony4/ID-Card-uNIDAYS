@@ -208,9 +208,9 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     br: [0.8165, 0.8510],
     bl: [0.1605, 0.8950],
     cornerRadius: 0.048,
-    maskExpand: 0.007,
+    maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.12
+    lightingBlend: 0.20
   },
   {
     id: 'scene_10',
@@ -222,7 +222,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.038,
     maskExpand: 0.006,
     hasPlasticSleeve: true,
-    lightingBlend: 0.12
+    lightingBlend: 0.14
   },
   {
     id: 'scene_11',
@@ -232,9 +232,24 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     br: [0.8645, 0.8780],
     bl: [0.0075, 0.9195],
     cornerRadius: 0.048,
-    maskExpand: 0.007,
+    maskExpand: 0.005,
     hasPlasticSleeve: false,
-    lightingBlend: 0.12
+    lightingBlend: 0.16,
+    foregroundPolygons: [
+      {
+        // Bottom thumb supporting lower-center edge of card
+        points: [
+          [0.312, 0.903],
+          [0.365, 0.896],
+          [0.455, 0.893],
+          [0.545, 0.892],
+          [0.585, 0.908],
+          [0.312, 0.915]
+        ],
+        castShadow: true,
+        featherPx: 1.5
+      }
+    ]
   },
   {
     id: 'scene_12',
@@ -246,7 +261,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.042,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10
+    lightingBlend: 0.14
   },
   {
     id: 'scene_13',
@@ -258,7 +273,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.042,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10,
+    lightingBlend: 0.14,
     foregroundPolygons: [
       {
         // Thumb holding bottom-right of card over snow
@@ -274,7 +289,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
           [0.870, 0.798]
         ],
         castShadow: true,
-        featherPx: 3.0
+        featherPx: 2.5
       }
     ]
   },
@@ -288,7 +303,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.044,
     maskExpand: 0.006,
     hasPlasticSleeve: true,
-    lightingBlend: 0.12,
+    lightingBlend: 0.14,
     slotPunch: {
       u1: 0.486,
       v1: 0.333,
@@ -299,14 +314,53 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
   {
     id: 'scene_15',
     matchKeys: ['2i55155k27', 'scene_15'],
-    tl: [0.0050, 0.3235],
+    tl: [0.0055, 0.3235],
     tr: [0.9620, 0.3165],
-    br: [0.9780, 0.6575],
-    bl: [0.0105, 0.6705],
+    br: [0.9765, 0.6525],
+    bl: [0.0105, 0.6650],
     cornerRadius: 0.046,
-    maskExpand: 0.006,
+    maskExpand: 0.0045,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10
+    lightingBlend: 0.20,
+    foregroundPolygons: [
+      {
+        // Left palm / thumb base supporting bottom-left corner of card
+        points: [
+          [0.002, 0.660],
+          [0.045, 0.663],
+          [0.098, 0.667],
+          [0.102, 0.688],
+          [0.002, 0.688]
+        ],
+        castShadow: true,
+        featherPx: 1.4
+      },
+      {
+        // Index finger pad supporting lower-left/center weight of card
+        points: [
+          [0.142, 0.663],
+          [0.245, 0.660],
+          [0.355, 0.658],
+          [0.436, 0.656],
+          [0.438, 0.682],
+          [0.140, 0.682]
+        ],
+        castShadow: true,
+        featherPx: 1.4
+      },
+      {
+        // Middle finger pad supporting lower-center/right weight of card
+        points: [
+          [0.452, 0.656],
+          [0.545, 0.653],
+          [0.648, 0.651],
+          [0.652, 0.678],
+          [0.450, 0.678]
+        ],
+        castShadow: true,
+        featherPx: 1.4
+      }
+    ]
   },
   {
     id: 'scene_16',
@@ -318,7 +372,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.046,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10
+    lightingBlend: 0.14
   },
   {
     id: 'scene_17',
@@ -330,7 +384,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.046,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10
+    lightingBlend: 0.14
   },
   {
     id: 'scene_18',
@@ -338,23 +392,36 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     tl: [0.1580, 0.2490],
     tr: [0.8405, 0.2815],
     br: [0.8415, 0.8395],
-    bl: [0.1515, 0.8640],
+    bl: [0.1515, 0.8610],
     cornerRadius: 0.046,
-    maskExpand: 0.006,
+    maskExpand: 0.005,
     hasPlasticSleeve: false,
-    lightingBlend: 0.16,
+    lightingBlend: 0.18,
     foregroundPolygons: [
       {
-        // Bottom-left thumb edge
+        // Top-left index finger pad pinching top edge
         points: [
-          [0.148, 0.868],
-          [0.215, 0.850],
-          [0.310, 0.848],
-          [0.385, 0.858],
-          [0.405, 0.872]
+          [0.145, 0.242],
+          [0.215, 0.252],
+          [0.268, 0.250],
+          [0.272, 0.235],
+          [0.145, 0.235]
         ],
         castShadow: true,
-        featherPx: 2.5
+        featherPx: 1.6
+      },
+      {
+        // Bottom-left thumb pad supporting lower edge
+        points: [
+          [0.148, 0.866],
+          [0.215, 0.847],
+          [0.310, 0.845],
+          [0.385, 0.855],
+          [0.408, 0.874],
+          [0.148, 0.874]
+        ],
+        castShadow: true,
+        featherPx: 1.8
       }
     ]
   },
@@ -368,7 +435,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.048,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10
+    lightingBlend: 0.14
   },
   {
     id: 'scene_20',
@@ -380,7 +447,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.046,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10,
+    lightingBlend: 0.14,
     slotPunch: {
       u1: 0.832,
       v1: 0.538,
@@ -398,7 +465,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.048,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.08
+    lightingBlend: 0.12
   },
   {
     id: 'scene_22',
@@ -410,7 +477,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.045,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10,
+    lightingBlend: 0.14,
     foregroundPolygons: [
       {
         // Thumb on bottom-right corner
@@ -422,7 +489,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
           [0.958, 0.812]
         ],
         castShadow: true,
-        featherPx: 2.5
+        featherPx: 2.0
       }
     ]
   },
@@ -436,7 +503,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.046,
     maskExpand: 0.004,
     hasPlasticSleeve: true,
-    lightingBlend: 0.06
+    lightingBlend: 0.10
   },
   {
     id: 'scene_seton_656u69492z',
@@ -446,9 +513,9 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     br: [0.8225, 0.4910],
     bl: [0.1410, 0.4960],
     cornerRadius: 0.046,
-    maskExpand: 0.006,
+    maskExpand: 0.005,
     hasPlasticSleeve: false,
-    lightingBlend: 0.12,
+    lightingBlend: 0.16,
     foregroundPolygons: [
       {
         // Left thumb with French manicure overlapping left edge of card
@@ -462,7 +529,19 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
           [0.132, 0.415]
         ],
         castShadow: true,
-        featherPx: 2.5
+        featherPx: 2.0
+      },
+      {
+        // Supporting finger contact along bottom-left edge
+        points: [
+          [0.215, 0.494],
+          [0.310, 0.493],
+          [0.412, 0.493],
+          [0.415, 0.508],
+          [0.215, 0.508]
+        ],
+        castShadow: true,
+        featherPx: 1.4
       }
     ]
   },
@@ -474,10 +553,23 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     br: [0.9355, 0.7955],
     bl: [0.0355, 0.8065],
     cornerRadius: 0.046,
-    maskExpand: 0.006,
+    maskExpand: 0.005,
     hasPlasticSleeve: false,
-    lightingBlend: 0.12,
+    lightingBlend: 0.16,
     foregroundPolygons: [
+      {
+        // Top-right index finger gripping upper-right edge
+        points: [
+          [0.640, 0.225],
+          [0.720, 0.244],
+          [0.835, 0.246],
+          [0.915, 0.234],
+          [0.915, 0.218],
+          [0.640, 0.218]
+        ],
+        castShadow: true,
+        featherPx: 1.8
+      },
       {
         // Bottom-right thumb overlapping lower-right edge
         points: [
@@ -489,7 +581,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
           [0.942, 0.808]
         ],
         castShadow: true,
-        featherPx: 2.5
+        featherPx: 2.0
       }
     ]
   },
@@ -503,7 +595,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.046,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.12
+    lightingBlend: 0.16
   },
   {
     id: 'scene_hws_170p6e501a',
@@ -513,9 +605,9 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     br: [0.9985, 0.8185],
     bl: [0.0485, 0.8265],
     cornerRadius: 0.044,
-    maskExpand: 0.006,
+    maskExpand: 0.005,
     hasPlasticSleeve: false,
-    lightingBlend: 0.14,
+    lightingBlend: 0.18,
     foregroundPolygons: [
       {
         // Bottom-left thumb edge
@@ -527,7 +619,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
           [0.042, 0.830]
         ],
         castShadow: true,
-        featherPx: 2.5
+        featherPx: 2.0
       }
     ]
   },
@@ -536,12 +628,27 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     matchKeys: ['1i5g121y6m', 'scene_utas'],
     tl: [0.1245, 0.1175],
     tr: [0.8185, 0.0615],
-    br: [0.8195, 0.7025],
-    bl: [0.1375, 0.6785],
+    br: [0.8195, 0.6985],
+    bl: [0.1375, 0.6755],
     cornerRadius: 0.046,
-    maskExpand: 0.006,
+    maskExpand: 0.0045,
     hasPlasticSleeve: false,
-    lightingBlend: 0.14
+    lightingBlend: 0.18,
+    foregroundPolygons: [
+      {
+        // Supporting thumb/palm along bottom edge of card
+        points: [
+          [0.372, 0.683],
+          [0.485, 0.688],
+          [0.645, 0.694],
+          [0.785, 0.698],
+          [0.785, 0.720],
+          [0.372, 0.720]
+        ],
+        castShadow: true,
+        featherPx: 1.5
+      }
+    ]
   },
   {
     id: 'scene_usu_3350531a5z',
@@ -553,7 +660,7 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     cornerRadius: 0.046,
     maskExpand: 0.006,
     hasPlasticSleeve: false,
-    lightingBlend: 0.12
+    lightingBlend: 0.16
   }
 ];
 
@@ -634,10 +741,10 @@ function detectCustomSceneQuad(sceneImg: HTMLImageElement): CalibratedSceneConfi
       ctx.drawImage(sceneImg, 0, 0, w, h);
       const data = ctx.getImageData(0, 0, w, h).data;
       // Compute edge energy map inside central region
-      let minX = w * 0.14;
-      let maxX = w * 0.86;
-      let minY = h * 0.18;
-      let maxY = h * 0.82;
+      const minX = w * 0.14;
+      const maxX = w * 0.86;
+      const minY = h * 0.18;
+      const maxY = h * 0.82;
 
       // Scan rows/cols for strong rectangular contrast
       const rowEnergy = new Float32Array(h);
@@ -688,7 +795,7 @@ function detectCustomSceneQuad(sceneImg: HTMLImageElement): CalibratedSceneConfi
           cornerRadius: 0.046,
           maskExpand: 0.005,
           hasPlasticSleeve: false,
-          lightingBlend: 0.10
+          lightingBlend: 0.14
         };
       }
     }
@@ -706,7 +813,7 @@ function detectCustomSceneQuad(sceneImg: HTMLImageElement): CalibratedSceneConfi
     cornerRadius: 0.046,
     maskExpand: 0.005,
     hasPlasticSleeve: false,
-    lightingBlend: 0.10
+    lightingBlend: 0.14
   };
 }
 
@@ -760,6 +867,61 @@ function computeUnitSquareHomography(
 }
 
 /**
+ * Offsets a triangle's 3 vertices outward so every edge moves perpendicularly outward
+ * by `padPx` pixels. This eliminates sub-pixel anti-aliasing seams along acute diagonals.
+ */
+function expandTrianglePerpendicular(
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  padPx: number = 1.45
+): [number, number, number, number, number, number] {
+  const signedArea2 = (x1 - x0) * (y2 - y0) - (x2 - x0) * (y1 - y0);
+  const orient = signedArea2 >= 0 ? 1 : -1;
+
+  const edgeNormal = (ax: number, ay: number, bx: number, by: number): [number, number] => {
+    const ex = bx - ax;
+    const ey = by - ay;
+    const len = Math.hypot(ex, ey) || 1;
+    // Outward normal for given winding
+    return [(ey / len) * orient, (-ex / len) * orient];
+  };
+
+  const [n01x, n01y] = edgeNormal(x0, y0, x1, y1);
+  const [n12x, n12y] = edgeNormal(x1, y1, x2, y2);
+  const [n20x, n20y] = edgeNormal(x2, y2, x0, y0);
+
+  const offsetVertex = (
+    vx: number,
+    vy: number,
+    nAx: number,
+    nAy: number,
+    nBx: number,
+    nBy: number
+  ): [number, number] => {
+    let bx = nAx + nBx;
+    let by = nAy + nBy;
+    const bLen = Math.hypot(bx, by);
+    if (bLen < 1e-4) {
+      return [vx + nAx * padPx, vy + nAy * padPx];
+    }
+    bx /= bLen;
+    by /= bLen;
+    const cosHalf = Math.max(0.32, Math.abs(bx * nAx + by * nAy));
+    const dist = Math.min(padPx * 3.0, padPx / cosHalf);
+    return [vx + bx * dist, vy + by * dist];
+  };
+
+  const [ox0, oy0] = offsetVertex(x0, y0, n20x, n20y, n01x, n01y);
+  const [ox1, oy1] = offsetVertex(x1, y1, n01x, n01y, n12x, n12y);
+  const [ox2, oy2] = offsetVertex(x2, y2, n12x, n12y, n20x, n20y);
+  return [ox0, oy0, ox1, oy1, ox2, oy2];
+}
+
+/**
  * Draws a single textured triangle from source canvas (sx0, sy0)..(sx2, sy2)
  * to destination canvas (dx0, dy0)..(dx2, dy2) using exact affine transformation.
  */
@@ -779,18 +941,15 @@ function drawTexturedTriangle(
   dx2: number,
   dy2: number
 ) {
-  // Expand triangle vertices slightly outward from centroid to prevent sub-pixel seam lines
-  const cx = (dx0 + dx1 + dx2) / 3;
-  const cy = (dy0 + dy1 + dy2) / 3;
-  const expand = (x: number, y: number) => {
-    const vx = x - cx;
-    const vy = y - cy;
-    const len = Math.hypot(vx, vy) || 1;
-    return [x + (vx / len) * 0.65, y + (vy / len) * 0.65];
-  };
-  const [ex0, ey0] = expand(dx0, dy0);
-  const [ex1, ey1] = expand(dx1, dy1);
-  const [ex2, ey2] = expand(dx2, dy2);
+  const [ex0, ey0, ex1, ey1, ex2, ey2] = expandTrianglePerpendicular(
+    dx0,
+    dy0,
+    dx1,
+    dy1,
+    dx2,
+    dy2,
+    1.45
+  );
 
   const denom = sx0 * (sy1 - sy2) + sx1 * (sy2 - sy0) + sx2 * (sy0 - sy1);
   if (Math.abs(denom) < 1e-8) return;
@@ -829,16 +988,24 @@ interface ScenePhotometrics {
   bpR: number;
   bpG: number;
   bpB: number;
+  shadowTintR: number;
+  shadowTintG: number;
+  shadowTintB: number;
   gamma: number;
   saturation: number;
-  directionalGrid: number[][]; // 3 rows x 4 cols of local illumination multipliers [0.74..1.05]
+  directionalGrid: number[][]; // 4 rows x 6 cols of local illumination multipliers [0.64..1.10]
+  lightDirX: number; // Normalized primary light direction X in [-1..1]
+  lightDirY: number; // Normalized primary light direction Y in [-1..1]
+  peakS: number; // Normalized horizontal highlight focal coordinate [0..1]
+  peakT: number; // Normalized vertical highlight focal coordinate [0..1]
+  contrastSpan: number; // Scene directional brightness contrast [0.12..0.42]
 }
 
 /**
  * Analyzes the reference scene's ambient exposure, white point, shadow floor (black point),
- * color temperature/tint cast, and 2D spatial directional illumination across the card quad.
- * Uses high-percentile (80th-92nd) sampling inside each sub-cell so only the bare PVC lighting
- * gradient is captured and zero dark text/graphics from the placeholder card ever influence the map.
+ * color temperature/tint cast, and 2D spatial directional illumination across BOTH the card quad
+ * and the surrounding background (fingers, denim, surface).
+ * This ensures the rendered card's brightness variation matches the surrounding hand and fabric.
  */
 function analyzeScenePhotometrics(
   sceneImg: HTMLImageElement,
@@ -851,18 +1018,27 @@ function analyzeScenePhotometrics(
     bpR: 14,
     bpG: 14,
     bpB: 16,
+    shadowTintR: 22,
+    shadowTintG: 26,
+    shadowTintB: 34,
     gamma: 1.04,
     saturation: 0.92,
     directionalGrid: [
-      [1.0, 1.0, 0.98, 0.96],
-      [0.99, 0.99, 0.97, 0.95],
-      [0.96, 0.96, 0.94, 0.92],
+      [1.06, 1.04, 1.00, 0.95, 0.90, 0.86],
+      [1.04, 1.02, 0.98, 0.93, 0.88, 0.83],
+      [0.98, 0.96, 0.93, 0.89, 0.84, 0.79],
+      [0.92, 0.91, 0.88, 0.84, 0.80, 0.75],
     ],
+    lightDirX: -0.65,
+    lightDirY: -0.55,
+    peakS: 0.24,
+    peakT: 0.26,
+    contrastSpan: 0.26,
   };
 
   try {
-    const AW = 160;
-    const AH = 160;
+    const AW = 192;
+    const AH = 192;
     const c = document.createElement('canvas');
     c.width = AW;
     c.height = AH;
@@ -889,39 +1065,59 @@ function analyzeScenePhotometrics(
       return [r, g, b, lum];
     };
 
-    // 1. Sample interior of the card on a 4x3 grid (each cell sampled 6x6 = 36 points)
-    const gridRows = 3;
-    const gridCols = 4;
+    // 1. Sample interior of the card AND surrounding peripheral background on a 6x4 grid
+    const gridRows = 4;
+    const gridCols = 6;
     const cardSamples: Array<[number, number, number, number]> = [];
-    const cellWhiteLums: number[][] = [];
+    const cellCombinedLums: number[][] = [];
 
     for (let gr = 0; gr < gridRows; gr++) {
       const rowLums: number[] = [];
       for (let gc = 0; gc < gridCols; gc++) {
-        const cellSamples: Array<[number, number, number, number]> = [];
-        for (let sy = 0; sy < 6; sy++) {
-          for (let sx = 0; sx < 6; sx++) {
-            const s = 0.05 + ((gc + (sx + 0.5) / 6) / gridCols) * 0.90;
-            const t = 0.05 + ((gr + (sy + 0.5) / 6) / gridRows) * 0.90;
-            const [px, py] = project(s, t);
-            const sp = samplePixel(px, py);
-            cellSamples.push(sp);
-            cardSamples.push(sp);
+        const innerSamples: Array<[number, number, number, number]> = [];
+        const outerSamples: Array<[number, number, number, number]> = [];
+
+        for (let sy = 0; sy < 5; sy++) {
+          for (let sx = 0; sx < 5; sx++) {
+            const uNorm = (gc + (sx + 0.5) / 5) / gridCols;
+            const vNorm = (gr + (sy + 0.5) / 5) / gridRows;
+
+            // Interior card point
+            const sIn = 0.04 + uNorm * 0.92;
+            const tIn = 0.04 + vNorm * 0.92;
+            const [pxIn, pyIn] = project(sIn, tIn);
+            const spIn = samplePixel(pxIn, pyIn);
+            innerSamples.push(spIn);
+            cardSamples.push(spIn);
+
+            // Surrounding background point just outside the card edge in the same direction
+            const sOut = -0.16 + uNorm * 1.32;
+            const tOut = -0.16 + vNorm * 1.32;
+            const [pxOut, pyOut] = project(sOut, tOut);
+            outerSamples.push(samplePixel(pxOut, pyOut));
           }
         }
-        cellSamples.sort((a, b) => a[3] - b[3]);
-        // 82nd percentile in this cell represents the local lit white PVC surface
-        const p82Idx = Math.min(cellSamples.length - 1, Math.floor(cellSamples.length * 0.82));
-        rowLums.push(cellSamples[p82Idx][3]);
+
+        innerSamples.sort((a, b) => a[3] - b[3]);
+        outerSamples.sort((a, b) => a[3] - b[3]);
+
+        // 84th percentile of inner card cell (captures local PVC illumination)
+        const inP84 = innerSamples[Math.min(innerSamples.length - 1, Math.floor(innerSamples.length * 0.84))][3];
+        // 75th percentile of outer environment cell (captures adjacent finger/denim brightness falloff)
+        const outP75 = outerSamples[Math.min(outerSamples.length - 1, Math.floor(outerSamples.length * 0.75))][3];
+
+        // Blend inner card lighting with surrounding background lighting variation so the card
+        // reflects the same directional falloff as the fingers and denim
+        rowLums.push(inP84 * 0.58 + outP75 * 0.42);
       }
-      cellWhiteLums.push(rowLums);
+      cellCombinedLums.push(rowLums);
     }
 
     // 2. Sample ambient environment ring outside the card quad
     const envSamples: Array<[number, number, number, number]> = [];
-    const ringOffsets = [-0.18, -0.09, 1.09, 1.18];
-    for (let i = 0; i <= 16; i++) {
-      const u = i / 16;
+    const ringOffsets = [-0.22, -0.11, 1.11, 1.22];
+    for (let i = 0; i <= 20; i++) {
+      const u = i / 20;
       for (const off of ringOffsets) {
         const [x1, y1] = project(u, off);
         envSamples.push(samplePixel(x1, y1));
@@ -929,7 +1125,6 @@ function analyzeScenePhotometrics(
         envSamples.push(samplePixel(x2, y2));
       }
     }
-    // Also sample broader scene background
     for (let y = 8; y < AH; y += 16) {
       for (let x = 8; x < AW; x += 16) {
         envSamples.push(samplePixel(x, y));
@@ -969,27 +1164,25 @@ function analyzeScenePhotometrics(
     eG /= eCount;
     eB /= eCount;
 
-    // If the underlying placeholder card had a white/light surface (cLum > 125), trust its white point strongly
-    const cardWeight = cLum > 135 ? 0.74 : 0.35;
+    const cardWeight = cLum > 140 ? 0.68 : 0.30;
     const envWeight = 1 - cardWeight;
 
-    let rawWpR = cR * cardWeight + eR * envWeight;
-    let rawWpG = cG * cardWeight + eG * envWeight;
-    let rawWpB = cB * cardWeight + eB * envWeight;
+    const rawWpR = cR * cardWeight + eR * envWeight;
+    const rawWpG = cG * cardWeight + eG * envWeight;
+    const rawWpB = cB * cardWeight + eB * envWeight;
 
-    // Preserve the scene's color temperature/tint cast while keeping white point in a natural photographic range [176..238]
-    // Never allow 255 pure digital white so the card never outshines the scene!
+    // Preserve the scene's color temperature/tint cast while keeping white point in a natural photographic range [174..234]
     const rawWpLum = Math.max(1, 0.299 * rawWpR + 0.587 * rawWpG + 0.114 * rawWpB);
-    const targetWpLum = Math.max(178, Math.min(234, rawWpLum * 0.95));
+    const targetWpLum = Math.max(176, Math.min(232, rawWpLum * 0.94));
     const wpScale = targetWpLum / rawWpLum;
 
-    const wpR = Math.max(168, Math.min(240, Math.round(rawWpR * wpScale)));
-    const wpG = Math.max(168, Math.min(240, Math.round(rawWpG * wpScale)));
-    const wpB = Math.max(168, Math.min(240, Math.round(rawWpB * wpScale)));
+    const wpR = Math.max(166, Math.min(238, Math.round(rawWpR * wpScale)));
+    const wpG = Math.max(166, Math.min(238, Math.round(rawWpG * wpScale)));
+    const wpB = Math.max(166, Math.min(238, Math.round(rawWpB * wpScale)));
 
-    // Compute scene black point (shadow floor) from 5th-14th percentile of scene + card
+    // Compute scene black point (shadow floor) and ambient shadow tint (e.g. denim blue or warm shadow)
     const bStart = Math.floor(envSamples.length * 0.05);
-    const bEnd = Math.max(bStart + 1, Math.floor(envSamples.length * 0.14));
+    const bEnd = Math.max(bStart + 1, Math.floor(envSamples.length * 0.18));
     let sR = 0, sG = 0, sB = 0;
     for (let i = bStart; i < bEnd; i++) {
       sR += envSamples[i][0];
@@ -1001,26 +1194,57 @@ function analyzeScenePhotometrics(
     sG /= bCount;
     sB /= bCount;
 
-    // Lift blacks to match real photographic shadow floor [10..26]
-    const bpR = Math.max(10, Math.min(26, Math.round(sR * 0.45 + 9)));
-    const bpG = Math.max(10, Math.min(26, Math.round(sG * 0.45 + 9)));
-    const bpB = Math.max(10, Math.min(28, Math.round(sB * 0.45 + 10)));
+    const bpR = Math.max(10, Math.min(26, Math.round(sR * 0.44 + 8)));
+    const bpG = Math.max(10, Math.min(26, Math.round(sG * 0.44 + 8)));
+    const bpB = Math.max(10, Math.min(28, Math.round(sB * 0.44 + 9)));
 
-    // Normalize the 4x3 directional illumination grid relative to the brightest cell
-    const flatCells = cellWhiteLums.flat().slice().sort((a, b) => a - b);
-    const refHigh = Math.max(110, flatCells[flatCells.length - 1] || 210);
+    const shadowTintR = Math.max(12, Math.min(48, Math.round(sR)));
+    const shadowTintG = Math.max(12, Math.min(48, Math.round(sG)));
+    const shadowTintB = Math.max(12, Math.min(54, Math.round(sB)));
 
-    const directionalGrid = cellWhiteLums.map(row =>
-      row.map(val => {
-        const ratio = val / refHigh;
-        // Smoothly compress ratio into [0.78..1.02] so directional shading is natural and cohesive
-        return Math.max(0.78, Math.min(1.02, 0.35 + 0.65 * ratio));
+    // Compute directional illumination grid with realistic dynamic contrast matching fingers/denim
+    const flatCells = cellCombinedLums.flat().slice().sort((a, b) => a - b);
+    const refLow = Math.max(25, flatCells[1] || 95);
+    const refHigh = Math.max(refLow + 20, flatCells[flatCells.length - 2] || 205);
+    const rawSpan = Math.max(0.16, Math.min(0.45, (refHigh - refLow) / refHigh));
+    // Ensure a meaningful directional brightness gradient (at least ~22% falloff across the card)
+    const contrastSpan = Math.max(0.22, Math.min(0.36, rawSpan * 1.15));
+
+    let weightedS = 0;
+    let weightedT = 0;
+    let weightSum = 0;
+    let gradX = 0;
+    let gradY = 0;
+
+    const directionalGrid = cellCombinedLums.map((row, rIdx) =>
+      row.map((val, cIdx) => {
+        const sNorm = (cIdx + 0.5) / gridCols;
+        const tNorm = (rIdx + 0.5) / gridRows;
+        const normPos = Math.max(0, Math.min(1, (val - refLow) / Math.max(1, refHigh - refLow)));
+
+        const w = Math.pow(normPos, 2) + 0.05;
+        weightedS += sNorm * w;
+        weightedT += tNorm * w;
+        weightSum += w;
+
+        gradX += (sNorm - 0.5) * (normPos - 0.5);
+        gradY += (tNorm - 0.5) * (normPos - 0.5);
+
+        // Map [0..1] relative brightness into [1.06 - contrastSpan .. 1.06]
+        const mult = 1.06 - contrastSpan * (1 - normPos);
+        return Math.max(0.64, Math.min(1.08, mult));
       })
     );
 
-    // Slightly warmer/moodier gamma when scene is darker
-    const gamma = targetWpLum < 205 ? 1.08 : 1.03;
-    const saturation = targetWpLum < 205 ? 0.88 : 0.92;
+    const peakS = weightSum > 0 ? Math.max(0.08, Math.min(0.92, weightedS / weightSum)) : 0.25;
+    const peakT = weightSum > 0 ? Math.max(0.08, Math.min(0.92, weightedT / weightSum)) : 0.25;
+
+    const gradLen = Math.hypot(gradX, gradY);
+    const lightDirX = gradLen > 1e-3 ? gradX / gradLen : -0.65;
+    const lightDirY = gradLen > 1e-3 ? gradY / gradLen : -0.55;
+
+    const gamma = targetWpLum < 205 ? 1.08 : 1.04;
+    const saturation = targetWpLum < 205 ? 0.88 : 0.91;
 
     return {
       wpR,
@@ -1029,9 +1253,17 @@ function analyzeScenePhotometrics(
       bpR,
       bpG,
       bpB,
+      shadowTintR,
+      shadowTintG,
+      shadowTintB,
       gamma,
       saturation,
       directionalGrid,
+      lightDirX,
+      lightDirY,
+      peakS,
+      peakT,
+      contrastSpan,
     };
   } catch {
     return defaultProfile;
@@ -1040,8 +1272,9 @@ function analyzeScenePhotometrics(
 
 /**
  * Prepares a rounded-corner version of the captured live ID card and grades its
- * exposure, white point, black point, color temperature, directional shading, optical
- * softness, and fine sensor grain so it blends like a real photograph in the scene.
+ * exposure, white point, black point, color temperature, multi-zone directional shading,
+ * anisotropic semi-matte PVC surface reflection (visible on both light and dark card areas),
+ * and realistic die-cut PVC edge bevel & micro-wear.
  */
 function prepareRoundedCardCanvas(
   cardCanvas: HTMLCanvasElement,
@@ -1064,8 +1297,8 @@ function prepareRoundedCardCanvas(
   ctx.clip();
 
   // 1. Apply subtle optical lens softness & slight desaturation so vector DOM capture matches real camera lens MTF
-  const sat = photometrics ? 1 - (1 - photometrics.saturation) * blendStrength : 0.93;
-  const blurPx = Math.max(0.35, Math.min(0.65, w * 0.00045)) * blendStrength;
+  const sat = photometrics ? 1 - (1 - photometrics.saturation) * blendStrength : 0.92;
+  const blurPx = Math.max(0.38, Math.min(0.68, w * 0.00048)) * blendStrength;
   try {
     ctx.filter = `blur(${blurPx.toFixed(2)}px) saturate(${sat.toFixed(3)})`;
   } catch {
@@ -1074,12 +1307,14 @@ function prepareRoundedCardCanvas(
   ctx.drawImage(cardCanvas, 0, 0, w, h);
   ctx.filter = 'none';
 
-  // 2. Apply smooth 2D spatial directional shading map in card space before perspective warp
+  // 2. Apply smooth 2D spatial directional shading map + semi-matte PVC specular response in card space
   if (photometrics && blendStrength > 0) {
     const grid = photometrics.directionalGrid;
     const gRows = grid.length;
     const gCols = grid[0].length;
+    const effStrength = Math.min(1.35, blendStrength);
 
+    // 2A. Multiplicative Diffuse Illumination Map (darkens shadow zones to match denim/finger falloff)
     const tinyC = document.createElement('canvas');
     tinyC.width = gCols;
     tinyC.height = gRows;
@@ -1088,19 +1323,25 @@ function prepareRoundedCardCanvas(
       const tImg = tCtx.createImageData(gCols, gRows);
       for (let r = 0; r < gRows; r++) {
         for (let c = 0; c < gCols; c++) {
-          // Interpolate cell multiplier with 1.0 by blendStrength
-          const mult = 1 - (1 - grid[r][c]) * Math.min(1.25, blendStrength);
-          const v = Math.max(0, Math.min(255, Math.round(mult * 255)));
+          const cellMult = grid[r][c];
+          const mult = 1 - (1 - cellMult) * effStrength;
+          const shadowFactor = Math.max(0, Math.min(1, (0.98 - cellMult) * 2.2)) * effStrength;
+
+          // Subtly shift shadow cells toward the scene's ambient shadow tint (e.g. denim cool shadow or warm indoor shadow)
+          const baseV = Math.max(0, Math.min(255, Math.round(mult * 255)));
+          const tintShiftR = (photometrics.shadowTintR - 28) * 0.35 * shadowFactor;
+          const tintShiftG = (photometrics.shadowTintG - 28) * 0.35 * shadowFactor;
+          const tintShiftB = (photometrics.shadowTintB - 28) * 0.35 * shadowFactor;
+
           const idx = (r * gCols + c) * 4;
-          tImg.data[idx] = v;
-          tImg.data[idx + 1] = v;
-          tImg.data[idx + 2] = v;
+          tImg.data[idx] = Math.max(0, Math.min(255, Math.round(baseV + tintShiftR)));
+          tImg.data[idx + 1] = Math.max(0, Math.min(255, Math.round(baseV + tintShiftG)));
+          tImg.data[idx + 2] = Math.max(0, Math.min(255, Math.round(baseV + tintShiftB)));
           tImg.data[idx + 3] = 255;
         }
       }
       tCtx.putImageData(tImg, 0, 0);
 
-      // Upscale onto a blurred shading canvas so transitions are ultra-smooth
       const shadeC = document.createElement('canvas');
       shadeC.width = 256;
       shadeC.height = 160;
@@ -1109,12 +1350,11 @@ function prepareRoundedCardCanvas(
         sCtx.imageSmoothingEnabled = true;
         sCtx.imageSmoothingQuality = 'high';
         try {
-          sCtx.filter = 'blur(22px)';
+          sCtx.filter = 'blur(20px)';
         } catch {
           // ignore
         }
-        // Draw slightly oversized so blur doesn't darken edges prematurely
-        sCtx.drawImage(tinyC, -16, -16, 256 + 32, 160 + 32);
+        sCtx.drawImage(tinyC, -18, -18, 256 + 36, 160 + 36);
         sCtx.filter = 'none';
 
         ctx.save();
@@ -1123,9 +1363,53 @@ function prepareRoundedCardCanvas(
         ctx.restore();
       }
     }
+
+    // 2B. Semi-Matte PVC Directional Surface Reflection (Screen + Soft-Light Lobe)
+    // Crucial for dark headers/cards (e.g. MILA UNIVERSITY) so dark PVC shows pronounced directional
+    // brightness variation matching the fingers and denim rather than looking flatly illuminated.
+    const peakX = photometrics.peakS * w;
+    const peakY = photometrics.peakT * h;
+    const outerRadius = Math.hypot(w, h) * 0.95;
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    const sheenAlpha = Math.min(0.20, (0.09 + photometrics.contrastSpan * 0.22) * effStrength);
+    const radGrad = ctx.createRadialGradient(
+      peakX,
+      peakY,
+      w * 0.04,
+      peakX - photometrics.lightDirX * w * 0.25,
+      peakY - photometrics.lightDirY * h * 0.25,
+      outerRadius
+    );
+    radGrad.addColorStop(0, `rgba(${photometrics.wpR}, ${photometrics.wpG}, ${photometrics.wpB}, ${sheenAlpha.toFixed(3)})`);
+    radGrad.addColorStop(0.42, `rgba(${photometrics.wpR}, ${photometrics.wpG}, ${photometrics.wpB}, ${(sheenAlpha * 0.42).toFixed(3)})`);
+    radGrad.addColorStop(0.78, `rgba(${photometrics.wpR}, ${photometrics.wpG}, ${photometrics.wpB}, ${(sheenAlpha * 0.08).toFixed(3)})`);
+    radGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = radGrad;
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
+
+    // Directional linear light-to-shadow gradient across the entire card plane
+    const l0x = w * (0.5 + photometrics.lightDirX * 0.55);
+    const l0y = h * (0.5 + photometrics.lightDirY * 0.55);
+    const l1x = w * (0.5 - photometrics.lightDirX * 0.55);
+    const l1y = h * (0.5 - photometrics.lightDirY * 0.55);
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'soft-light';
+    const linGrad = ctx.createLinearGradient(l0x, l0y, l1x, l1y);
+    const hlAlpha = Math.min(0.26, 0.16 * effStrength);
+    const shAlpha = Math.min(0.32, 0.22 * effStrength);
+    linGrad.addColorStop(0, `rgba(${photometrics.wpR}, ${photometrics.wpG}, ${photometrics.wpB}, ${hlAlpha.toFixed(3)})`);
+    linGrad.addColorStop(0.48, 'rgba(128, 128, 128, 0)');
+    linGrad.addColorStop(1, `rgba(${photometrics.bpR}, ${photometrics.bpG}, ${photometrics.bpB}, ${shAlpha.toFixed(3)})`);
+    ctx.fillStyle = linGrad;
+    ctx.fillRect(0, 0, w, h);
+    ctx.restore();
   }
 
-  // 3. Per-pixel Photometric Grading (White-point scaling, Lifted Blacks, Color Cast & Photographic ISO Grain)
+  // 3. Per-pixel Photometric Grading + Matte PVC Micro-Texture & Organic Edge Wear
   if (photometrics && blendStrength > 0) {
     try {
       const imgData = ctx.getImageData(0, 0, w, h);
@@ -1142,16 +1426,14 @@ function prepareRoundedCardCanvas(
 
       const gamma = 1 + (photometrics.gamma - 1) * s;
 
-      // Precompute 256-entry LUTs for R, G, B for instant grading
       const lutR = new Uint8Array(256);
       const lutG = new Uint8Array(256);
       const lutB = new Uint8Array(256);
 
       for (let i = 0; i < 256; i++) {
         const norm = i / 255;
-        // Subtle filmic highlight shoulder roll-off so bright whites never clip harshly
         const curved = Math.pow(norm, gamma);
-        const rolloff = curved - 0.035 * s * Math.pow(norm, 3.5);
+        const rolloff = curved - 0.038 * s * Math.pow(norm, 3.4);
         const t = Math.max(0, Math.min(1, rolloff));
 
         lutR[i] = Math.max(0, Math.min(255, Math.round(bpR + t * (wpR - bpR))));
@@ -1159,18 +1441,41 @@ function prepareRoundedCardCanvas(
         lutB[i] = Math.max(0, Math.min(255, Math.round(bpB + t * (wpB - bpB))));
       }
 
-      // Deterministic fast PRNG for fine photographic sensor grain
       let seed = 1337;
-      const grainAmp = 2.2 * Math.min(1.0, s);
+      const grainAmp = 2.6 * Math.min(1.05, s);
+      const edgeBandPx = Math.max(4, Math.round(w * 0.008));
 
-      for (let i = 0; i < d.length; i += 4) {
-        if (d[i + 3] === 0) continue;
-        seed = (seed * 1664525 + 1013904223) | 0;
-        const noise = (((seed >>> 16) & 255) / 127.5 - 1.0) * grainAmp;
+      for (let y = 0; y < h; y++) {
+        const distY = Math.min(y, h - 1 - y);
+        for (let x = 0; x < w; x++) {
+          const i = (y * w + x) * 4;
+          if (d[i + 3] === 0) continue;
 
-        d[i] = Math.max(0, Math.min(255, lutR[d[i]] + noise));
-        d[i + 1] = Math.max(0, Math.min(255, lutG[d[i + 1]] + noise));
-        d[i + 2] = Math.max(0, Math.min(255, lutB[d[i + 2]] + noise));
+          seed = (seed * 1664525 + 1013904223) | 0;
+          const r1 = ((seed >>> 16) & 255) / 127.5 - 1.0;
+          seed = (seed * 1664525 + 1013904223) | 0;
+          const r2 = ((seed >>> 16) & 255) / 255.0;
+
+          let noise = r1 * grainAmp;
+
+          // Subtle physical edge micro-wear & matte bevel texture in the outer edgeBandPx
+          // Replaces the overly clean digital border look with realistic die-cut PVC edge variation
+          const distX = Math.min(x, w - 1 - x);
+          const distEdge = Math.min(distX, distY);
+          if (distEdge < edgeBandPx) {
+            const edgeFactor = 1 - distEdge / edgeBandPx;
+            // Low-frequency spatial modulation along the perimeter for natural edge wear
+            const wave =
+              Math.sin(x * 0.07 + y * 0.05) * 0.5 +
+              Math.cos(x * 0.23 - y * 0.19) * 0.5;
+            const wearScuff = edgeFactor * (wave * 7.5 + (r2 - 0.42) * 9.0) * Math.min(1.0, s);
+            noise += wearScuff;
+          }
+
+          d[i] = Math.max(0, Math.min(255, lutR[d[i]] + noise));
+          d[i + 1] = Math.max(0, Math.min(255, lutG[d[i + 1]] + noise));
+          d[i + 2] = Math.max(0, Math.min(255, lutB[d[i + 2]] + noise));
+        }
       }
 
       ctx.putImageData(imgData, 0, 0);
@@ -1179,26 +1484,22 @@ function prepareRoundedCardCanvas(
     }
   }
 
-  // 4. Inner Edge Ambient Occlusion (recessed badge holder / contact vignette around the perimeter)
-  const edgeAoAlpha = 0.14 * Math.min(1.2, blendStrength);
+  // 4. Soften any built-in CSS template border around the outer perimeter so it doesn't look like a clean vector box
+  const edgeAoAlpha = 0.12 * Math.min(1.2, blendStrength);
   if (edgeAoAlpha > 0.01) {
     ctx.save();
-    ctx.strokeStyle = `rgba(12, 10, 8, ${edgeAoAlpha.toFixed(3)})`;
-    ctx.lineWidth = Math.max(4, w * 0.012);
+    ctx.strokeStyle = `rgba(16, 14, 12, ${edgeAoAlpha.toFixed(3)})`;
+    ctx.lineWidth = Math.max(3, w * 0.008);
     ctx.stroke();
     ctx.restore();
   }
 
-  // 5. Scene-adapted physical PVC card edge rim (never brighter than the scene's white point)
-  const rimR = photometrics ? photometrics.wpR : 225;
-  const rimG = photometrics ? photometrics.wpG : 223;
-  const rimB = photometrics ? photometrics.wpB : 218;
-  ctx.strokeStyle = `rgba(${rimR}, ${rimG}, ${rimB}, 0.22)`;
-  ctx.lineWidth = Math.max(1.5, w * 0.0025);
-  ctx.stroke();
   ctx.restore();
 
-  // Sample average graded edge color from `out` so the mask under-fill matches the graded card border
+  // Sample average graded edge color from `out`
+  const rimR = photometrics ? photometrics.wpR : 220;
+  const rimG = photometrics ? photometrics.wpG : 218;
+  const rimB = photometrics ? photometrics.wpB : 214;
   let rSum = rimR, gSum = rimG, bSum = rimB;
   try {
     const sampleC = document.createElement('canvas');
@@ -1241,71 +1542,190 @@ function traceRoundedPerspectiveQuad(
   tMax: number,
   cornerRadiusRatio: number
 ) {
+  const pts = sampleRoundedPerspectivePerimeter(project, sMin, tMin, sMax, tMax, cornerRadiusRatio);
+  ctx.beginPath();
+  for (let i = 0; i < pts.length; i++) {
+    const [x, y] = pts[i];
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+}
+
+/**
+ * Returns ordered perimeter points `[x, y, s, t]` around the rounded perspective quad.
+ */
+function sampleRoundedPerspectivePerimeter(
+  project: (s: number, t: number) => [number, number],
+  sMin: number,
+  tMin: number,
+  sMax: number,
+  tMax: number,
+  cornerRadiusRatio: number
+): Array<[number, number, number, number]> {
   const rx = cornerRadiusRatio * (sMax - sMin);
   const ry = cornerRadiusRatio * 1.58 * (tMax - tMin);
-  const stepsPerEdge = 16;
+  const stepsPerEdge = 20;
   const stepsPerCorner = 10;
+  const pts: Array<[number, number, number, number]> = [];
 
-  ctx.beginPath();
-  let first = true;
-  const moveOrLine = (s: number, t: number) => {
+  const pushPt = (s: number, t: number) => {
     const [x, y] = project(s, t);
-    if (first) {
-      ctx.moveTo(x, y);
-      first = false;
-    } else {
-      ctx.lineTo(x, y);
-    }
+    pts.push([x, y, s, t]);
   };
 
-  // Top edge: (sMin + rx, tMin) -> (sMax - rx, tMin)
+  // Top edge
   for (let i = 0; i <= stepsPerEdge; i++) {
     const s = sMin + rx + ((sMax - sMin - 2 * rx) * i) / stepsPerEdge;
-    moveOrLine(s, tMin);
+    pushPt(s, tMin);
   }
   // Top-right corner
   for (let i = 1; i <= stepsPerCorner; i++) {
     const ang = -Math.PI / 2 + (Math.PI / 2) * (i / stepsPerCorner);
-    moveOrLine(sMax - rx + Math.cos(ang) * rx, tMin + ry + Math.sin(ang) * ry);
+    pushPt(sMax - rx + Math.cos(ang) * rx, tMin + ry + Math.sin(ang) * ry);
   }
   // Right edge
   for (let i = 1; i <= stepsPerEdge; i++) {
     const t = tMin + ry + ((tMax - tMin - 2 * ry) * i) / stepsPerEdge;
-    moveOrLine(sMax, t);
+    pushPt(sMax, t);
   }
   // Bottom-right corner
   for (let i = 1; i <= stepsPerCorner; i++) {
     const ang = 0 + (Math.PI / 2) * (i / stepsPerCorner);
-    moveOrLine(sMax - rx + Math.cos(ang) * rx, tMax - ry + Math.sin(ang) * ry);
+    pushPt(sMax - rx + Math.cos(ang) * rx, tMax - ry + Math.sin(ang) * ry);
   }
   // Bottom edge
   for (let i = 1; i <= stepsPerEdge; i++) {
     const s = sMax - rx - ((sMax - sMin - 2 * rx) * i) / stepsPerEdge;
-    moveOrLine(s, tMax);
+    pushPt(s, tMax);
   }
   // Bottom-left corner
   for (let i = 1; i <= stepsPerCorner; i++) {
     const ang = Math.PI / 2 + (Math.PI / 2) * (i / stepsPerCorner);
-    moveOrLine(sMin + rx + Math.cos(ang) * rx, tMax - ry + Math.sin(ang) * ry);
+    pushPt(sMin + rx + Math.cos(ang) * rx, tMax - ry + Math.sin(ang) * ry);
   }
   // Left edge
   for (let i = 1; i <= stepsPerEdge; i++) {
     const t = tMax - ry - ((tMax - tMin - 2 * ry) * i) / stepsPerEdge;
-    moveOrLine(sMin, t);
+    pushPt(sMin, t);
   }
   // Top-left corner
-  for (let i = 1; i <= stepsPerCorner; i++) {
+  for (let i = 1; i < stepsPerCorner; i++) {
     const ang = Math.PI + (Math.PI / 2) * (i / stepsPerCorner);
-    moveOrLine(sMin + rx + Math.cos(ang) * rx, tMin + ry + Math.sin(ang) * ry);
+    pushPt(sMin + rx + Math.cos(ang) * rx, tMin + ry + Math.sin(ang) * ry);
   }
-  ctx.closePath();
+
+  return pts;
+}
+
+/**
+ * Renders physically realistic die-cut PVC card edges:
+ * 1. Subtle 3D CR80 PVC core thickness on camera-facing edges
+ * 2. Light-direction-dependent specular bevel reflection (brighter where facing the scene light source,
+ *    darker shadow bevel on the opposite side, never a uniform digital outline)
+ * 3. Organic micro-wear / surface reflection variation along the edge and corners
+ */
+function renderPhysicalCardEdges(
+  ctx: CanvasRenderingContext2D,
+  project: (s: number, t: number) => [number, number],
+  sMin: number,
+  tMin: number,
+  sMax: number,
+  tMax: number,
+  cornerRadius: number,
+  photometrics: ScenePhotometrics,
+  W: number,
+  H: number,
+  hasPlasticSleeve: boolean,
+  blendStrength: number
+) {
+  const pts = sampleRoundedPerspectivePerimeter(project, sMin, tMin, sMax, tMax, cornerRadius);
+  if (pts.length < 4) return;
+
+  const baseWidth = Math.max(1.2, W * 0.0016);
+
+  // 1. Subtle 0.76mm PVC core thickness along the bottom/camera-facing rim
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  for (let i = 0; i < pts.length; i++) {
+    const [x0, y0, s0, t0] = pts[i];
+    const [x1, y1] = pts[(i + 1) % pts.length];
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    const segLen = Math.hypot(dx, dy);
+    if (segLen < 0.5) continue;
+
+    // Outward normal for clockwise perimeter in screen coords
+    const nx = dy / segLen;
+    const ny = -dx / segLen;
+
+    // Alignment with scene light source vector
+    const lightAlign = nx * photometrics.lightDirX + ny * photometrics.lightDirY;
+
+    // Organic micro-variation along the die-cut edge so reflection isn't mathematically uniform
+    const microVar =
+      0.78 +
+      0.22 * Math.sin(i * 0.63 + s0 * 11.0 + t0 * 7.0) +
+      0.14 * Math.cos(i * 1.73 - s0 * 19.0);
+
+    // Local brightness from directional grid
+    const gRows = photometrics.directionalGrid.length;
+    const gCols = photometrics.directionalGrid[0].length;
+    const gr = Math.max(0, Math.min(gRows - 1, Math.floor(Math.max(0, Math.min(0.999, t0)) * gRows)));
+    const gc = Math.max(0, Math.min(gCols - 1, Math.floor(Math.max(0, Math.min(0.999, s0)) * gCols)));
+    const localMult = photometrics.directionalGrid[gr][gc];
+
+    if (lightAlign > -0.15) {
+      // Lit bevel edge: catches directional specular highlight from the scene light source
+      const specFactor = Math.max(0, Math.min(1, (lightAlign + 0.15) / 1.15)) * microVar * localMult;
+      const alpha = (hasPlasticSleeve ? 0.34 : 0.26) * specFactor * Math.min(1.2, blendStrength);
+      const r = Math.min(245, Math.round(photometrics.wpR * (0.94 + 0.08 * specFactor)));
+      const g = Math.min(245, Math.round(photometrics.wpG * (0.94 + 0.08 * specFactor)));
+      const b = Math.min(245, Math.round(photometrics.wpB * (0.94 + 0.08 * specFactor)));
+
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1, y1);
+      ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(3)})`;
+      ctx.lineWidth = baseWidth * (0.85 + 0.45 * specFactor);
+      ctx.stroke();
+    } else {
+      // Away-facing bevel edge: soft matte PVC core edge with shadow falloff
+      const shadeFactor = Math.max(0, Math.min(1, (-lightAlign - 0.15) / 0.85)) * microVar;
+      // Subtle matte PVC core thickness (off-white/grey core in shadow) + outer dark crevice
+      const coreR = Math.round(photometrics.wpR * 0.62 * localMult);
+      const coreG = Math.round(photometrics.wpG * 0.62 * localMult);
+      const coreB = Math.round(photometrics.wpB * 0.64 * localMult);
+      const coreAlpha = 0.18 * (0.7 + 0.3 * microVar);
+
+      ctx.beginPath();
+      ctx.moveTo(x0 + nx * 0.6, y0 + ny * 0.6);
+      ctx.lineTo(x1 + nx * 0.6, y1 + ny * 0.6);
+      ctx.strokeStyle = `rgba(${coreR}, ${coreG}, ${coreB}, ${coreAlpha.toFixed(3)})`;
+      ctx.lineWidth = baseWidth * 0.95;
+      ctx.stroke();
+
+      const darkAlpha = 0.24 * shadeFactor * Math.min(1.2, blendStrength);
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1, y1);
+      ctx.strokeStyle = `rgba(${photometrics.bpR}, ${photometrics.bpG}, ${photometrics.bpB}, ${darkAlpha.toFixed(3)})`;
+      ctx.lineWidth = baseWidth * 0.9;
+      ctx.stroke();
+    }
+  }
+
+  ctx.restore();
 }
 
 /**
  * Main calibrated 4-corner perspective homography compositor.
  * Replaces 100% of the underlying card in the scene with the exact live ID card preview,
  * applies scene-adaptive photometric color grading, white-point matching, directional shading,
- * plastic holder shadows/reflections, and restores overlapping foreground thumbs/fingers and slot holes.
+ * plastic holder shadows/reflections, physical die-cut edge bevels, and restores overlapping
+ * foreground thumbs/fingers with realistic weight-bearing contact physics.
  */
 export function compositeCalibratedMockup(
   sceneImg: HTMLImageElement,
@@ -1317,7 +1737,6 @@ export function compositeCalibratedMockup(
 
   const natW = sceneImg.naturalWidth || sceneImg.width || 1200;
   const natH = sceneImg.naturalHeight || sceneImg.height || 900;
-  // Cap output resolution to 1600px on longest side for fast, crisp rendering
   const maxDim = 1600;
   const scale = Math.min(1, maxDim / Math.max(natW, natH));
   const W = Math.max(1, Math.round(natW * scale));
@@ -1341,9 +1760,9 @@ export function compositeCalibratedMockup(
 
   const project = computeUnitSquareHomography(tl, tr, br, bl);
   const cornerRadius = cfg.cornerRadius ?? 0.046;
-  const maskExpand = cfg.maskExpand ?? 0.006;
+  const maskExpand = cfg.maskExpand ?? 0.0055;
 
-  // Analyze scene photometrics (white point, black point, color cast, 2D directional shading)
+  // Analyze scene photometrics (white point, black point, color cast, 2D directional shading & light vector)
   const photometrics = analyzeScenePhotometrics(sceneImg, cfg);
 
   // Prepare rounded & photometrically graded live card canvas
@@ -1354,27 +1773,31 @@ export function compositeCalibratedMockup(
     blendStrength
   );
 
-  // 2. Mask out 100% of the old underlying card (slightly expanded by maskExpand)
-  // and render realistic contact shadow against the surface/holder
+  // 2. Mask out 100% of the old underlying card and render directional contact shadow
+  // Notice: when fingers support the bottom edge (foregroundPolygons present), we keep downward
+  // shadow offset tight so it never obscures the finger contact line.
+  const hasFingerSupport = Boolean(cfg.foregroundPolygons && cfg.foregroundPolygons.length > 0);
   ctx.save();
   traceRoundedPerspectiveQuad(
     ctx,
     project,
     -maskExpand,
-    -maskExpand * 1.35,
+    -maskExpand * 1.25,
     1 + maskExpand,
-    1 + maskExpand * 1.35,
+    1 + maskExpand * (hasFingerSupport ? 0.85 : 1.25),
     cornerRadius
   );
-  ctx.shadowColor = 'rgba(0, 0, 0, 0.38)';
-  ctx.shadowBlur = Math.max(4, Math.round(W * 0.006));
-  ctx.shadowOffsetX = 0;
-  ctx.shadowOffsetY = Math.max(1, Math.round(H * 0.002));
+  ctx.shadowColor = hasFingerSupport ? 'rgba(0, 0, 0, 0.28)' : 'rgba(0, 0, 0, 0.42)';
+  ctx.shadowBlur = Math.max(3, Math.round(W * (hasFingerSupport ? 0.004 : 0.0065)));
+  ctx.shadowOffsetX = Math.round(-photometrics.lightDirX * W * 0.0018);
+  ctx.shadowOffsetY = hasFingerSupport
+    ? Math.max(0, Math.round(H * 0.0008))
+    : Math.max(1, Math.round(H * 0.0024));
   ctx.fillStyle = edgeColor;
   ctx.fill();
   ctx.restore();
 
-  // 3. Warp the live ID card into the exact 4-corner perspective using a 28x20 projective mesh
+  // 3. Warp the live ID card into the exact 4-corner perspective using a seam-free 28x20 projective mesh
   ctx.save();
   traceRoundedPerspectiveQuad(
     ctx,
@@ -1382,7 +1805,7 @@ export function compositeCalibratedMockup(
     -maskExpand * 0.5,
     -maskExpand * 0.65,
     1 + maskExpand * 0.5,
-    1 + maskExpand * 0.65,
+    1 + maskExpand * (hasFingerSupport ? 0.45 : 0.65),
     cornerRadius
   );
   ctx.clip();
@@ -1392,15 +1815,27 @@ export function compositeCalibratedMockup(
   const sw = roundedCard.width;
   const sh = roundedCard.height;
 
+  const botExpand = hasFingerSupport ? maskExpand * 0.45 : maskExpand * 0.65;
+  const topExpand = maskExpand * 0.65;
+
+  // Draw a 2-triangle coarse base pass of roundedCard first so sub-pixel AA never sees a contrasting background color
+  {
+    const [bx00, by00] = project(-maskExpand * 0.5, -topExpand);
+    const [bx10, by10] = project(1 + maskExpand * 0.5, -topExpand);
+    const [bx11, by11] = project(1 + maskExpand * 0.5, 1 + botExpand);
+    const [bx01, by01] = project(-maskExpand * 0.5, 1 + botExpand);
+    drawTexturedTriangle(ctx, roundedCard, 0, 0, sw, 0, sw, sh, bx00, by00, bx10, by10, bx11, by11);
+    drawTexturedTriangle(ctx, roundedCard, 0, 0, sw, sh, 0, sh, bx00, by00, bx11, by11, bx01, by01);
+  }
+
   for (let r = 0; r < rows; r++) {
     const t0 = r / rows;
     const t1 = (r + 1) / rows;
     const sy0 = t0 * sh;
     const sy1 = t1 * sh;
 
-    // Map slightly beyond [0..1] to cover the expanded mask seamlessly
-    const mt0 = -maskExpand * 0.5 + t0 * (1 + maskExpand);
-    const mt1 = -maskExpand * 0.5 + t1 * (1 + maskExpand);
+    const mt0 = -topExpand + t0 * (1 + topExpand + botExpand);
+    const mt1 = -topExpand + t1 * (1 + topExpand + botExpand);
 
     for (let c = 0; c < cols; c++) {
       const s0 = c / cols;
@@ -1421,10 +1856,9 @@ export function compositeCalibratedMockup(
     }
   }
 
-  // 4. Transfer low-frequency ambient lighting & color mood from the original scene
-  // (heavily blurred so zero text or details from the old card ever bleed through)
-  const baseLightingBlend = cfg.lightingBlend ?? 0.12;
-  const effectiveLightingBlend = baseLightingBlend * Math.max(0.5, blendStrength);
+  // 4. Transfer low-frequency ambient lighting & color mood from the surrounding scene
+  const baseLightingBlend = cfg.lightingBlend ?? 0.15;
+  const effectiveLightingBlend = baseLightingBlend * Math.max(0.6, blendStrength);
   if (effectiveLightingBlend > 0) {
     try {
       const lightC = document.createElement('canvas');
@@ -1432,12 +1866,12 @@ export function compositeCalibratedMockup(
       lightC.height = H;
       const lCtx = lightC.getContext('2d');
       if (lCtx) {
-        const blurPx = Math.max(42, Math.round(W * 0.065));
-        lCtx.filter = `blur(${blurPx}px) saturate(0.35)`;
+        const blurPx = Math.max(46, Math.round(W * 0.075));
+        lCtx.filter = `blur(${blurPx}px) saturate(0.45)`;
         lCtx.drawImage(sceneImg, 0, 0, W, H);
         ctx.save();
         ctx.globalCompositeOperation = 'soft-light';
-        ctx.globalAlpha = Math.min(0.28, effectiveLightingBlend * 1.35);
+        ctx.globalAlpha = Math.min(0.36, effectiveLightingBlend * 1.55);
         ctx.drawImage(lightC, 0, 0);
         ctx.restore();
       }
@@ -1446,46 +1880,49 @@ export function compositeCalibratedMockup(
     }
   }
 
-  // 5. Add physical PVC surface response & optional plastic badge sleeve sheen using scene white point
+  // 5. Add physical PVC surface response & optional plastic badge sleeve sheen using scene light vector
   const wpColor = `${photometrics.wpR}, ${photometrics.wpG}, ${photometrics.wpB}`;
-  const [p0x, p0y] = project(0, 0);
-  const [p2x, p2y] = project(1, 1);
+  const [cX, cY] = project(0.5, 0.5);
+  const [eX, eY] = project(0.5 + photometrics.lightDirX * 0.55, 0.5 + photometrics.lightDirY * 0.55);
+  const [oX, oY] = project(0.5 - photometrics.lightDirX * 0.55, 0.5 - photometrics.lightDirY * 0.55);
 
   if (cfg.hasPlasticSleeve) {
-    const sheenGrad = ctx.createLinearGradient(p0x, p0y, p2x, p2y);
-    sheenGrad.addColorStop(0, `rgba(${wpColor}, 0.09)`);
-    sheenGrad.addColorStop(0.32, `rgba(${wpColor}, 0.02)`);
-    sheenGrad.addColorStop(0.48, `rgba(${wpColor}, 0.11)`);
-    sheenGrad.addColorStop(0.56, `rgba(${wpColor}, 0.01)`);
-    sheenGrad.addColorStop(1, 'rgba(0, 0, 0, 0.08)');
+    const sheenGrad = ctx.createLinearGradient(eX, eY, oX, oY);
+    sheenGrad.addColorStop(0, `rgba(${wpColor}, 0.12)`);
+    sheenGrad.addColorStop(0.32, `rgba(${wpColor}, 0.03)`);
+    sheenGrad.addColorStop(0.48, `rgba(${wpColor}, 0.13)`);
+    sheenGrad.addColorStop(0.58, `rgba(${wpColor}, 0.01)`);
+    sheenGrad.addColorStop(1, 'rgba(0, 0, 0, 0.11)');
     ctx.fillStyle = sheenGrad;
     ctx.fillRect(0, 0, W, H);
   } else {
-    // Subtle satin/matte directional surface falloff even without a plastic sleeve
-    const matteGrad = ctx.createLinearGradient(p0x, p0y, p2x, p2y);
-    matteGrad.addColorStop(0, `rgba(${wpColor}, 0.04)`);
-    matteGrad.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
-    matteGrad.addColorStop(1, 'rgba(0, 0, 0, 0.06)');
+    // Realistic matte/satin PVC surface reflection & shadow falloff aligned with the scene light vector
+    const matteGrad = ctx.createLinearGradient(eX, eY, oX, oY);
+    matteGrad.addColorStop(0, `rgba(${wpColor}, 0.07)`);
+    matteGrad.addColorStop(0.45, 'rgba(0, 0, 0, 0)');
+    matteGrad.addColorStop(1, 'rgba(0, 0, 0, 0.11)');
     ctx.fillStyle = matteGrad;
     ctx.fillRect(0, 0, W, H);
   }
 
-  // Inner edge contact shadow & subtle bevel around the warped card so edges tuck into the holder/surface
-  traceRoundedPerspectiveQuad(
+  // Restore clip before drawing physical perimeter bevels
+  ctx.restore();
+
+  // 5B. Render directional, light-reactive physical PVC edge bevel & micro-wear
+  renderPhysicalCardEdges(
     ctx,
     project,
     -maskExpand * 0.45,
-    -maskExpand * 0.6,
+    -topExpand * 0.92,
     1 + maskExpand * 0.45,
-    1 + maskExpand * 0.6,
-    cornerRadius
+    1 + botExpand * 0.92,
+    cornerRadius,
+    photometrics,
+    W,
+    H,
+    Boolean(cfg.hasPlasticSleeve),
+    blendStrength
   );
-  ctx.strokeStyle = cfg.hasPlasticSleeve
-    ? `rgba(${wpColor}, 0.24)`
-    : 'rgba(15, 15, 15, 0.22)';
-  ctx.lineWidth = Math.max(1.4, W * 0.0018);
-  ctx.stroke();
-  ctx.restore();
 
   // 6. Restore lanyard slot punch hole if present in this scene
   if (cfg.slotPunch) {
@@ -1508,25 +1945,41 @@ export function compositeCalibratedMockup(
     ctx.restore();
   }
 
-  // 7. Restore foreground occlusions (thumbs, fingers, clips) on top of the card
+  // 7. Restore foreground occlusions (thumbs, supporting fingers, clips) with physical weight-contact shading
   if (cfg.foregroundPolygons && cfg.foregroundPolygons.length > 0) {
     for (const poly of cfg.foregroundPolygons) {
       if (!poly.points || poly.points.length < 3) continue;
 
-      // First draw a soft contact shadow cast by the thumb/finger onto the card
+      // Compute polygon centroid to determine direction from finger contact into the card interior
+      let polyCx = 0;
+      let polyCy = 0;
+      for (const [u, v] of poly.points) {
+        polyCx += u * W;
+        polyCy += v * H;
+      }
+      polyCx /= poly.points.length;
+      polyCy /= poly.points.length;
+
+      const toCardX = cX - polyCx;
+      const toCardY = cY - polyCy;
+      const toCardLen = Math.hypot(toCardX, toCardY) || 1;
+      const inNx = toCardX / toCardLen;
+      const inNy = toCardY / toCardLen;
+
       if (poly.castShadow) {
         ctx.save();
         traceRoundedPerspectiveQuad(
           ctx,
           project,
-          -maskExpand,
-          -maskExpand,
-          1 + maskExpand,
-          1 + maskExpand,
+          -maskExpand * 0.5,
+          -topExpand,
+          1 + maskExpand * 0.5,
+          1 + botExpand,
           cornerRadius
         );
         ctx.clip();
 
+        // Layer A: Broad soft ambient occlusion where finger/thumb approaches the card surface
         ctx.beginPath();
         poly.points.forEach(([u, v], idx) => {
           const px = u * W;
@@ -1535,21 +1988,30 @@ export function compositeCalibratedMockup(
           else ctx.lineTo(px, py);
         });
         ctx.closePath();
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.42)';
-        ctx.shadowBlur = Math.max(6, Math.round(W * 0.008));
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = -Math.max(1, Math.round(H * 0.002));
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+        ctx.shadowColor = 'rgba(12, 8, 6, 0.34)';
+        ctx.shadowBlur = Math.max(5, Math.round(W * 0.0065));
+        ctx.shadowOffsetX = inNx * Math.max(1.5, W * 0.0022);
+        ctx.shadowOffsetY = inNy * Math.max(1.5, H * 0.0022);
+        ctx.fillStyle = 'rgba(12, 8, 6, 0.22)';
         ctx.fill();
+
+        // Layer B: Tight high-precision contact crevice line (1.5px-2.5px) right at the finger-to-card weight-bearing boundary
+        ctx.shadowColor = 'rgba(8, 5, 4, 0.52)';
+        ctx.shadowBlur = Math.max(1.5, Math.round(W * 0.0018));
+        ctx.shadowOffsetX = inNx * Math.max(0.8, W * 0.001);
+        ctx.shadowOffsetY = inNy * Math.max(0.8, H * 0.001);
+        ctx.strokeStyle = 'rgba(15, 10, 8, 0.38)';
+        ctx.lineWidth = Math.max(1.4, W * 0.0018);
+        ctx.stroke();
         ctx.restore();
       }
 
-      // Now composite the original scene's thumb/finger pixels with a smooth feathered mask
+      // Composite the original scene's thumb/finger pixels with a crisp feathered mask so the skin contact edge is clearly visible
       const maskCanvas = document.createElement('canvas');
       maskCanvas.width = W;
       maskCanvas.height = H;
       const mCtx = maskCanvas.getContext('2d')!;
-      const feather = poly.featherPx ?? 2.0;
+      const feather = poly.featherPx ?? 1.6;
       try {
         mCtx.filter = `blur(${feather}px)`;
       } catch {
@@ -1566,7 +2028,6 @@ export function compositeCalibratedMockup(
       mCtx.fillStyle = '#ffffff';
       mCtx.fill();
 
-      // Composite sceneImg using maskCanvas
       mCtx.filter = 'none';
       mCtx.globalCompositeOperation = 'source-in';
       mCtx.drawImage(sceneImg, 0, 0, W, H);
@@ -1577,3 +2038,4 @@ export function compositeCalibratedMockup(
 
   return outCanvas.toDataURL('image/jpeg', 0.94);
 }
+
