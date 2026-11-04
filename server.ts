@@ -18,6 +18,71 @@ function getAiClient(): GoogleGenAI {
   });
 }
 
+// Track per-model quota cooldowns so we don't repeatedly hit 429 RESOURCE_EXHAUSTED
+const modelCooldownUntil = new Map<string, number>();
+const IMAGE_MODELS = ['gemini-3.1-flash-lite-image', 'gemini-2.5-flash-image'];
+
+function isQuotaOrRateLimitError(err: any): boolean {
+  const msg = String(err?.message || err || '');
+  const status = err?.status || err?.code || err?.error?.code;
+  return (
+    status === 429 ||
+    status === 'RESOURCE_EXHAUSTED' ||
+    msg.includes('429') ||
+    msg.includes('RESOURCE_EXHAUSTED') ||
+    msg.includes('Quota exceeded')
+  );
+}
+
+function markModelQuotaCooldown(model: string, err: any) {
+  const msg = String(err?.message || '');
+  // Default 15 minute cooldown if free tier limit is 0, or 60s for transient rate limit
+  const isZeroLimit = msg.includes('limit: 0');
+  const cooldownMs = isZeroLimit ? 15 * 60 * 1000 : 60 * 1000;
+  modelCooldownUntil.set(model, Date.now() + cooldownMs);
+}
+
+async function generateImageWithFallback(contents: any): Promise<string | null> {
+  let ai: GoogleGenAI;
+  try {
+    ai = getAiClient();
+  } catch {
+    return null;
+  }
+
+  const now = Date.now();
+  for (const model of IMAGE_MODELS) {
+    const cooldown = modelCooldownUntil.get(model) || 0;
+    if (now < cooldown) {
+      continue;
+    }
+
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents,
+      });
+
+      const parts = response.candidates?.[0]?.content?.parts || [];
+      for (const part of parts) {
+        if (part.inlineData?.data) {
+          const mimeType = part.inlineData.mimeType || 'image/png';
+          return `data:${mimeType};base64,${part.inlineData.data}`;
+        }
+      }
+    } catch (err: any) {
+      if (isQuotaOrRateLimitError(err)) {
+        markModelQuotaCooldown(model, err);
+        console.log(`[Gemini Image] Quota/rate limit reached for ${model}; switching to fallback.`);
+      } else {
+        console.log(`[Gemini Image] Model ${model} unavailable (${err?.status || 'error'}); switching to fallback.`);
+      }
+    }
+  }
+
+  return null;
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
@@ -32,28 +97,27 @@ async function startServer() {
         return;
       }
 
-      const ai = getAiClient();
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-          parts: [{ text: prompt }],
-        },
+      const dataUrl = await generateImageWithFallback({
+        parts: [{ text: prompt }],
       });
 
-      const parts = response.candidates?.[0]?.content?.parts || [];
-      for (const part of parts) {
-        if (part.inlineData?.data) {
-          const mimeType = part.inlineData.mimeType || 'image/png';
-          const dataUrl = `data:${mimeType};base64,${part.inlineData.data}`;
-          res.json({ dataUrl });
-          return;
-        }
+      if (dataUrl) {
+        res.json({ dataUrl });
+        return;
       }
 
-      res.status(502).json({ error: 'No image data returned from Gemini model' });
+      // Return 200 with fallback flag so the client cleanly uses its built-in studio avatar pool
+      res.status(200).json({
+        dataUrl: null,
+        fallback: true,
+        reason: 'Image generation quota reached on current API key tier; using local studio portrait fallback.',
+      });
     } catch (err: any) {
-      console.error('Server /api/gemini/avatar error:', err);
-      res.status(500).json({ error: err?.message || 'Failed to generate avatar image' });
+      res.status(200).json({
+        dataUrl: null,
+        fallback: true,
+        reason: err?.message || 'Using local studio portrait fallback.',
+      });
     }
   });
 
@@ -72,32 +136,31 @@ async function startServer() {
         return;
       }
 
-      const ai = getAiClient();
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-          parts: [
-            { inlineData: { mimeType: referenceMimeType, data: referenceBase64 } },
-            { inlineData: { mimeType: cardMimeType, data: cardBase64 } },
-            { text: prompt },
-          ],
-        },
+      const dataUrl = await generateImageWithFallback({
+        parts: [
+          { inlineData: { mimeType: referenceMimeType, data: referenceBase64 } },
+          { inlineData: { mimeType: cardMimeType, data: cardBase64 } },
+          { text: prompt },
+        ],
       });
 
-      const parts = response.candidates?.[0]?.content?.parts || [];
-      for (const part of parts) {
-        if (part.inlineData?.data) {
-          const mimeType = part.inlineData.mimeType || 'image/png';
-          const dataUrl = `data:${mimeType};base64,${part.inlineData.data}`;
-          res.json({ dataUrl });
-          return;
-        }
+      if (dataUrl) {
+        res.json({ dataUrl });
+        return;
       }
 
-      res.status(502).json({ error: 'No mockup image data returned from Gemini model' });
+      // Return 200 with fallback flag so client uses Calibrated 3D Holder Fit seamlessly
+      res.status(200).json({
+        dataUrl: null,
+        fallback: true,
+        reason: 'Image generation quota reached on current API key tier; using calibrated 3D compositor.',
+      });
     } catch (err: any) {
-      console.error('Server /api/gemini/mockup error:', err);
-      res.status(500).json({ error: err?.message || 'Failed to generate AI mockup' });
+      res.status(200).json({
+        dataUrl: null,
+        fallback: true,
+        reason: err?.message || 'Using calibrated 3D compositor fallback.',
+      });
     }
   });
 

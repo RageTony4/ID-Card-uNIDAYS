@@ -317,10 +317,21 @@ export async function generateUniqueStudentAvatar(
     console.warn('Server avatar generation failed:', err);
   }
 
-  // If API call fails, select a clean high-resolution studio portrait matching gender
-  const fallbackIndex = gender === 'male'
-    ? Math.floor(Math.random() * 59) + 1
-    : Math.floor(Math.random() * 109) + 1;
+  // If API quota is reached or unavailable, select a unique non-repeating high-resolution studio portrait matching gender
+  const maxIndex = gender === 'male' ? 59 : 109;
+  const usedSet = gender === 'male' ? usedMaleFallbacks : usedFemaleFallbacks;
+  if (usedSet.size >= maxIndex) {
+    usedSet.clear();
+  }
+
+  let fallbackIndex = Math.floor(Math.random() * maxIndex) + 1;
+  let attempts = 0;
+  while (usedSet.has(fallbackIndex) && attempts < 150) {
+    fallbackIndex = Math.floor(Math.random() * maxIndex) + 1;
+    attempts++;
+  }
+  usedSet.add(fallbackIndex);
+
   const cleanPortraitUrl = `/assets/avatars/${gender}_${fallbackIndex}.webp`;
 
   return {
@@ -334,3 +345,6 @@ export async function generateUniqueStudentAvatar(
     timestamp: Date.now()
   };
 }
+
+const usedMaleFallbacks = new Set<number>();
+const usedFemaleFallbacks = new Set<number>();

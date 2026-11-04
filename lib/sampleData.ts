@@ -244,6 +244,12 @@ type Country = 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'In
 const usedNames = new Set<string>();
 
 const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postcode: string, country: Country }> = {
+  'CAY College': { city: 'Worthing, UK', address: 'Broadwater Road, Worthing, West Sussex', postcode: 'BN14 8AH', country: 'UK' },
+  'New College': { city: 'Leamington Spa, UK', address: 'Warwick New Road, Royal Leamington Spa', postcode: 'CV32 5JE', country: 'UK' },
+  'MPC College': { city: 'Huddersfield, UK', address: 'Queensgate, Huddersfield, West Yorkshire', postcode: 'HD1 3DH', country: 'UK' },
+  'SCL College': { city: 'Ashford, UK', address: 'Elwick Road, Ashford, Kent', postcode: 'TN23 1NN', country: 'UK' },
+  'Kew College': { city: 'Richmond, UK', address: '24-26 Cumberland Road, Kew, Richmond', postcode: 'TW9 3HQ', country: 'UK' },
+  'USP College': { city: 'Benfleet, UK', address: 'Seevic Campus, Runnymede Chase, Benfleet, Essex', postcode: 'SS7 1TW', country: 'UK' },
   'Birmingham City FC Community Trust': { city: 'Birmingham, UK', address: 'St. Andrew\'s Stadium, Birmingham', postcode: 'B9 4RL', country: 'UK' },
   'Communicate School': { city: 'Manchester, UK', address: '24 Nicholas St, Manchester', postcode: 'M1 4EJ', country: 'UK' },
   'Manchester Communication Academy': { city: 'Manchester, UK', address: 'Silchester Drive, Manchester', postcode: 'M40 8NT', country: 'UK' },
@@ -542,6 +548,12 @@ const getRandomId = (university: string): string => {
   if (university === 'Università di Bologna') return `UNIBO-IT-${year}-${randomNum}`;
   if (university === 'Accademia Belle Arti Bologna') return `ABAB-IT-${year}-${randomNum}`;
   if (university === 'University of Bologna - Unibo') return `UNIBO-IT-${year}-${randomNum}`;
+  if (university === 'CAY College') return `CAY-UK-${year}-${randomNum}`;
+  if (university === 'New College') return `NC-UK-${year}-${randomNum}`;
+  if (university === 'MPC College') return `MPC-UK-${year}-${randomNum}`;
+  if (university === 'SCL College') return `SCL-UK-${year}-${randomNum}`;
+  if (university === 'Kew College') return `KEW-UK-${year}-${randomNum}`;
+  if (university === 'USP College') return `USP-UK-${year}-${randomNum}`;
   if (university === 'University of Warwick') return `UOW-UK-${year}-${randomNum}`;
   if (university === 'University of Leeds') return `UOL-UK-${year}-${randomNum}`;
   if (university === 'Roo University') return `ROO-UK-${year}-${randomNum}`;
@@ -662,6 +674,20 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
       ? 'www.mccc.edu'
       : university.toLowerCase().includes('eastbridge')
       ? 'www.eastbridge.edu'
+      : university === 'CAY College'
+      ? 'www.caycollege.ac.uk'
+      : university === 'New College'
+      ? 'www.newcollege-leamington.ac.uk'
+      : university === 'MPC College'
+      ? 'www.mpccollege.ac.uk'
+      : university === 'SCL College'
+      ? 'www.wearescl.co.uk'
+      : university === 'Kew College'
+      ? 'www.kewcollegeprep.com'
+      : university === 'USP College'
+      ? 'www.uspcollege.ac.uk'
+      : countryType === 'UK'
+      ? `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.ac.uk`
       : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
     photo: photo,
     logo: isAirUni 

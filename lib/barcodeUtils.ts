@@ -48,6 +48,24 @@ export function getSchoolWebsiteUrl(schoolName?: string, website?: string): stri
   if (name.includes('community-ed') || name.includes('cea')) {
     return 'https://www.cea-academy.ac.uk';
   }
+  if (name === 'cay college') {
+    return 'https://www.caycollege.ac.uk';
+  }
+  if (name === 'new college') {
+    return 'https://www.newcollege-leamington.ac.uk';
+  }
+  if (name === 'mpc college') {
+    return 'https://www.mpccollege.ac.uk';
+  }
+  if (name === 'scl college') {
+    return 'https://www.wearescl.co.uk';
+  }
+  if (name === 'kew college') {
+    return 'https://www.kewcollegeprep.com';
+  }
+  if (name === 'usp college') {
+    return 'https://www.uspcollege.ac.uk';
+  }
 
   const clean = name.replace(/[^a-z0-9]/g, '');
   return `https://www.${clean || 'school'}.edu`;

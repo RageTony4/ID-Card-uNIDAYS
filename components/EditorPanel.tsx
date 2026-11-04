@@ -215,6 +215,12 @@ const FEMALE_HEADSHOTS = [
 
 const SCHOOL_DATA = {
     'United Kingdom': [
+        'CAY College',
+        'New College',
+        'MPC College',
+        'SCL College',
+        'Kew College',
+        'USP College',
         'Community-Ed Academy',
         'Brunel University London',
         'Durham University',
