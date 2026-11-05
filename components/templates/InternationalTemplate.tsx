@@ -157,9 +157,6 @@ export const InternationalTemplate: React.FC<InternationalTemplateProps> = ({ st
       {/* Top Header Strip - Centered STUDENT and IDENTITY CARD Titles */}
       <div className="pt-2 px-3 pb-1 border-b border-[#93C5FD]/60 relative z-20">
         <div className="flex items-center justify-center relative w-full">
-          {studentInfo.logo && (
-            <img src={studentInfo.logo} alt="Logo" className="w-5 h-5 object-contain absolute left-0" />
-          )}
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className="font-sans font-black text-[13px] sm:text-[14px] tracking-[0.16em] text-[#1E3A8A] uppercase leading-none text-center">
               STUDENT

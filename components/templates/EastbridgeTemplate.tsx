@@ -1,43 +1,14 @@
 import React from 'react';
 import { StudentInfo } from '../../types';
 import { ScannableBarcode } from '../ScannableBarcode';
+import { parseMatchingExpiryDate } from './NewReferenceTemplates';
 
 interface EastbridgeTemplateProps {
   studentInfo: StudentInfo;
   side: 'front' | 'back';
+  avatarSide?: 'left' | 'right';
   forwardedRef: React.ForwardedRef<HTMLDivElement>;
 }
-
-// Format date into "DD MMM YYYY" (e.g. "31 DEC 2029")
-const formatDisplayDate = (rawDate: string): string => {
-  if (!rawDate) return '31 DEC 2029';
-  const trimmed = rawDate.trim();
-  // If already formatted like "31 DEC 2029" or "31 Dec 2029", normalize uppercase
-  if (/^\d{1,2}\s+[A-Za-z]{3,}\s+\d{4}$/.test(trimmed)) {
-    return trimmed.toUpperCase();
-  }
-  // Try DD/MM/YYYY or DD-MM-YYYY or YYYY-MM-DD
-  const parts = trimmed.split(/[-/]/);
-  if (parts.length === 3) {
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    let day = parts[0];
-    let month = parts[1];
-    let year = parts[2];
-    if (parts[0].length === 4) {
-      // YYYY-MM-DD
-      year = parts[0];
-      month = parts[1];
-      day = parts[2];
-    }
-    const mNum = parseInt(month, 10);
-    if (!isNaN(mNum) && mNum >= 1 && mNum <= 12) {
-      const dNum = parseInt(day, 10);
-      const dStr = isNaN(dNum) ? day : String(dNum).padStart(2, '0');
-      return `${dStr} ${months[mNum - 1]} ${year}`;
-    }
-  }
-  return trimmed.toUpperCase();
-};
 
 // Format student number with space separation if digits (e.g. "2026 0148")
 const formatStudentNumber = (rawId: string): string => {
@@ -83,13 +54,19 @@ const EastbridgeCrestSvg = ({ className = "w-16 h-12" }: { className?: string })
   </svg>
 );
 
-export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({ studentInfo, side, forwardedRef }) => {
+export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({
+  studentInfo,
+  side,
+  avatarSide = 'right',
+  forwardedRef
+}) => {
+  const isAvatarLeft = avatarSide === 'left' || studentInfo.avatarSide === 'left';
   const university = (studentInfo.universityName || 'EASTBRIDGE UNIVERSITY').trim().toUpperCase();
   const fullName = (studentInfo.studentName || 'MAYA N. OKELLO').trim().toUpperCase();
   const rawId = studentInfo.studentId || '2026 0148';
   const formattedId = formatStudentNumber(rawId);
-  const validUntilFormatted = formatDisplayDate(studentInfo.validUntil || '31 DEC 2029');
-  const course = studentInfo.course || 'Bachelor of Arts';
+  const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+  const validUntilFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
   const website = studentInfo.website || 'www.eastbridge.edu';
 
   // Split university into main name and secondary suffix
@@ -196,41 +173,16 @@ export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({ studentI
       {/* Subtle Top Gloss / Specular Sheen */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/25 pointer-events-none z-30" />
 
-      {/* ================= HEADER BAR ================= */}
+      {/* ================= HEADER BAR (Centered & Bolded School Name) ================= */}
       <div 
-        className="w-full px-3.5 py-2.5 flex items-center gap-3 relative z-20 border-b border-[#353B47] flex-shrink-0"
+        className="w-full px-3.5 py-2.5 flex items-center justify-center relative z-20 border-b border-[#353B47] flex-shrink-0"
         style={{
           background: 'linear-gradient(180deg, #242831 0%, #1A1D24 100%)'
         }}
       >
-        {/* Crest Logo */}
-        <div className="flex-shrink-0 flex items-center justify-center">
-          {studentInfo.logo ? (
-            <img 
-              src={studentInfo.logo} 
-              alt="University Crest" 
-              className="h-11 w-auto max-w-[65px] object-contain drop-shadow"
-              onError={(e) => {
-                // Fallback to transparent crest or SVG
-                (e.target as HTMLImageElement).src = '/assets/eastbridge_crest_transparent.png';
-              }}
-            />
-          ) : (
-            <img 
-              src="/assets/eastbridge_crest_transparent.png" 
-              alt="Eastbridge Crest" 
-              className="h-11 w-auto max-w-[65px] object-contain drop-shadow"
-              onError={(e) => {
-                (e.target as HTMLElement).style.display = 'none';
-              }}
-            />
-          )}
-        </div>
-
-        {/* University Name Block matching the reference layout */}
-        <div className="flex flex-col justify-center text-left leading-none">
+        <div className="flex flex-col items-center justify-center text-center leading-none w-full min-w-0">
           <h1 
-            className="font-serif font-black tracking-[0.14em] text-white uppercase leading-none drop-shadow-sm"
+            className="font-serif font-extrabold tracking-[0.14em] text-white uppercase leading-none drop-shadow-sm truncate w-full text-center"
             style={{
               fontSize: mainUniTitle.length > 14 ? '15px' : '18.5px',
               fontFamily: '"Cinzel", "Times New Roman", "Playfair Display", Georgia, serif'
@@ -239,7 +191,7 @@ export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({ studentI
             {mainUniTitle}
           </h1>
           <span 
-            className="font-serif font-semibold text-[8px] sm:text-[9px] tracking-[0.32em] text-[#CBD5E1] uppercase leading-tight mt-1 block"
+            className="font-serif font-bold text-[8.5px] sm:text-[9.5px] tracking-[0.32em] text-[#CBD5E1] uppercase leading-tight mt-1 block text-center"
             style={{
               fontFamily: '"Cinzel", "Times New Roman", Georgia, serif'
             }}
@@ -251,18 +203,18 @@ export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({ studentI
 
       {/* ================= MAIN BODY ================= */}
       <div 
-        className="flex-1 w-full flex flex-row items-center justify-between px-3.5 py-2 relative z-20 overflow-hidden"
+        className={`flex-1 w-full flex ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'} items-center justify-between px-3.5 py-2 relative z-20 overflow-hidden gap-3`}
         style={{
           background: 'linear-gradient(180deg, #E7EAEF 0%, #DFE3E9 50%, #ECEFF4 100%)'
         }}
       >
         {/* Very faint background seal watermark */}
-        <div className="absolute right-24 top-1/2 -translate-y-1/2 pointer-events-none opacity-[0.05]">
+        <div className={`absolute ${isAvatarLeft ? 'left-24' : 'right-24'} top-1/2 -translate-y-1/2 pointer-events-none opacity-[0.05]`}>
           <EastbridgeCrestSvg className="w-56 h-40" />
         </div>
 
-        {/* Left Information Block */}
-        <div className="flex-1 flex flex-col justify-between h-full pr-2 text-left z-10">
+        {/* Information Block */}
+        <div className={`flex-1 flex flex-col justify-between h-full ${isAvatarLeft ? 'pl-1' : 'pr-2'} text-left z-10 min-w-0`}>
           {/* Top Tag: STUDENT IDENTIFICATION */}
           <div>
             <span className="font-sans font-bold text-[7.5px] sm:text-[8px] tracking-[0.24em] text-[#475569] uppercase block leading-none">
@@ -307,7 +259,7 @@ export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({ studentI
           </div>
         </div>
 
-        {/* Right Student Photo Box matching reference proportions */}
+        {/* Student Photo Box matching reference proportions */}
         <div className="w-[84px] sm:w-[88px] h-[106px] sm:h-[112px] rounded-[3px] p-0.5 bg-white/70 border border-slate-300/80 shadow-md relative overflow-hidden flex-shrink-0 z-10">
           <img
             src={studentInfo.photo || '/assets/avatars/female_1.webp'}

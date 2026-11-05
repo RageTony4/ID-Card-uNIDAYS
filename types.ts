@@ -18,6 +18,7 @@ export interface StudentInfo {
   bloodGroup: string;
   emergencyContact: string;
   t1Variant?: 'white' | 'dark';
+  avatarSide?: 'left' | 'right';
   codeType?: 'qr' | 'barcode';
 }
 
@@ -36,4 +37,5 @@ export interface GenerationHistoryItem {
   studentInfo: StudentInfo;
   template?: IdCardTemplate;
   t1Variant?: 'white' | 'dark';
+  avatarSide?: 'left' | 'right';
 }

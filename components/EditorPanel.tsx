@@ -13,6 +13,8 @@ interface EditorPanelProps {
   theme: 'light' | 'dark';
   t1Variant?: 'white' | 'dark';
   onT1VariantChange?: (variant: 'white' | 'dark') => void;
+  avatarSide?: 'left' | 'right';
+  onToggleAvatarSide?: () => void;
   isNameLocked?: boolean;
   onToggleNameLock?: () => void;
   isDateLocked?: boolean;
@@ -391,6 +393,8 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   theme,
   t1Variant = 'white',
   onT1VariantChange,
+  avatarSide = 'right',
+  onToggleAvatarSide,
   isNameLocked = true,
   onToggleNameLock,
   isDateLocked = true,
@@ -778,6 +782,44 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                 Dark Design
               </button>
             </div>
+          </div>
+        )}
+
+        {/* One-Click Switch Avatar Side Button for UTAS, Eastbridge, Durham, Brunel, and Hobart (HWS) */}
+        {(template === 'utas' || template === 'eastbridge' || template === 'durham' || template === 'brunel' || template === 'hws') && (
+          <div className={`mt-3 p-3 rounded-xl border flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in duration-200 ${
+            isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-indigo-50/70 border-indigo-200'
+          }`}>
+            <div className="flex items-center gap-2.5">
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                isDark ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30' : 'bg-indigo-100 text-indigo-700'
+              }`}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
+              <div>
+                <span className={`text-xs font-black uppercase tracking-wider block ${isDark ? 'text-zinc-200' : 'text-zinc-900'}`}>
+                  Avatar & Details Side Layout
+                </span>
+                <span className={`text-[10.5px] block ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                  Currently: <strong>Avatar on {avatarSide === 'left' ? 'Left' : 'Right'}</strong> • Details on {avatarSide === 'left' ? 'Right' : 'Left'}
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onToggleAvatarSide}
+              className="px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm active:scale-95 transition-all cursor-pointer flex-shrink-0"
+              title="One-click switch between Avatar on Right and Avatar on Left"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              <span>
+                {avatarSide === 'left' ? 'Switch Avatar to Right Side' : 'Switch Avatar to Left Side'}
+              </span>
+            </button>
           </div>
         )}
       </div>

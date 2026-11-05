@@ -16,6 +16,7 @@ interface IdCardProps {
   side?: 'front' | 'back';
   template?: IdCardTemplate;
   t1Variant?: 'white' | 'dark';
+  avatarSide?: 'left' | 'right';
 }
 
 const formatToDDMMYYYY = (dateStr: string): string => {
@@ -92,7 +93,7 @@ const formatToMMYYYY = (dateStr: string): string => {
   return cleaned;
 };
 
-const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant', t1Variant = 'white' }, ref) => {
+const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant', t1Variant = 'white', avatarSide = 'right' }, ref) => {
   if (
     template === 'utas' ||
     template === 'brunel' ||
@@ -104,7 +105,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     template === 'usu' ||
     template === 'hws'
   ) {
-    return <NewReferenceTemplates studentInfo={studentInfo} side={side} template={template} forwardedRef={ref} />;
+    return <NewReferenceTemplates studentInfo={studentInfo} side={side} template={template} avatarSide={avatarSide} forwardedRef={ref} />;
   }
   if (template === 'sainik') {
     return <SainikTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
@@ -116,7 +117,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     return <InternationalTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
   }
   if (template === 'eastbridge') {
-    return <EastbridgeTemplate studentInfo={studentInfo} side={side} forwardedRef={ref} />;
+    return <EastbridgeTemplate studentInfo={studentInfo} side={side} avatarSide={avatarSide} forwardedRef={ref} />;
   }
 
   // Clean university name for display (remove trailing star if present)
@@ -653,11 +654,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           {/* Top Header Strip */}
           <div className="px-3.5 pt-2.5 pb-1 border-b border-neutral-200/80 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              {studentInfo.logo ? (
-                <img src={studentInfo.logo} alt="Logo" className="w-5 h-5 object-contain flex-shrink-0" />
-              ) : (
-                <T3BracLogo className="w-5 h-5 flex-shrink-0" />
-              )}
+              <T3BracLogo className="w-5 h-5 flex-shrink-0" />
               <span className="font-sans font-black text-[10.5px] uppercase tracking-wider text-[#0F172A]">
                 {uFull}
               </span>
@@ -1383,15 +1380,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         {/* Top Header Bar: Pure White, School Logo & Name */}
         <div className="h-[42px] w-full bg-white border-b border-neutral-200/90 px-3 flex items-center justify-between relative z-20 flex-shrink-0">
           <div className="flex items-center gap-2.5">
-            {studentInfo.logo ? (
-              <img 
-                src={studentInfo.logo} 
-                alt="University Logo" 
-                className="w-7 h-7 object-contain flex-shrink-0"
-              />
-            ) : (
-              <T3BracLogo className="w-7 h-7 flex-shrink-0" />
-            )}
+            <T3BracLogo className="w-7 h-7 flex-shrink-0" />
             <span
               className="font-sans font-black tracking-tight text-[#0F172A] leading-tight"
               style={{ fontSize: '14px' }}
@@ -1571,15 +1560,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
                 {line2}
               </span>
             </div>
-            {studentInfo.logo ? (
-              <img 
-                src={studentInfo.logo} 
-                alt="School Logo" 
-                className="w-10 h-7 object-contain flex-shrink-0"
-              />
-            ) : (
-              <CranbourneEastLogo className="w-10 h-7 flex-shrink-0" />
-            )}
+            <CranbourneEastLogo className="w-10 h-7 flex-shrink-0" />
           </div>
 
           {/* Center Student Info */}
@@ -1679,15 +1660,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
           <div className="w-[66%] h-full p-3 sm:p-3.5 flex flex-col justify-between relative z-10">
             {/* Header Row: Seal + Texas Wordmark */}
             <div className="flex items-center gap-2">
-              {studentInfo.logo ? (
-                <img 
-                  src={studentInfo.logo} 
-                  alt="University Seal" 
-                  className="w-9 h-9 object-contain flex-shrink-0"
-                />
-              ) : (
-                <UTAustinSealSVG className="w-9 h-9 flex-shrink-0" isDark={true} />
-              )}
+              <UTAustinSealSVG className="w-9 h-9 flex-shrink-0" isDark={true} />
               <div className="flex flex-col min-w-0 pr-1">
                 <span className="font-serif font-black text-[#FF7A00] text-[22px] sm:text-[23px] leading-none tracking-wider uppercase">
                   {mainTitle}
@@ -1758,15 +1731,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
         <div className="w-[66%] h-full p-3 sm:p-3.5 flex flex-col justify-between relative z-10">
           {/* Header Row: Seal + Texas Wordmark */}
           <div className="flex items-center gap-2">
-            {studentInfo.logo ? (
-              <img 
-                src={studentInfo.logo} 
-                alt="University Seal" 
-                className="w-9 h-9 object-contain flex-shrink-0"
-              />
-            ) : (
-              <UTAustinSealSVG className="w-9 h-9 flex-shrink-0" isDark={false} />
-            )}
+            <UTAustinSealSVG className="w-9 h-9 flex-shrink-0" isDark={false} />
             <div className="flex flex-col min-w-0 pr-1">
               <span className="font-serif font-black text-[#BF5700] text-[22px] sm:text-[23px] leading-none tracking-wider uppercase">
                 {mainTitle}

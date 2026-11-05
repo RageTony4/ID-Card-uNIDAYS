@@ -20,7 +20,7 @@ function getAiClient(): GoogleGenAI {
 
 // Track per-model quota cooldowns so we don't repeatedly hit 429 RESOURCE_EXHAUSTED
 const modelCooldownUntil = new Map<string, number>();
-const IMAGE_MODELS = ['gemini-3.1-flash-lite-image', 'gemini-2.5-flash-image'];
+const IMAGE_MODELS = ['gemini-2.5-flash-image', 'gemini-3.1-flash-image-preview'];
 
 function isQuotaOrRateLimitError(err: any): boolean {
   const msg = String(err?.message || err || '');
@@ -36,7 +36,6 @@ function isQuotaOrRateLimitError(err: any): boolean {
 
 function markModelQuotaCooldown(model: string, err: any) {
   const msg = String(err?.message || '');
-  // Default 15 minute cooldown if free tier limit is 0, or 60s for transient rate limit
   const isZeroLimit = msg.includes('limit: 0');
   const cooldownMs = isZeroLimit ? 15 * 60 * 1000 : 60 * 1000;
   modelCooldownUntil.set(model, Date.now() + cooldownMs);
@@ -73,9 +72,10 @@ async function generateImageWithFallback(contents: any): Promise<string | null> 
     } catch (err: any) {
       if (isQuotaOrRateLimitError(err)) {
         markModelQuotaCooldown(model, err);
-        console.log(`[Gemini Image] Quota/rate limit reached for ${model}; switching to fallback.`);
+        console.warn(`[Gemini Image] Quota/rate limit reached for ${model}; using studio v4 avatar fallback.`);
       } else {
-        console.log(`[Gemini Image] Model ${model} unavailable (${err?.status || 'error'}); switching to fallback.`);
+        markModelQuotaCooldown(model, err);
+        console.warn(`[Gemini Image] Model ${model} error (${err?.status || 'unknown'}):`, err?.message || err);
       }
     }
   }
@@ -106,17 +106,17 @@ async function startServer() {
         return;
       }
 
-      // Return 200 with fallback flag so the client cleanly uses its built-in studio avatar pool
+      // Return 200 with fallback flag so client seamlessly uses the v4 studio avatar generator
       res.status(200).json({
         dataUrl: null,
         fallback: true,
-        reason: 'Image generation quota reached on current API key tier; using local studio portrait fallback.',
+        reason: 'Image generation quota reached on current API key tier; using studio v4 avatar.',
       });
     } catch (err: any) {
       res.status(200).json({
         dataUrl: null,
         fallback: true,
-        reason: err?.message || 'Using local studio portrait fallback.',
+        reason: err?.message || 'Using studio v4 avatar fallback.',
       });
     }
   });

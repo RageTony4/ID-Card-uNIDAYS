@@ -7,6 +7,7 @@ interface NewReferenceTemplateProps {
   studentInfo: StudentInfo;
   side: 'front' | 'back';
   template: IdCardTemplate;
+  avatarSide?: 'left' | 'right';
   forwardedRef: React.ForwardedRef<HTMLDivElement>;
 }
 
@@ -431,6 +432,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
   studentInfo,
   side,
   template,
+  avatarSide,
   forwardedRef
 }) => {
   const fullName = (studentInfo.studentName || 'JEAN BROOK').trim();
@@ -438,6 +440,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
   const rawId = (studentInfo.studentId || '219443').trim();
   const photoUrl = studentInfo.photo || '/assets/avatars/female_1.webp';
   const cleanUniName = (studentInfo.universityName || 'University').replace(/\*$/, '').trim();
+  const isAvatarLeft = avatarSide === 'left' || studentInfo.avatarSide === 'left';
 
   // Common clean back side for all 9 new templates, with matching expiry date, current school details, and barcode
   if (side === 'back') {
@@ -555,28 +558,23 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           <polygon points="135,52 195,52 252,214 192,214" fill="#E5DEC9" opacity="0.55" />
         </svg>
 
-        {/* Top Section: Left UTAS Header + Right Framed Photo */}
-        <div className="relative z-10 flex justify-between items-start gap-2">
-          {/* Left Side: Header + Divider + Student Details */}
-          <div className="flex-1 flex flex-col pr-1 min-w-0">
-            {/* Crest + Dynamic Serif Wordmark */}
-            <div className="flex items-center gap-1.5 pb-2 border-b-[1.5px] border-neutral-700">
-              {studentInfo.logo ? (
-                <img src={studentInfo.logo} alt="Logo" className="w-10 h-8 object-contain flex-shrink-0" />
-              ) : (
-                <UtasLionCrest className="w-11 h-8 flex-shrink-0" />
-              )}
-              <div className="flex flex-col leading-none text-left min-w-0 flex-1">
+        {/* Top Section: UTAS Header + Framed Photo (Switchable Left/Right) */}
+        <div className={`relative z-10 flex justify-between items-start gap-2 ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
+          {/* Header + Divider + Student Details */}
+          <div className={`flex-1 flex flex-col min-w-0 ${isAvatarLeft ? 'pl-1' : 'pr-1'}`}>
+            {/* Dynamic Serif Wordmark - Centered & Bolded */}
+            <div className="flex items-center justify-center pb-2 border-b-[1.5px] border-neutral-700">
+              <div className="flex flex-col items-center justify-center leading-none text-center min-w-0 flex-1">
                 <div
-                  className={`font-serif tracking-[0.06em] text-neutral-800 font-normal truncate ${
-                    headerTop.length > 16 ? 'text-[10px]' : 'text-[12.5px]'
+                  className={`font-serif tracking-[0.06em] text-neutral-950 font-extrabold truncate w-full text-center ${
+                    headerTop.length > 16 ? 'text-[10.5px]' : 'text-[13px]'
                   }`}
                 >
-                  {headerTop} {uniOfMatch ? <span className="italic font-serif">of</span> : null}
+                  {headerTop} {uniOfMatch ? <span className="italic font-serif font-bold">of</span> : null}
                 </div>
                 <div
-                  className={`font-serif tracking-[0.12em] text-neutral-800 font-semibold mt-0.5 truncate ${
-                    headerBot.length > 16 ? 'text-[10.5px]' : 'text-[13px]'
+                  className={`font-serif tracking-[0.12em] text-neutral-950 font-extrabold mt-0.5 truncate w-full text-center ${
+                    headerBot.length > 16 ? 'text-[10.5px]' : 'text-[13.5px]'
                   }`}
                 >
                   {headerBot}
@@ -584,21 +582,18 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               </div>
             </div>
 
-            {/* Student ID, Last Name, First Name */}
-            <div className="pt-2 text-left leading-[1.22] space-y-0.5">
+            {/* Student ID & Horizontal Student Name */}
+            <div className="pt-2 text-left leading-[1.22] space-y-1">
               <SingleLineText fontSize={10.5} className="font-sans font-bold text-neutral-900 tracking-wide text-left">
                 {displayId}
               </SingleLineText>
-              <SingleLineText fontSize={10.5} className="font-sans font-medium text-neutral-800 uppercase tracking-wide text-left">
-                {lastName}
-              </SingleLineText>
-              <SingleLineText fontSize={10} className="font-sans font-normal text-neutral-800 text-left">
-                {firstNames}
+              <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-wide leading-tight text-left">
+                {toTitleCase(fullName)}
               </SingleLineText>
             </div>
           </div>
 
-          {/* Right Side: Framed Portrait + Status */}
+          {/* Framed Portrait + Status */}
           <div className="flex flex-col items-center flex-shrink-0 w-[86px]">
             <div className="w-[82px] h-[88px] border-[1.5px] border-neutral-800 bg-neutral-200 overflow-hidden shadow-xs">
               <img
@@ -628,7 +623,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         </div>
 
         {/* Bottom Section: Barcode + Number Centered Underneath */}
-        <div className="relative z-10 pt-1.5 flex items-end justify-between pl-2 pr-1">
+        <div className={`relative z-10 pt-1.5 flex items-end justify-between pl-2 pr-1 ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
           <div className="flex flex-col items-center">
             <ScannableBarcode
               value={barcodeDigits}
@@ -694,19 +689,14 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         ref={forwardedRef}
         className="id-card-container shadow-xl bg-[#FDFDFD] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900 p-3.5"
       >
-        {/* Top Row: Left Crest + Red Line + School Name + Red Line + Right Portrait */}
-        <div className="flex justify-between items-start gap-2 h-[96px]">
-          {/* Left Header */}
-          <div className="flex items-center h-full pt-0.5 min-w-0 flex-1">
-            {studentInfo.logo ? (
-              <img src={studentInfo.logo} alt={cleanUniName} className="w-12 h-14 object-contain mr-2 flex-shrink-0" />
-            ) : (
-              <BrunelCrestSvg className="w-12 h-15 flex-shrink-0 mr-2" />
-            )}
-            <div className="w-[1.5px] h-14 bg-[#D9381E] mr-2 flex-shrink-0" />
-            <div className="flex flex-col justify-center text-left leading-[1.06] pr-2 min-w-0 flex-1">
+        {/* Top Row: Centered & Bolded School Name + Portrait (Switchable Left/Right) */}
+        <div className={`flex justify-between items-start gap-2 h-[96px] ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
+          {/* Header - Centered & Bolded */}
+          <div className="flex items-center justify-center h-full pt-0.5 min-w-0 flex-1">
+            <div className="w-[1.5px] h-14 bg-[#D9381E] flex-shrink-0" />
+            <div className="flex flex-col items-center justify-center text-center leading-[1.08] px-2 min-w-0 flex-1">
               <span
-                className={`font-sans font-extrabold text-[#0B1F3A] tracking-tight truncate ${
+                className={`font-sans font-extrabold text-[#0B1F3A] tracking-tight truncate w-full text-center ${
                   line1.length > 11 ? 'text-[14px]' : 'text-[18px]'
                 }`}
               >
@@ -714,8 +704,8 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               </span>
               {line2 && (
                 <span
-                  className={`font-sans font-light text-[#0B1F3A] tracking-tight truncate ${
-                    line2.length > 12 ? 'text-[12.5px]' : 'text-[16px]'
+                  className={`font-sans font-bold text-[#0B1F3A] tracking-tight truncate w-full text-center ${
+                    line2.length > 12 ? 'text-[12.5px]' : 'text-[15.5px]'
                   }`}
                 >
                   {line2}
@@ -723,8 +713,8 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               )}
               {line3 && (
                 <span
-                  className={`font-sans font-light text-[#0B1F3A] tracking-tight truncate ${
-                    line3.length > 12 ? 'text-[12px]' : 'text-[15.5px]'
+                  className={`font-sans font-bold text-[#0B1F3A] tracking-tight truncate w-full text-center ${
+                    line3.length > 12 ? 'text-[12px]' : 'text-[15px]'
                   }`}
                 >
                   {line3}
@@ -734,8 +724,8 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             <div className="w-[1.5px] h-14 bg-[#D9381E] flex-shrink-0" />
           </div>
 
-          {/* Right Portrait */}
-          <div className="w-[82px] h-[94px] bg-white overflow-hidden flex-shrink-0 mr-1">
+          {/* Portrait */}
+          <div className={`w-[82px] h-[94px] bg-white overflow-hidden flex-shrink-0 ${isAvatarLeft ? 'ml-1' : 'mr-1'}`}>
             <img
               src={photoUrl}
               alt={fullName}
@@ -746,26 +736,23 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           </div>
         </div>
 
-        {/* Bottom Half: Left Surname/Given Names/Course + Union Circle & Right Level / Card No / Student ID / Expiry */}
-        <div className="flex-1 flex justify-between items-end pt-1 gap-2">
-          {/* Left Column */}
+        {/* Bottom Half: Student Name/Course + Union Circle & Level / Card No / Student ID / Expiry */}
+        <div className={`flex-1 flex justify-between items-end pt-1 gap-2 ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
+          {/* Name/Course + Union Circle Column */}
           <div className="flex flex-col justify-between h-full flex-1 min-w-0">
-            <div className="pl-2 pr-1 pt-0.5 text-center w-full min-w-0">
-              <SingleLineText fontSize={13} className="font-sans font-bold text-neutral-950 uppercase tracking-wide leading-tight text-center">
-                {lastName}
-              </SingleLineText>
-              <SingleLineText fontSize={11} className="font-sans font-medium text-neutral-900 leading-tight mt-0.5 text-center">
-                {firstNames}
+            <div className="pl-2 pr-1 pt-1 text-center w-full min-w-0">
+              <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-wide leading-tight text-center">
+                {toTitleCase(fullName)}
               </SingleLineText>
               {studentInfo.course && (
-                <SingleLineText fontSize={8.5} className="font-sans font-semibold text-[#0B1F3A]/85 leading-tight mt-0.5 text-center">
+                <SingleLineText fontSize={8.5} className="font-sans font-semibold text-[#0B1F3A]/85 leading-tight mt-1 text-center">
                   {studentInfo.course}
                 </SingleLineText>
               )}
             </div>
 
-            {/* Bottom-Left Union of Students Circle */}
-            <div className="w-11 h-11 rounded-full bg-[#0B1F3A] flex flex-col items-center justify-center text-white p-1 shadow-xs flex-shrink-0">
+            {/* Union of Students Circle */}
+            <div className={`w-11 h-11 rounded-full bg-[#0B1F3A] flex flex-col items-center justify-center text-white p-1 shadow-xs flex-shrink-0 ${isAvatarLeft ? 'self-end' : 'self-start'}`}>
               <span className="font-sans font-black text-[7.5px] tracking-wider leading-none">
                 UNION
               </span>
@@ -778,7 +765,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             </div>
           </div>
 
-          {/* Right Column */}
+          {/* Level / Card No / Student ID / Expiry Column */}
           <div className="w-[122px] text-left flex flex-col justify-end leading-[1.16] pb-0.5 flex-shrink-0">
             <div className="font-sans font-bold text-[10px] text-neutral-950 uppercase tracking-wide mb-0.5 truncate">
               {levelLabel}
@@ -835,22 +822,12 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
 
           {/* Right Header & Details */}
           <div className="flex-1 flex flex-col justify-between h-full text-left min-w-0">
-            {/* Gold Crest Box + Black School Banner */}
+            {/* Accent Bar + Black School Banner (Centered & Bolded) */}
             <div>
               <div className="flex items-stretch h-8 w-full">
-                <div className="w-8 bg-[#6E5326] flex items-center justify-center p-1 flex-shrink-0">
-                  {studentInfo.logo ? (
-                    <img src={studentInfo.logo} alt="Logo" className="w-5 h-5 object-contain" />
-                  ) : (
-                    <svg className="w-5 h-5" viewBox="0 0 32 32" fill="none">
-                      <path d="M6 4 H26 V16 C26 24, 16 29, 16 29 C16 29, 6 24, 6 16 V4 Z" fill="#FFFFFF" opacity="0.2" />
-                      <polygon points="16,6 21,9 21,15 16,18 11,15 11,9" fill="#FFFFFF" />
-                      <path d="M7 18 H25 M8 21 H24 M10 24 H22" stroke="#FFFFFF" strokeWidth="1.6" />
-                    </svg>
-                  )}
-                </div>
-                <div className="flex-1 bg-[#18181B] flex items-center px-2 min-w-0">
-                  <SingleLineText fontSize={cleanUniName.length > 22 ? 10.5 : 13} className="font-sans font-normal text-white tracking-wide text-left">
+                <div className="w-2.5 bg-[#6E5326] flex-shrink-0" />
+                <div className="flex-1 bg-[#18181B] flex items-center justify-center px-2.5 min-w-0">
+                  <SingleLineText fontSize={cleanUniName.length > 22 ? 10.5 : 13} className="font-sans font-extrabold text-white tracking-wide text-center">
                     {cleanUniName}
                   </SingleLineText>
                 </div>
@@ -863,12 +840,9 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             </div>
 
             {/* Name, Course, ID & Matching Expiry Date */}
-            <div className="leading-[1.16] mt-1 min-w-0">
-              <SingleLineText fontSize={10.5} className="font-sans font-bold text-neutral-950 text-left">
-                {firstNames}
-              </SingleLineText>
-              <SingleLineText fontSize={11} className="font-sans font-extrabold text-neutral-950 uppercase tracking-tight text-left">
-                {lastName}
+            <div className="leading-[1.18] mt-1 min-w-0">
+              <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-wide leading-tight text-left">
+                {toTitleCase(fullName)}
               </SingleLineText>
               {studentInfo.course && (
                 <SingleLineText fontSize={8.5} className="font-sans font-semibold text-neutral-700 mt-0.5 text-left">
@@ -943,23 +917,18 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         ref={forwardedRef}
         className="id-card-container shadow-xl bg-[#F9FAFB] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900 p-3"
       >
-        {/* Top Header Row: Crest & Title + NUS Circles + Union Square Logo */}
-        <div className="flex items-start justify-between gap-1">
-          <div className="flex items-start gap-1.5 min-w-0 flex-1 pr-1">
-            {studentInfo.logo ? (
-              <img src={studentInfo.logo} alt={cleanUniName} className="w-8 h-10 object-contain flex-shrink-0" />
-            ) : (
-              <DurhamShieldSvg className="w-8 h-10 flex-shrink-0" />
-            )}
-            <div className="flex flex-col text-left leading-none pt-0.5 min-w-0 flex-1">
+        {/* Top Header Row: Centered & Bolded School Title + NUS Circles + Union Square Logo */}
+        <div className={`flex items-start justify-between gap-1 ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div className={`flex items-center justify-center min-w-0 flex-1 ${isAvatarLeft ? 'pl-1' : 'pr-1'}`}>
+            <div className="flex flex-col items-center justify-center text-center leading-none pt-0.5 min-w-0 flex-1">
               <span
-                className={`font-serif text-neutral-800 tracking-tight leading-none truncate ${
+                className={`font-serif font-extrabold text-neutral-950 tracking-tight leading-none truncate w-full text-center ${
                   durhamPrimary.length > 14 ? 'text-[14px]' : 'text-[19px]'
                 }`}
               >
                 {toTitleCase(durhamPrimary)}
               </span>
-              <span className="font-serif text-[12px] text-neutral-600 tracking-wide mt-0.5 truncate">
+              <span className="font-serif font-bold text-[12px] text-neutral-800 tracking-wide mt-0.5 truncate w-full text-center">
                 {toTitleCase(durhamSecondary)}
               </span>
             </div>
@@ -988,14 +957,14 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           </div>
         </div>
 
-        {/* Lower Section: Left Name Bar + College/Course + Barcode + Expiry & Right Portrait */}
-        <div className="flex-1 flex gap-2.5 items-stretch pt-1.5 min-h-0">
-          {/* Left Column */}
+        {/* Lower Section: Name Bar + College/Course + Barcode + Expiry & Portrait (Switchable Left/Right) */}
+        <div className={`flex-1 flex gap-2.5 items-stretch pt-1.5 min-h-0 ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
+          {/* Details Column */}
           <div className="flex-1 flex flex-col justify-between min-w-0">
             {/* Indigo Name Bar */}
             <div className="w-full bg-[#241973] py-0.5 px-2 text-center shadow-2xs">
-              <SingleLineText fontSize={10.5} className="font-sans font-medium text-white uppercase tracking-wider text-center">
-                {fullName.toUpperCase()}
+              <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-white tracking-wide leading-tight text-center">
+                {toTitleCase(fullName)}
               </SingleLineText>
             </div>
 
@@ -1023,14 +992,14 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               </span>
             </div>
 
-            {/* Bottom Left Row: Card No. + Matching Expiry */}
+            {/* Bottom Row: Card No. + Matching Expiry */}
             <div className="flex justify-between items-center text-[8px] font-sans font-semibold text-neutral-900 pt-0.5">
               <span>Card No. {cardNo}</span>
               <span>Expiry {expiryFormatted}</span>
             </div>
           </div>
 
-          {/* Right Portrait Photo */}
+          {/* Portrait Photo */}
           <div className="w-[82px] h-[106px] bg-slate-100 overflow-hidden flex-shrink-0 self-end relative border border-neutral-200">
             <img
               src={photoUrl}
@@ -1059,7 +1028,6 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
     const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
     const displayId = rawId || '23222';
     const { line1: setonLine1, line2: setonLine2 } = splitTwoBalancedLines(cleanUniName);
-    const emblemCode = getSchoolAcronym(cleanUniName, 'ES•HS');
 
     // Parse dynamic address into 2 clean lines
     const rawAddr = (studentInfo.address || '5715 Emerson Street, Bladensburg, MD 20710').trim();
@@ -1099,9 +1067,11 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
 
         {/* Top Header Strip: Name on Left + ID on Right */}
         <div className="relative z-10 w-full px-3.5 py-1.5 border-b border-neutral-600 flex items-center justify-between bg-white/90 gap-2">
-          <span className="font-sans text-[12px] font-medium text-neutral-800 truncate">
-            {toTitleCase(fullName)}
-          </span>
+          <div className="flex-1 min-w-0">
+            <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-wide leading-tight text-left">
+              {toTitleCase(fullName)}
+            </SingleLineText>
+          </div>
           <div className="flex items-center gap-2 font-sans text-[11.5px] text-neutral-800 flex-shrink-0">
             <span>ID:</span>
             <span className="font-semibold tabular-nums">{displayId}</span>
@@ -1110,41 +1080,29 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
 
         {/* Main Content Area */}
         <div className="relative z-10 flex-1 flex justify-between px-3 pt-1.5 pb-2 gap-2 min-h-0">
-          {/* Left Column: School Title, Seal, Address, Academic Year, Expiry, Barcode */}
+          {/* Left Column: Centered & Bolded School Title, Address, Academic Year, Expiry, Barcode */}
           <div className="flex-1 flex flex-col justify-between min-w-0">
-            <div className="flex items-start justify-between gap-1.5">
+            <div className="flex items-center justify-center w-full">
               <div className="flex-1 text-center min-w-0">
                 <div
-                  className={`font-serif font-black text-[#C53030] leading-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)] truncate ${
+                  className={`font-serif font-extrabold text-[#C53030] leading-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)] truncate w-full text-center ${
                     setonLine1.length > 18 ? 'text-[11.5px]' : 'text-[14px]'
                   }`}
                 >
                   {toTitleCase(setonLine1)}
                 </div>
                 <div
-                  className={`font-serif font-black text-[#C53030] leading-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)] truncate ${
+                  className={`font-serif font-extrabold text-[#C53030] leading-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.25)] truncate w-full text-center ${
                     setonLine2.length > 18 ? 'text-[11px]' : 'text-[13.5px]'
                   }`}
                 >
                   {toTitleCase(setonLine2)}
                 </div>
-                <div className="font-serif text-[7.2px] text-neutral-800 leading-tight mt-1 font-medium">
+                <div className="font-serif text-[7.2px] text-neutral-800 leading-tight mt-1 font-bold text-center">
                   <div className="truncate">{addrLine1}</div>
                   <div className="truncate">{addrLine2}</div>
                 </div>
               </div>
-
-              {/* Red Circular Emblem */}
-              {studentInfo.logo ? (
-                <img src={studentInfo.logo} alt="Emblem" className="w-10 h-10 object-contain flex-shrink-0 mt-1" />
-              ) : (
-                <div className="w-10 h-12 rounded-full border-[2.5px] border-[#C53030] flex flex-col items-center justify-center bg-white/90 flex-shrink-0 mt-1 shadow-2xs">
-                  <div className="w-6 h-6 rounded-full bg-[#C53030] flex flex-col items-center justify-center text-white">
-                    <span className="text-[5px] font-black leading-none">{emblemCode}</span>
-                    <span className="text-[7px] font-bold leading-none">†</span>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Academic Year & Matching Expiry Date */}
@@ -1338,17 +1296,17 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         className="id-card-container shadow-xl bg-[#FAF9F5] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900"
       >
         {/* Top Dark Navy/Black Banner */}
-        <div className="w-full h-[64px] bg-[#161920] relative flex items-start justify-end pr-4 pt-3 flex-shrink-0 pl-[118px]">
+        <div className="w-full h-[64px] bg-[#161920] relative flex items-start justify-center pr-4 pt-2 flex-shrink-0 pl-[118px]">
           <div className="text-center leading-tight w-full min-w-0">
             <div
-              className={`font-serif text-slate-100 tracking-[0.11em] uppercase truncate ${
+              className={`font-serif font-bold text-slate-100 tracking-[0.11em] uppercase truncate ${
                 bannerTop.length > 18 ? 'text-[10.5px]' : 'text-[13px]'
               }`}
             >
               {bannerTop}
             </div>
             <div
-              className={`font-serif text-slate-200 tracking-[0.2em] uppercase mt-0.5 truncate ${
+              className={`font-serif font-bold text-slate-200 tracking-[0.2em] uppercase mt-0.5 truncate ${
                 bannerBot.length > 18 ? 'text-[9.5px]' : 'text-[11.5px]'
               }`}
             >
@@ -1362,7 +1320,17 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           {microRepeat}
         </div>
 
-        {/* Overlapping Portrait Photo on Left */}
+        {/* Overlapping Circular University Seal in the Right Space */}
+        <div className="absolute top-[42px] right-[46px] z-20 drop-shadow-xs">
+          <ByuSealSvg
+            className="w-[82px] h-[82px]"
+            schoolName={cleanUniName}
+            location={studentInfo.location || 'PROVO, UTAH'}
+            acronym={sealAcronym}
+          />
+        </div>
+
+        {/* Portrait Photo on Left */}
         <div className="absolute top-[22px] left-4 w-[98px] h-[102px] bg-white border border-neutral-200 shadow-xs overflow-hidden z-10">
           <img
             src={photoUrl}
@@ -1371,22 +1339,6 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             referrerPolicy="no-referrer"
             onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/male_4.webp'; }}
           />
-        </div>
-
-        {/* Overlapping Circular Seal on Center-Right */}
-        <div className="absolute top-[42px] right-8 z-10">
-          {studentInfo.logo ? (
-            <div className="w-[92px] h-[92px] rounded-full bg-[#FAF8F2] border-2 border-[#D4AF37] flex items-center justify-center p-2 shadow-xs">
-              <img src={studentInfo.logo} alt={cleanUniName} className="w-full h-full object-contain" />
-            </div>
-          ) : (
-            <ByuSealSvg
-              className="w-[96px] h-[96px] drop-shadow-xs"
-              schoolName={cleanUniName}
-              location={studentInfo.location || 'PROVO, UTAH'}
-              acronym={sealAcronym}
-            />
-          )}
         </div>
 
         {/* Vertical Right-Edge Red Security Text */}
@@ -1402,7 +1354,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         {/* Bottom Body Details: Name, Student/Course (Full Width), ID & EXP Date */}
         <div className="flex-1 flex flex-col justify-end px-4 pb-2.5 pt-14 relative z-10">
           <div className="text-left leading-[1.18] min-w-0 w-full pr-4">
-            <SingleLineText fontSize={11.5} className="font-sans font-bold text-neutral-950 text-left">
+            <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-wide leading-tight text-left">
               {toTitleCase(fullName)}
             </SingleLineText>
             <SingleLineText fontSize={10} className="font-sans font-bold text-[#6B4E23] text-left">
@@ -1495,7 +1447,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           </div>
         </div>
 
-        {/* Bottom Section: Full-Width Role/Course Line + Lower Row (Details & Signature on Left + University Tower Mark on Right) */}
+        {/* Bottom Section: Full-Width Role/Course Line + Lower Row (Details & Signature on Left + Centered Bolded School Name on Right) */}
         <div className="relative z-10 flex flex-col justify-end pt-1 min-w-0 w-full">
           <SingleLineText fontSize={9.5} className="font-sans font-bold text-neutral-950 uppercase text-left leading-[1.16]">
             {studentInfo.course ? `${roleLabel} • ${studentInfo.course}` : roleLabel}
@@ -1506,7 +1458,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               <SingleLineText fontSize={10} className="font-sans font-bold text-neutral-950 tabular-nums text-left">
                 {displayId}
               </SingleLineText>
-              <SingleLineText fontSize={10} className="font-sans font-bold text-neutral-950 text-left">
+              <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-wide leading-tight text-left">
                 {toTitleCase(fullName)}
               </SingleLineText>
               <div className="flex items-center gap-3 mt-0.5 min-w-0">
@@ -1522,24 +1474,13 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               </SingleLineText>
             </div>
 
-            {/* Bottom-Right University Tower Mark */}
-            <div className="flex items-end gap-1 text-right flex-shrink-0 max-w-[120px]">
-              {studentInfo.logo ? (
-                <img src={studentInfo.logo} alt="Logo" className="w-8 h-8 object-contain flex-shrink-0" />
-              ) : (
-                <svg className="w-8 h-8 text-[#1E293B] flex-shrink-0" viewBox="0 0 48 48" fill="currentColor">
-                  <polygon points="24,4 36,18 12,18" />
-                  <rect x="14" y="19" width="20" height="24" />
-                  <rect x="18" y="23" width="3" height="8" fill="#FFFFFF" />
-                  <rect x="23" y="23" width="3" height="8" fill="#FFFFFF" />
-                  <rect x="28" y="23" width="3" height="8" fill="#FFFFFF" />
-                </svg>
-              )}
-              <div className="flex flex-col leading-none pb-0.5 text-left min-w-0">
-                <SingleLineText fontSize={10} className="font-sans font-extrabold text-neutral-800 tracking-tight text-left">
+            {/* Bottom-Right University Wordmark - Centered & Bolded */}
+            <div className="flex items-end justify-center text-center flex-shrink-0 max-w-[125px]">
+              <div className="flex flex-col items-center justify-center leading-tight pb-0.5 text-center min-w-0">
+                <SingleLineText fontSize={10.5} className="font-sans font-extrabold text-neutral-950 tracking-tight text-center">
                   {bottomLogoLine1}
                 </SingleLineText>
-                <SingleLineText fontSize={9} className="font-sans font-light text-neutral-600 tracking-wide text-left">
+                <SingleLineText fontSize={9.5} className="font-sans font-bold text-neutral-900 tracking-wide text-center">
                   {bottomLogoLine2}
                 </SingleLineText>
               </div>
@@ -1583,20 +1524,8 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
         <path d="M0,90 Q160,110 340,70 M110,0 Q140,110 180,214" stroke="#F8FAFC" strokeWidth="3" fill="none" />
       </svg>
 
-      {/* Top Row: Left Seal + Center Dynamic School Name + Right Seal */}
-      <div className="relative z-10 flex items-center justify-between gap-1">
-        {/* Left Seal */}
-        {studentInfo.logo ? (
-          <img src={studentInfo.logo} alt="Seal" className="w-9 h-9 object-contain flex-shrink-0" />
-        ) : (
-          <svg className="w-9 h-9 flex-shrink-0" viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="21" fill="#F8FAFC" stroke="#1E296B" strokeWidth="2.5" />
-            <circle cx="24" cy="24" r="16" stroke="#1E296B" strokeWidth="1" strokeDasharray="2 1" />
-            <path d="M16 15 H32 V25 C32 32, 24 36, 24 36 C24 36, 16 32, 16 25 V15 Z" fill="#1E296B" />
-            <path d="M16 24 H32 M24 15 V36" stroke="#F8FAFC" strokeWidth="1.8" />
-          </svg>
-        )}
-
+      {/* Top Row: Centered & Bolded Dynamic School Name */}
+      <div className="relative z-10 flex items-center justify-center">
         {/* Center Title */}
         <div
           className="flex-1 text-center leading-tight min-w-0 px-1"
@@ -1605,37 +1534,25 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           }}
         >
           <div
-            className={`font-serif font-bold text-[#1E296B] uppercase tracking-[0.05em] truncate ${
-              hwsTop.length > 22 ? 'text-[10px]' : 'text-[12.5px]'
+            className={`font-serif font-extrabold text-[#1E296B] uppercase tracking-[0.05em] truncate w-full text-center ${
+              hwsTop.length > 22 ? 'text-[10.5px]' : 'text-[13.5px]'
             }`}
           >
             {hwsTop}
           </div>
           <div
-            className={`font-serif font-bold text-[#1E296B] uppercase tracking-[0.04em] truncate ${
-              hwsBot.length > 22 ? 'text-[10px]' : 'text-[12.5px]'
+            className={`font-serif font-extrabold text-[#1E296B] uppercase tracking-[0.04em] truncate w-full text-center ${
+              hwsBot.length > 22 ? 'text-[10.5px]' : 'text-[13.5px]'
             }`}
           >
             {hwsBot}
           </div>
         </div>
-
-        {/* Right Seal */}
-        {studentInfo.logo ? (
-          <img src={studentInfo.logo} alt="Seal" className="w-9 h-9 object-contain flex-shrink-0" />
-        ) : (
-          <svg className="w-9 h-9 flex-shrink-0" viewBox="0 0 48 48" fill="none">
-            <circle cx="24" cy="24" r="21" fill="#F8FAFC" stroke="#1E296B" strokeWidth="2.5" />
-            <circle cx="24" cy="24" r="16" stroke="#1E296B" strokeWidth="1" strokeDasharray="2 1" />
-            <path d="M17 16 H31 V26 C31 32, 24 36, 24 36 C24 36, 17 32, 17 26 V16 Z" fill="#1E296B" />
-            <circle cx="24" cy="24" r="4" fill="#F8FAFC" />
-          </svg>
-        )}
       </div>
 
-      {/* Main Content Area: Left Name, ID, Course, Expiry & White Barcode Box + Right Framed Photo & STUDENT */}
-      <div className="relative z-10 flex-1 flex justify-between items-end gap-2 pt-1 min-h-0">
-        {/* Left Column */}
+      {/* Main Content Area: Name, ID, Course, Expiry & White Barcode Box + Framed Photo & STUDENT (Switchable Left/Right) */}
+      <div className={`relative z-10 flex-1 flex justify-between items-end gap-2 pt-1 min-h-0 ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
+        {/* Details Column */}
         <div className="flex-1 flex flex-col justify-between h-full min-w-0">
           <div
             className="text-left pl-1 pt-0.5 leading-[1.18] min-w-0"
@@ -1643,7 +1560,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               textShadow: '0 0 5px rgba(255,255,255,0.95), 0 0 2px rgba(255,255,255,0.9)'
             }}
           >
-            <SingleLineText fontSize={12} className="font-serif font-bold text-neutral-950 text-left">
+            <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-wide leading-tight text-left">
               {toTitleCase(fullName)}
             </SingleLineText>
             <SingleLineText fontSize={11.5} className="font-serif font-bold text-neutral-950 tabular-nums text-left">
@@ -1659,8 +1576,8 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             </div>
           </div>
 
-          {/* Bottom-Left White Box with Barcode */}
-          <div className="bg-white px-2.5 py-1.5 shadow-xs border border-neutral-200 w-[178px] flex flex-col items-center">
+          {/* White Box with Barcode */}
+          <div className={`bg-white px-2.5 py-1.5 shadow-xs border border-neutral-200 w-[178px] flex flex-col items-center ${isAvatarLeft ? 'self-end' : 'self-start'}`}>
             <ScannableBarcode
               value={hwsBarcodeDigits}
               className="h-7 w-full"
@@ -1673,7 +1590,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Portrait Photo + STUDENT */}
+        {/* Portrait Photo + STUDENT Column */}
         <div className="flex flex-col items-center flex-shrink-0">
           <div className="w-[88px] h-[100px] bg-white p-[2px] shadow-sm">
             <img

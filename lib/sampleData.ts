@@ -690,11 +690,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
       ? `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.ac.uk`
       : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
     photo: photo,
-    logo: isAirUni 
-      ? '/assets/air_university_logo.svg' 
-      : university.toLowerCase().includes('eastbridge')
-      ? '/assets/eastbridge_crest_transparent.png'
-      : null,
+    logo: null,
     bloodGroup: getRandomElement(bloodGroups),
     emergencyContact: getRandomPhoneNumber(countryType),
   };

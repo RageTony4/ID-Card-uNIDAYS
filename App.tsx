@@ -19,9 +19,19 @@ const App: React.FC = () => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (!parsed.photo || parsed.photo.includes('catbox.moe') || parsed.photo.includes('picsum.photos') || parsed.photo.includes('any-link-me')) {
+        if (
+          !parsed.photo ||
+          parsed.photo.includes('catbox.moe') ||
+          parsed.photo.includes('picsum.photos') ||
+          parsed.photo.includes('any-link-me') ||
+          parsed.photo.includes('xsgames.co') ||
+          parsed.photo.includes('randomuser.me') ||
+          parsed.photo.includes('thispersondoesnotexist.com') ||
+          parsed.photo.startsWith('data:image/jpeg;base64,')
+        ) {
           parsed.photo = '/assets/avatars/female_1.webp';
         }
+        parsed.logo = null;
         return parsed;
       } catch (e) {
         console.error('Failed to parse saved student info', e);
@@ -59,6 +69,11 @@ const App: React.FC = () => {
     return (saved === 'dark' || saved === 'white') ? saved : 'white';
   });
 
+  const [avatarSide, setAvatarSide] = useState<'left' | 'right'>(() => {
+    const saved = localStorage.getItem('id_gen_avatar_side');
+    return (saved === 'left' || saved === 'right') ? saved : 'right';
+  });
+
   const [isNameLocked, setIsNameLocked] = useState<boolean>(() => {
     const saved = localStorage.getItem('id_gen_name_locked');
     return saved !== null ? saved === 'true' : true;
@@ -83,7 +98,7 @@ const App: React.FC = () => {
   const [isGeneratingAvatar, setIsGeneratingAvatar] = useState<boolean>(false);
 
   const [generatedAvatars, setGeneratedAvatars] = useState<GeneratedAvatarItem[]>(() => {
-    const saved = localStorage.getItem('id_gen_generated_avatars');
+    const saved = localStorage.getItem('id_gen_generated_avatars_v4');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -137,6 +152,10 @@ const App: React.FC = () => {
   }, [t1Variant]);
 
   useEffect(() => {
+    localStorage.setItem('id_gen_avatar_side', avatarSide);
+  }, [avatarSide]);
+
+  useEffect(() => {
     localStorage.setItem('id_gen_name_locked', String(isNameLocked));
   }, [isNameLocked]);
 
@@ -154,7 +173,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     try {
-      localStorage.setItem('id_gen_generated_avatars', JSON.stringify(generatedAvatars.slice(0, 6)));
+      localStorage.setItem('id_gen_generated_avatars_v4', JSON.stringify(generatedAvatars.slice(0, 6)));
     } catch (e) {
       console.warn('Could not persist generated avatars in localStorage', e);
     }
@@ -207,9 +226,24 @@ const App: React.FC = () => {
         timestamp: Date.now(),
         studentInfo: { ...newInfo },
         template: tpl || template,
-        t1Variant
+        t1Variant,
+        avatarSide
       };
       return [newItem, ...prev].slice(0, 5);
+    });
+  };
+
+  const handleToggleAvatarSide = () => {
+    setAvatarSide(prev => {
+      const next = prev === 'right' ? 'left' : 'right';
+      setStudentInfo(info => ({ ...info, avatarSide: next }));
+      showToast(
+        next === 'left'
+          ? 'Switched: Avatar Profile on LEFT side • Student Details on RIGHT side'
+          : 'Switched: Avatar Profile on RIGHT side • Student Details on LEFT side',
+        'info'
+      );
+      return next;
     });
   };
 
@@ -481,7 +515,7 @@ const App: React.FC = () => {
         validUntil: isDateLocked ? studentInfo.validUntil : newInfo.validUntil,
         dob: isDateLocked ? studentInfo.dob : newInfo.dob,
         photo: studentInfo.photo || newInfo.photo,
-        logo: newInfo.logo !== null ? newInfo.logo : studentInfo.logo 
+        logo: null
       };
 
       setStudentInfo(updatedInfo);
@@ -535,7 +569,7 @@ const App: React.FC = () => {
       issueDate: isDateLocked ? studentInfo.issueDate : newInfo.issueDate,
       validUntil: isDateLocked ? studentInfo.validUntil : newInfo.validUntil,
       dob: isDateLocked ? studentInfo.dob : newInfo.dob,
-      logo: studentInfo.logo 
+      logo: null
     };
 
     setStudentInfo(finalInfo);
@@ -576,7 +610,7 @@ const App: React.FC = () => {
       issueDate: isDateLocked ? studentInfo.issueDate : newInfo.issueDate,
       validUntil: isDateLocked ? studentInfo.validUntil : newInfo.validUntil,
       dob: isDateLocked ? studentInfo.dob : newInfo.dob,
-      logo: studentInfo.logo 
+      logo: null
     };
 
     setStudentInfo(finalInfo);
@@ -607,6 +641,9 @@ const App: React.FC = () => {
     }
     if (item.t1Variant) {
       setT1Variant(item.t1Variant);
+    }
+    if (item.avatarSide) {
+      setAvatarSide(item.avatarSide);
     }
     const name = item.studentInfo.studentName;
     if (name) {
@@ -650,6 +687,8 @@ const App: React.FC = () => {
               setT1Variant(variant);
               showToast(`Switched T1 to ${variant === 'dark' ? 'Dark' : 'White'} design`, 'info');
             }}
+            avatarSide={avatarSide}
+            onToggleAvatarSide={handleToggleAvatarSide}
             isNameLocked={isNameLocked}
             onToggleNameLock={toggleNameLock}
             isDateLocked={isDateLocked}
@@ -685,6 +724,8 @@ const App: React.FC = () => {
               setT1Variant(variant);
               showToast(`Switched T1 to ${variant === 'dark' ? 'Dark' : 'White'} design`, 'info');
             }}
+            avatarSide={avatarSide}
+            onToggleAvatarSide={handleToggleAvatarSide}
             showToast={showToast} 
             autoTrigger={autoTrigger}
             setActiveTab={setActiveTab}

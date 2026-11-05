@@ -137,9 +137,6 @@ export const UOfLifeTemplate: React.FC<UOfLifeTemplateProps> = ({ studentInfo, s
           <span className="font-sans font-black text-[10px] sm:text-[11px] tracking-[0.12em] text-white uppercase drop-shadow-sm">
             STUDENT ID CARD
           </span>
-          {studentInfo.logo && (
-            <img src={studentInfo.logo} alt="Logo" className="w-5 h-5 object-contain" />
-          )}
         </div>
 
         {/* Left Information Area: Trilingual Labels */}

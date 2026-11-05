@@ -13,6 +13,8 @@ interface PreviewPanelProps {
   theme: 'light' | 'dark';
   t1Variant?: 'white' | 'dark';
   onT1VariantChange?: (variant: 'white' | 'dark') => void;
+  avatarSide?: 'left' | 'right';
+  onToggleAvatarSide?: () => void;
   showToast: (message: string, type: ToastType) => void;
   autoTrigger?: number;
   setActiveTab: (tab: 'edit' | 'preview') => void;
@@ -57,6 +59,8 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   theme, 
   t1Variant = 'white', 
   onT1VariantChange, 
+  avatarSide = 'right',
+  onToggleAvatarSide,
   showToast, 
   autoTrigger = 0, 
   setActiveTab, 
@@ -684,14 +688,37 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         </div>
       )}
 
+      {/* One-Click Avatar Side Switcher for UTAS, Eastbridge, Durham, Brunel, and Hobart (HWS) */}
+      {(template === 'utas' || template === 'eastbridge' || template === 'durham' || template === 'brunel' || template === 'hws') && (
+        <div className={`mb-5 p-1.5 px-3 rounded-full border flex items-center gap-3 shadow-xs transition-all animate-in fade-in duration-200 ${
+          isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-white/90 border-neutral-300 backdrop-blur-sm'
+        }`}>
+          <span className={`text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5 ${isDark ? 'text-indigo-400' : 'text-indigo-700'}`}>
+            <span className="w-2 h-2 rounded-full bg-indigo-500" />
+            Avatar on {avatarSide === 'left' ? 'Left' : 'Right'}
+          </span>
+          <button
+            type="button"
+            onClick={onToggleAvatarSide}
+            className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-indigo-600 hover:bg-indigo-500 text-white shadow-xs transition-all flex items-center gap-1.5 active:scale-95 cursor-pointer"
+            title="One-click switch Avatar Profile between Right and Left side"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            <span>{avatarSide === 'left' ? 'Switch Avatar to Right' : 'Switch Avatar to Left'}</span>
+          </button>
+        </div>
+      )}
+
       <div className="space-y-6 w-full flex flex-col items-center">
         <div>
            <p className={`font-bold mb-2 text-center text-sm uppercase tracking-wide transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Front Side</p>
-           <IdCard ref={frontCardRef} studentInfo={studentInfo} side="front" template={template} t1Variant={t1Variant} />
+           <IdCard ref={frontCardRef} studentInfo={studentInfo} side="front" template={template} t1Variant={t1Variant} avatarSide={avatarSide} />
         </div>
         <div>
            <p className={`font-bold mb-2 text-center text-sm uppercase tracking-wide transition-colors duration-300 ${isDark ? 'text-zinc-500' : 'text-gray-500'}`}>Back Side</p>
-           <IdCard ref={backCardRef} studentInfo={studentInfo} side="back" template={template} t1Variant={t1Variant} />
+           <IdCard ref={backCardRef} studentInfo={studentInfo} side="back" template={template} t1Variant={t1Variant} avatarSide={avatarSide} />
         </div>
 
         {/* Scannable Code Status Pill */}

@@ -30,7 +30,7 @@ const FEMALE_NAMES_SET = new Set([
 ]);
 
 const HISPANIC_SURNAMES = new Set([
-  'garcia', 'rodriguez', 'martinez', 'hernandez', 'lopez', 'gonzalez', 'perez', 'sanchez', 'ramirez', 'torres', 'flores', 'rivera', 'gomez', 'diaz', 'cruz', 'morales', 'ortiz', 'REYES'
+  'garcia', 'rodriguez', 'martinez', 'hernandez', 'lopez', 'gonzalez', 'perez', 'sanchez', 'ramirez', 'torres', 'flores', 'rivera', 'gomez', 'diaz', 'cruz', 'morales', 'ortiz', 'reyes'
 ]);
 
 const EAST_ASIAN_NAMES = new Set([
@@ -182,7 +182,6 @@ export function inferStudentDemographics(studentInfo: StudentInfo): {
   }
 
   // For UK, USA, Canada, Australia, Germany, France, Ireland, Austria:
-  // Provide diverse multi-ethnic university demographics so repeated randomizations generate unique races and faces
   const diversePool = [
     {
       ethnicityDescription: 'European / Caucasian heritage with natural fair-to-medium complexion and distinct facial bone structure',
@@ -229,16 +228,15 @@ export function inferStudentDemographics(studentInfo: StudentInfo): {
 }
 
 /**
- * Normalizes any image data URL to a clean 512x512 square JPEG data URL
- * so it embeds cleanly in ID cards and html-to-image exports.
+ * Downscales a base64 image dataURL to a clean 360x360 JPEG so it embeds fast in html-to-image
+ * and fits comfortably in memory / localStorage.
  */
-async function normalizeAvatarDataUrl(rawDataUrl: string): Promise<string> {
-  return new Promise((resolve, reject) => {
+async function downscaleDataUrl(rawDataUrl: string, size: number = 360): Promise<string> {
+  return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      const size = 512;
       canvas.width = size;
       canvas.height = size;
       const ctx = canvas.getContext('2d');
@@ -246,16 +244,41 @@ async function normalizeAvatarDataUrl(rawDataUrl: string): Promise<string> {
         resolve(rawDataUrl);
         return;
       }
-      // Center-crop square
-      const minDim = Math.min(img.width, img.height);
-      const sx = (img.width - minDim) / 2;
-      const sy = (img.height - minDim) * 0.25; // slight top bias for headshots
-      ctx.drawImage(img, sx, Math.max(0, sy), minDim, minDim, 0, 0, size, size);
-      resolve(canvas.toDataURL('image/jpeg', 0.92));
+      ctx.drawImage(img, 0, 0, size, size);
+      resolve(canvas.toDataURL('image/jpeg', 0.88));
     };
-    img.onerror = (err) => reject(err);
+    img.onerror = () => resolve(rawDataUrl);
     img.src = rawDataUrl;
   });
+}
+
+// Track used studio v4 avatar indices so each generation picks a fresh, unused v4 studio portrait
+const usedMaleV4Indices = new Set<number>();
+const usedFemaleV4Indices = new Set<number>();
+
+function pickNextUnusedV4Avatar(gender: 'male' | 'female', currentPhoto?: string): string {
+  const maxIndex = gender === 'male' ? 59 : 109;
+  const usedSet = gender === 'male' ? usedMaleV4Indices : usedFemaleV4Indices;
+
+  if (usedSet.size >= maxIndex) {
+    usedSet.clear();
+  }
+
+  const candidates: number[] = [];
+  for (let i = 1; i <= maxIndex; i++) {
+    const url = `/assets/avatars/${gender}_${i}.webp`;
+    if (!usedSet.has(i) && url !== currentPhoto) {
+      candidates.push(i);
+    }
+  }
+
+  const chosenIdx =
+    candidates.length > 0
+      ? candidates[Math.floor(Math.random() * candidates.length)]
+      : Math.floor(Math.random() * maxIndex) + 1;
+
+  usedSet.add(chosenIdx);
+  return `/assets/avatars/${gender}_${chosenIdx}.webp`;
 }
 
 export async function generateUniqueStudentAvatar(
@@ -300,10 +323,10 @@ export async function generateUniqueStudentAvatar(
     if (response.ok) {
       const data = await response.json();
       if (data?.dataUrl) {
-        const normalizedUrl = await normalizeAvatarDataUrl(data.dataUrl);
+        const compactUrl = await downscaleDataUrl(data.dataUrl, 360);
         return {
           id: `ai-avatar-${Date.now()}-${uniqueSeed}`,
-          url: normalizedUrl,
+          url: compactUrl,
           studentName: studentInfo.studentName || 'Student',
           ethnicity: shortEthnicityLabel,
           gender,
@@ -314,29 +337,14 @@ export async function generateUniqueStudentAvatar(
       }
     }
   } catch (err) {
-    console.warn('Server avatar generation failed:', err);
+    console.warn('Server avatar generation failed, using v4 studio avatar:', err);
   }
 
-  // If API quota is reached or unavailable, select a unique non-repeating high-resolution studio portrait matching gender
-  const maxIndex = gender === 'male' ? 59 : 109;
-  const usedSet = gender === 'male' ? usedMaleFallbacks : usedFemaleFallbacks;
-  if (usedSet.size >= maxIndex) {
-    usedSet.clear();
-  }
-
-  let fallbackIndex = Math.floor(Math.random() * maxIndex) + 1;
-  let attempts = 0;
-  while (usedSet.has(fallbackIndex) && attempts < 150) {
-    fallbackIndex = Math.floor(Math.random() * maxIndex) + 1;
-    attempts++;
-  }
-  usedSet.add(fallbackIndex);
-
-  const cleanPortraitUrl = `/assets/avatars/${gender}_${fallbackIndex}.webp`;
-
+  // Fallback to the v4 studio portrait collection (unused index per session)
+  const fallbackUrl = pickNextUnusedV4Avatar(gender, studentInfo.photo || undefined);
   return {
     id: `ai-avatar-${Date.now()}-${uniqueSeed}`,
-    url: cleanPortraitUrl,
+    url: fallbackUrl,
     studentName: studentInfo.studentName || 'Student',
     ethnicity: shortEthnicityLabel,
     gender,
@@ -345,6 +353,3 @@ export async function generateUniqueStudentAvatar(
     timestamp: Date.now()
   };
 }
-
-const usedMaleFallbacks = new Set<number>();
-const usedFemaleFallbacks = new Set<number>();

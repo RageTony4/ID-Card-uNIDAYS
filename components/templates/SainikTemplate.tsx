@@ -249,11 +249,7 @@ export const SainikTemplate: React.FC<SainikTemplateProps> = ({ studentInfo, sid
       <div className="h-[46px] w-full bg-[#1B345D] px-2.5 py-1.5 flex items-center justify-between relative z-20 flex-shrink-0 text-white shadow-sm border-b border-[#254A80]">
         {/* Left Emblem */}
         <div className="flex items-center gap-2">
-          {studentInfo.logo ? (
-            <img src={studentInfo.logo} alt="School Logo" className="w-8 h-8 object-contain flex-shrink-0" />
-          ) : (
-            <SainikCrestLogo className="w-8 h-8 flex-shrink-0" />
-          )}
+          <SainikCrestLogo className="w-8 h-8 flex-shrink-0" />
           {/* Header Typography */}
           <div className="flex flex-col text-left max-w-[215px]">
             <h1
