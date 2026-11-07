@@ -661,6 +661,18 @@ export const CALIBRATED_SCENES: CalibratedSceneConfig[] = [
     maskExpand: 0.006,
     hasPlasticSleeve: false,
     lightingBlend: 0.16
+  },
+  {
+    id: 'scene_52426q1b6r',
+    matchKeys: ['52426q1b6r', 'scene_52426q1b6r'],
+    tl: [0.0520, 0.0335],
+    tr: [0.9635, 0.1145],
+    br: [0.9225, 0.8965],
+    bl: [0.0175, 0.8155],
+    cornerRadius: 0.048,
+    maskExpand: 0.006,
+    hasPlasticSleeve: false,
+    lightingBlend: 0.16
   }
 ];
 
@@ -701,7 +713,8 @@ export function resolveLocalSceneUrl(sceneUrl: string): string {
     ['303r4n681v', '/assets/mockups/scene_durham_303r4n681v.jpg'],
     ['170p6e501a', '/assets/mockups/scene_hws_170p6e501a.jpg'],
     ['1i5g121y6m', '/assets/mockups/scene_utas_1i5g121y6m.jpg'],
-    ['3350531a5z', '/assets/mockups/scene_usu_3350531a5z.jpg']
+    ['3350531a5z', '/assets/mockups/scene_usu_3350531a5z.jpg'],
+    ['52426q1b6r', '/assets/mockups/scene_52426q1b6r.png']
   ];
   for (const [key, localPath] of map) {
     if (clean.includes(key)) return localPath;

@@ -103,7 +103,12 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     template === 'harvard' ||
     template === 'byu' ||
     template === 'usu' ||
-    template === 'hws'
+    template === 'hws' ||
+    template === 'hcu' ||
+    template === 'nsu' ||
+    template === 'glasgow' ||
+    template === 'williampenn' ||
+    template === 'stanford'
   ) {
     return <NewReferenceTemplates studentInfo={studentInfo} side={side} template={template} avatarSide={avatarSide} forwardedRef={ref} />;
   }

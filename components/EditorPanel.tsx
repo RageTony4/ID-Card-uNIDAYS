@@ -224,6 +224,7 @@ const SCHOOL_DATA = {
         'Kew College',
         'USP College',
         'Community-Ed Academy',
+        'University of Glasgow',
         'Brunel University London',
         'Durham University',
         'Birmingham City FC Community Trust',
@@ -282,6 +283,10 @@ const SCHOOL_DATA = {
     ],
     'USA': [
         'Eastbridge University',
+        'Houston Christian University',
+        'Newport State University',
+        'William Penn High School',
+        'Stanford University',
         'Harvard University',
         'Brigham Young University',
         'Utah State University',
@@ -590,6 +595,56 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             Hobart & WS
           </button>
           <button 
+            onClick={() => onTemplateChange('hcu')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'hcu' 
+                ? 'border-[#102182] bg-[#102182]/20 text-[#102182] dark:text-blue-300 shadow-md font-black ring-2 ring-[#102182]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            HCU
+          </button>
+          <button 
+            onClick={() => onTemplateChange('nsu')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'nsu' 
+                ? 'border-[#25134D] bg-[#25134D]/20 text-[#25134D] dark:text-purple-300 shadow-md font-black ring-2 ring-[#25134D]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Newport St
+          </button>
+          <button 
+            onClick={() => onTemplateChange('glasgow')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'glasgow' 
+                ? 'border-[#163268] bg-[#163268]/20 text-[#163268] dark:text-sky-300 shadow-md font-black ring-2 ring-[#163268]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Glasgow
+          </button>
+          <button 
+            onClick={() => onTemplateChange('williampenn')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'williampenn' 
+                ? 'border-[#D1322A] bg-[#D1322A]/20 text-[#D1322A] dark:text-red-300 shadow-md font-black ring-2 ring-[#D1322A]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Wm Penn HS
+          </button>
+          <button 
+            onClick={() => onTemplateChange('stanford')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'stanford' 
+                ? 'border-[#8C1515] bg-[#8C1515]/20 text-[#8C1515] dark:text-rose-300 shadow-md font-black ring-2 ring-[#8C1515]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            Stanford
+          </button>
+          <button 
             onClick={() => onTemplateChange('eastbridge')}
             className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
               template === 'eastbridge' 
@@ -796,8 +851,8 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
           </div>
         )}
 
-        {/* One-Click Switch Avatar Side Button for UTAS, Eastbridge, Durham, Brunel, and Hobart (HWS) */}
-        {(template === 'utas' || template === 'eastbridge' || template === 'durham' || template === 'brunel' || template === 'hws') && (
+        {/* One-Click Switch Avatar Side Button */}
+        {(template === 'utas' || template === 'eastbridge' || template === 'durham' || template === 'brunel' || template === 'hws' || template === 'hcu' || template === 'nsu' || template === 'glasgow' || template === 'williampenn' || template === 'stanford') && (
           <div className={`mt-3 p-3 rounded-xl border flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in duration-200 ${
             isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-indigo-50/70 border-indigo-200'
           }`}>

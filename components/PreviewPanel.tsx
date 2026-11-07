@@ -50,7 +50,8 @@ const MOCKUP_SCENES = [
   { url: "/assets/mockups/scene_durham_303r4n681v.jpg", label: "Natural View 24" },
   { url: "/assets/mockups/scene_hws_170p6e501a.jpg", label: "Natural View 25" },
   { url: "/assets/mockups/scene_utas_1i5g121y6m.jpg", label: "Natural View 26" },
-  { url: "/assets/mockups/scene_usu_3350531a5z.jpg", label: "Natural View 27" }
+  { url: "/assets/mockups/scene_usu_3350531a5z.jpg", label: "Natural View 27" },
+  { url: "/assets/mockups/scene_52426q1b6r.png", label: "Natural View 28" }
 ];
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ 
@@ -688,8 +689,8 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
         </div>
       )}
 
-      {/* One-Click Avatar Side Switcher for UTAS, Eastbridge, Durham, Brunel, and Hobart (HWS) */}
-      {(template === 'utas' || template === 'eastbridge' || template === 'durham' || template === 'brunel' || template === 'hws') && (
+      {/* One-Click Avatar Side Switcher */}
+      {(template === 'utas' || template === 'eastbridge' || template === 'durham' || template === 'brunel' || template === 'hws' || template === 'hcu' || template === 'nsu' || template === 'glasgow' || template === 'williampenn' || template === 'stanford') && (
         <div className={`mb-5 p-1.5 px-3 rounded-full border flex items-center gap-3 shadow-xs transition-all animate-in fade-in duration-200 ${
           isDark ? 'bg-zinc-900/90 border-zinc-800' : 'bg-white/90 border-neutral-300 backdrop-blur-sm'
         }`}>

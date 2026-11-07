@@ -262,6 +262,7 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Giggleswick School': { city: 'Settle, UK', address: 'Settle, North Yorkshire', postcode: 'BD24 0DE', country: 'UK' },
   'Carlton Keighley': { city: 'Keighley, UK', address: 'Undercliffe Lane, Keighley', postcode: 'BD21 4RN', country: 'UK' },
   'Community-Ed Academy': { city: 'London, UK', address: '42 High Street, Kensington, London', postcode: 'SW7 2AZ', country: 'UK' },
+  'University of Glasgow': { city: 'Glasgow, Scotland, UK', address: 'University Avenue, Glasgow', postcode: 'G12 8QQ', country: 'UK' },
   'Brunel University London': { city: 'Uxbridge, London, UK', address: 'Kingston Lane, Uxbridge, Middlesex', postcode: 'UB8 3PH', country: 'UK' },
   'Durham University': { city: 'Durham, UK', address: 'The Palatine Centre, Stockton Road, Durham', postcode: 'DH1 3LE', country: 'UK' },
   'CommunityNI': { city: 'Belfast, UK', address: '35 Donegall St, Belfast', postcode: 'BT1 2FG', country: 'UK' },
@@ -315,6 +316,10 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'University of Wollongong': { city: 'Wollongong, NSW, Australia', address: 'Northfields Ave, Wollongong', postcode: '2522', country: 'Australia' },
   'Mini Bambini Early Learning Centre': { city: 'Sydney, NSW, Australia', address: '15 Bambini Way, Sydney', postcode: '2000', country: 'Australia' },
   'Northfield University': { city: 'Boston, MA, USA', address: '750 University Avenue, Boston, MA', postcode: '02115', country: 'USA' },
+  'Houston Christian University': { city: 'Houston, TX, USA', address: '7502 Fondren Rd, Houston, TX', postcode: '77074', country: 'USA' },
+  'Newport State University': { city: 'Newport, RI, USA', address: '100 Bellevue Ave, Newport, RI', postcode: '02840', country: 'USA' },
+  'William Penn High School': { city: 'New Castle, DE, USA', address: '713 E Basin Rd, New Castle, DE', postcode: '19720', country: 'USA' },
+  'Stanford University': { city: 'Stanford, CA, USA', address: '450 Jane Stanford Way, Stanford, CA', postcode: '94305', country: 'USA' },
   'Harvard University': { city: 'Cambridge, MA, USA', address: 'Massachusetts Hall, Cambridge, MA', postcode: '02138', country: 'USA' },
   'Brigham Young University': { city: 'Provo, UT, USA', address: 'Campus Dr, Provo, UT', postcode: '84602', country: 'USA' },
   'Utah State University': { city: 'Logan, UT, USA', address: 'Old Main Hill, Logan, UT', postcode: '84322', country: 'USA' },
@@ -504,6 +509,11 @@ const getRandomId = (university: string): string => {
   if (university === 'Brunel University London') return `204${Math.floor(1000 + Math.random() * 8999)}`;
   if (university === 'Durham University') return `000${Math.floor(200000 + Math.random() * 799999)}`;
   if (university === 'Elizabeth Seton High School') return `23${Math.floor(100 + Math.random() * 899)}`;
+  if (university === 'Houston Christian University') return `H013${Math.floor(10000 + Math.random() * 89999)}`;
+  if (university === 'Newport State University') return `26-1-0${Math.floor(10000 + Math.random() * 89999)}`;
+  if (university === 'University of Glasgow') return `2001${Math.floor(1000 + Math.random() * 8999)}`;
+  if (university === 'William Penn High School') return `012-${Math.floor(1000 + Math.random() * 8999)}`;
+  if (university === 'Stanford University') return `058${Math.floor(10000 + Math.random() * 89999)}`;
   if (university === 'Harvard University') return `9078${Math.floor(1000 + Math.random() * 8999)} 0`;
   if (university === 'Brigham Young University') return `879${Math.floor(100000 + Math.random() * 899999)} 01`;
   if (university === 'Utah State University') return `A014${Math.floor(10000 + Math.random() * 89999)}`;
@@ -701,6 +711,16 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
       ? 'www.mccc.edu'
       : university.toLowerCase().includes('eastbridge')
       ? 'www.eastbridge.edu'
+      : university === 'Houston Christian University'
+      ? 'www.hc.edu'
+      : university === 'Newport State University'
+      ? 'www.newportstate.edu'
+      : university === 'University of Glasgow'
+      ? 'www.gla.ac.uk'
+      : university === 'William Penn High School'
+      ? 'www.colonialschooldistrict.org'
+      : university === 'Stanford University'
+      ? 'www.stanford.edu'
       : university === 'CAY College'
       ? 'www.caycollege.ac.uk'
       : university === 'New College'

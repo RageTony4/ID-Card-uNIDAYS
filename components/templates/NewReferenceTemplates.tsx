@@ -188,6 +188,11 @@ const getSchoolAcronym = (uniName: string, defaultAcronym: string = 'UNI'): stri
   if (lower.includes('harvard')) return 'HU';
   if (lower.includes('brunel')) return 'BUL';
   if (lower.includes('curtin')) return 'CU';
+  if (lower.includes('houston christian')) return 'HCU';
+  if (lower.includes('newport state')) return 'NSU';
+  if (lower.includes('glasgow')) return 'UOG';
+  if (lower.includes('william penn')) return 'WPHS';
+  if (lower.includes('stanford')) return 'SU';
 
   const stopWords = new Set(['of', 'the', 'and', 'at', 'in', 'for', 'de', 'di', 'la', 'le']);
   const words = cleaned
@@ -228,6 +233,18 @@ const splitPrimaryAndSuffix = (uniName: string): { primary: string; secondary: s
   }
   if (lower === 'elizabeth seton high school') {
     return { primary: 'Elizabeth Seton', secondary: 'High School' };
+  }
+  if (lower === 'houston christian university') {
+    return { primary: 'Houston Christian', secondary: 'UNIVERSITY' };
+  }
+  if (lower === 'newport state university') {
+    return { primary: 'NEWPORT STATE', secondary: 'UNIVERSITY' };
+  }
+  if (lower === 'william penn high school') {
+    return { primary: 'WILLIAM PENN', secondary: 'HIGH SCHOOL' };
+  }
+  if (lower === 'stanford university') {
+    return { primary: 'Stanford', secondary: 'University' };
   }
 
   // Check "The University of X" or "University of X"
@@ -1483,6 +1500,593 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                 <SingleLineText fontSize={9.5} className="font-sans font-bold text-neutral-900 tracking-wide text-center">
                   {bottomLogoLine2}
                 </SingleLineText>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================================================
+  // FRONT 10: HOUSTON CHRISTIAN UNIVERSITY (hcu) — 52426q1b6r.png
+  // ==========================================================================
+  if (template === 'hcu') {
+    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+    const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
+    const displayId = rawId && /^H\d+/i.test(rawId) ? rawId.toUpperCase() : `H${deriveDigits(rawId || '01312123', 8, '013')}`;
+    const isHcu = cleanUniName.toLowerCase().includes('houston christian');
+    const { primary: hcuPrimary, secondary: hcuSecondary } = splitPrimaryAndSuffix(cleanUniName);
+    const primaryWords = hcuPrimary.split(/\s+/);
+    const line1 = isHcu ? 'Houston' : (primaryWords[0] || 'Houston');
+    const line2 = isHcu ? 'Christian' : (primaryWords.slice(1).join(' ') || '');
+    const line3 = (isHcu ? 'UNIVERSITY' : hcuSecondary).toUpperCase();
+    const roleLabel =
+      studentInfo.status && !studentInfo.status.toLowerCase().includes('currently enrolled')
+        ? studentInfo.status.toUpperCase()
+        : 'UNDERGRADUATE';
+
+    return (
+      <div
+        ref={forwardedRef}
+        className="id-card-container shadow-xl bg-[#102182] overflow-hidden relative rounded-xl border border-[#1E3A8A] font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-white"
+        style={{
+          background: 'linear-gradient(155deg, #162B9C 0%, #0E1D78 55%, #0A155E 100%)'
+        }}
+      >
+        {/* Subtle Glossy PVC Diagonal Highlight */}
+        <div
+          className="absolute inset-0 pointer-events-none z-0 opacity-20"
+          style={{
+            background: 'linear-gradient(118deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.04) 42%, transparent 60%)'
+          }}
+        />
+
+        <div className={`relative z-10 flex-1 flex items-stretch justify-between min-h-0 ${isAvatarLeft ? 'flex-row' : 'flex-row-reverse'}`}>
+          {/* Portrait + Student ID Column */}
+          <div className="w-[118px] flex flex-col justify-between pt-3 pb-2.5 px-3 flex-shrink-0">
+            <div className="w-full h-[142px] bg-[#7CB2EE] overflow-hidden border border-white/25 shadow-sm">
+              <img
+                src={photoUrl}
+                alt={fullName}
+                className="w-full h-full object-cover object-top"
+                referrerPolicy="no-referrer"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/male_5.webp'; }}
+              />
+            </div>
+            <div className="w-full pt-1.5 text-center">
+              <SingleLineText fontSize={14.5} className="font-sans font-medium text-white tracking-wider tabular-nums text-center">
+                {displayId}
+              </SingleLineText>
+            </div>
+          </div>
+
+          {/* Right Header, Role, Single-Line Bold Name & White Barcode Strip */}
+          <div className="flex-1 flex flex-col justify-between pt-2.5 min-w-0">
+            {/* Top Centered & Bolded School Name */}
+            <div className="px-2.5 flex items-center justify-center text-center min-w-0">
+              <div className="flex flex-col items-center justify-center leading-[1.02] min-w-0 w-full">
+                <SingleLineText fontSize={line1.length > 12 ? 17 : 22} className="font-serif font-extrabold text-white tracking-tight text-center">
+                  {toTitleCase(line1)}
+                </SingleLineText>
+                {line2 && (
+                  <SingleLineText fontSize={line2.length > 12 ? 16 : 21} className="font-serif font-extrabold text-white tracking-tight text-center">
+                    {toTitleCase(line2)}
+                  </SingleLineText>
+                )}
+                <SingleLineText fontSize={10.5} className="font-serif font-bold text-white/95 tracking-[0.22em] uppercase mt-1 text-center">
+                  {line3}
+                </SingleLineText>
+              </div>
+            </div>
+
+            {/* Middle Role + Bold Single-Line Student Name */}
+            <div className="px-2.5 my-auto flex flex-col items-center justify-center text-center min-w-0">
+              <SingleLineText fontSize={10.5} className="font-sans font-extrabold text-white uppercase tracking-[0.09em] text-center">
+                {roleLabel}
+              </SingleLineText>
+              {studentInfo.course && (
+                <SingleLineText fontSize={7.5} className="font-sans font-semibold text-sky-200/90 tracking-wide mt-0.5 text-center">
+                  {`${studentInfo.course} • EXP ${expiryFormatted}`}
+                </SingleLineText>
+              )}
+              <div className="w-full mt-1">
+                <SingleLineText fontSize={13.5} className="font-serif font-extrabold text-white uppercase tracking-wide text-center">
+                  {fullName.toUpperCase()}
+                </SingleLineText>
+              </div>
+            </div>
+
+            {/* Bottom White Barcode Box */}
+            <div className="w-full bg-white px-3 py-1.5 h-[42px] flex items-center justify-center shadow-inner">
+              <ScannableBarcode
+                value={displayId}
+                className="h-full w-full"
+                fill="#09090B"
+                showValue={false}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================================================
+  // FRONT 11: NEWPORT STATE UNIVERSITY (nsu) — 4q1f151l3z.png
+  // ==========================================================================
+  if (template === 'nsu') {
+    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+    const expiryYear = exp.year;
+    const startYear = expiryYear - 1;
+    const academicSpan =
+      studentInfo.academicYear && studentInfo.academicYear.trim()
+        ? studentInfo.academicYear.replace('/', '-')
+        : `${startYear}-${expiryYear}`;
+    const displayId = rawId && rawId.includes('-') ? rawId : `26-1-0${deriveDigits(rawId || '82907', 5, '82')}`;
+    const { primary: nsuPrimary, secondary: nsuSecondary } = splitPrimaryAndSuffix(cleanUniName);
+    const { line1: badgeLine1, line2: badgeLine2 } = splitTwoBalancedLines(cleanUniName);
+    const dobUpper = (studentInfo.dob || '9 AUGUST 2006').toUpperCase();
+    const majorUpper = (studentInfo.course || 'ART + PSYCHOLOGY').toUpperCase();
+    const classLevel =
+      studentInfo.status && !studentInfo.status.toLowerCase().includes('currently enrolled')
+        ? studentInfo.status.toUpperCase()
+        : 'FRESHMAN';
+    const houseLabel = cleanUniName.toUpperCase();
+
+    return (
+      <div
+        ref={forwardedRef}
+        className="id-card-container shadow-xl bg-[#F2F1F6] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900"
+      >
+        {/* Top Deep Plum / Indigo Header Band */}
+        <div className="w-full h-[52px] bg-[#160B30] relative flex items-center justify-center px-4 flex-shrink-0 overflow-hidden">
+          {/* Subtle Right Crest Watermark */}
+          <svg className="absolute right-3 -top-1 w-14 h-14 opacity-10 pointer-events-none" viewBox="0 0 80 90" fill="none">
+            <path d="M40 4 L10 16 V48 C10 68 40 86 40 86 C40 86 70 68 70 48 V16 L40 4 Z" stroke="#FFFFFF" strokeWidth="3" />
+            <text x="40" y="42" textAnchor="middle" fill="#FFFFFF" fontSize="18" fontFamily="serif" fontWeight="bold">
+              {getSchoolAcronym(cleanUniName, 'NSU')}
+            </text>
+          </svg>
+
+          {/* Centered & Bolded School Title */}
+          <div className="flex flex-col items-center justify-center text-center leading-none z-10 min-w-0 w-full">
+            <SingleLineText fontSize={nsuPrimary.length > 18 ? 13 : 16.5} className="font-serif font-extrabold text-white uppercase tracking-[0.06em] text-center">
+              {nsuPrimary.toUpperCase()}
+            </SingleLineText>
+            <SingleLineText fontSize={9.5} className="font-serif font-bold text-white/90 uppercase tracking-[0.38em] mt-1 text-center">
+              {nsuSecondary.toUpperCase()}
+            </SingleLineText>
+          </div>
+        </div>
+
+        {/* Thin Black & Purple Separator Bar */}
+        <div className="w-full h-[3px] bg-black border-b border-[#2E1A60] flex-shrink-0" />
+
+        {/* Body Content */}
+        <div className="relative flex-1 flex items-stretch justify-between px-3 py-2 gap-2.5 min-h-0">
+          {/* Subtle Gothic Campus Tower Watermark on Right */}
+          <svg className="absolute right-5 bottom-0 w-44 h-36 pointer-events-none opacity-[0.08] z-0" viewBox="0 0 200 160">
+            <rect x="75" y="18" width="32" height="125" fill="#1E1B4B" />
+            <rect x="35" y="68" width="115" height="75" fill="#312E81" />
+            <polygon points="35,68 92,42 150,68" fill="#1E1B4B" />
+          </svg>
+
+          <div className={`relative z-10 flex-1 flex items-stretch gap-2.5 min-h-0 pr-3 ${isAvatarLeft ? 'flex-row' : 'flex-row-reverse'}`}>
+            {/* Portrait + School Footer Badge */}
+            <div className="w-[92px] flex flex-col flex-shrink-0">
+              <div className="w-full flex-1 bg-neutral-200 rounded-t-lg overflow-hidden border border-neutral-300 border-b-0">
+                <img
+                  src={photoUrl}
+                  alt={fullName}
+                  className="w-full h-full object-cover object-top"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_6.webp'; }}
+                />
+              </div>
+              <div className="w-full h-[26px] bg-[#25134D] rounded-b-lg px-2 flex items-center justify-between gap-1 text-white flex-shrink-0">
+                <div className="font-serif text-[6px] leading-[1.08] tracking-wider uppercase font-bold text-left min-w-0 flex-1">
+                  <div className="truncate">{badgeLine1.toUpperCase()}</div>
+                  <div className="truncate">{badgeLine2.toUpperCase()}</div>
+                </div>
+                <svg className="w-4 h-4.5 flex-shrink-0" viewBox="0 0 24 28" fill="none">
+                  <path d="M12 2 L3 6 V15 C3 21 12 26 12 26 C12 26 21 21 21 15 V6 L12 2 Z" stroke="#FFFFFF" strokeWidth="1.6" fill="#160B30" />
+                  <path d="M6 17 Q12 12 18 17 M6 20 Q12 15 18 20" stroke="#FFFFFF" strokeWidth="1.4" fill="none" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Student Details + Barcode + Signature */}
+            <div className="flex-1 flex flex-col justify-between min-w-0 text-left">
+              <div>
+                <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-[#110A22] uppercase tracking-wider leading-tight text-left">
+                  {fullName.toUpperCase()}
+                </SingleLineText>
+
+                <div className="mt-1 space-y-[1.5px] text-[7.5px] leading-[1.26] font-sans">
+                  <div className="truncate">
+                    <span className="font-extrabold text-[#2E1A60] uppercase">STUDENT ID: </span>
+                    <span className="font-extrabold text-[#0F0A1C] tabular-nums">{displayId}</span>
+                  </div>
+                  <div className="truncate">
+                    <span className="font-extrabold text-[#2E1A60] uppercase">DATE OF BIRTH: </span>
+                    <span className="font-extrabold text-[#0F0A1C]">{dobUpper}</span>
+                  </div>
+                  <div className="truncate">
+                    <span className="font-extrabold text-[#2E1A60] uppercase">MAJOR: </span>
+                    <span className="font-extrabold text-[#0F0A1C]">{majorUpper}</span>
+                  </div>
+                  <div className="truncate">
+                    <span className="font-extrabold text-[#2E1A60] uppercase">CLASS: </span>
+                    <span className="font-extrabold text-[#0F0A1C]">{classLevel}</span>
+                  </div>
+                  <div className="truncate">
+                    <span className="font-extrabold text-[#2E1A60] uppercase">HOUSE: </span>
+                    <span className="font-extrabold text-[#0F0A1C]">{houseLabel}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Barcode + Signature Row */}
+              <div className="flex items-end justify-between gap-2 pt-1">
+                <div className="w-[104px] flex-shrink-0">
+                  <ScannableBarcode
+                    value={displayId}
+                    className="h-6 w-full"
+                    fill="#09090B"
+                    showValue={false}
+                  />
+                </div>
+                <div className="flex-1 flex flex-col items-center min-w-0">
+                  <div className="w-full border-b border-neutral-700 pb-0.5 text-center">
+                    <SingleLineText fontSize={9.5} className="font-serif italic text-neutral-900 text-center">
+                      {toTitleCase(fullName)}
+                    </SingleLineText>
+                  </div>
+                  <span className="text-[5px] font-sans font-extrabold text-[#2E1A60] uppercase tracking-wider mt-0.5">
+                    STUDENT SIGNATURE
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right-Edge Vertical Academic Year Tab */}
+          <div className="absolute right-0 bottom-0 h-[66px] w-[17px] bg-[#09090B] rounded-tl-md flex items-center justify-center z-20">
+            <span
+              className="font-sans font-bold text-[8px] text-white tracking-wider tabular-nums whitespace-nowrap"
+              style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+            >
+              {academicSpan}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================================================
+  // FRONT 12: UNIVERSITY OF GLASGOW (glasgow) — 19650v161r.png
+  // ==========================================================================
+  if (template === 'glasgow') {
+    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 30, 8);
+    const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
+    const dobParsed = parseMatchingExpiryDate(studentInfo.dob, undefined, undefined, 15, 11);
+    const dobFormatted = `${String(dobParsed.day).padStart(2, '0')}/${String(dobParsed.monthIndex + 1).padStart(2, '0')}/${dobParsed.year > 2015 ? 2004 : dobParsed.year}`;
+    const displayId = rawId || '20016842';
+    const isGlasgow = cleanUniName.toLowerCase().includes('glasgow');
+    const { line1: glasgowLine1, line2: glasgowLine2 } = splitTwoBalancedLines(cleanUniName);
+    const bannerTop = isGlasgow ? 'University' : toTitleCase(glasgowLine1);
+    const bannerBot = isGlasgow ? 'of Glasgow' : toTitleCase(glasgowLine2);
+    const formattedCommaName = `${toTitleCase(lastName)}, ${firstNames}`;
+    const programShort =
+      studentInfo.status && !studentInfo.status.toLowerCase().includes('currently enrolled')
+        ? studentInfo.status.slice(0, 14)
+        : 'PGT';
+
+    return (
+      <div
+        ref={forwardedRef}
+        className="id-card-container shadow-xl bg-[#FAFAFC] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900 p-3.5"
+      >
+        <div className={`flex-1 flex items-stretch justify-between gap-3 min-h-0 ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
+          {/* Left Column: Navy School Box, Bold Single-Line Name, Red ID, Tall Barcode */}
+          <div className="flex-1 flex flex-col justify-between min-w-0">
+            {/* Deep Navy Blue Banner Box (Centered & Bolded School Name) */}
+            <div
+              className="w-full h-[64px] bg-[#163268] px-3 py-2 flex flex-col items-center justify-center text-center shadow-xs"
+              style={{
+                background: 'linear-gradient(180deg, #1E3F7F 0%, #132A58 100%)'
+              }}
+            >
+              <SingleLineText fontSize={bannerTop.length > 16 ? 13 : 16.5} className="font-serif font-extrabold text-white tracking-wide leading-tight text-center">
+                {bannerTop}
+              </SingleLineText>
+              <SingleLineText fontSize={bannerBot.length > 16 ? 12.5 : 16} className="font-serif font-extrabold text-white tracking-wide leading-tight text-center">
+                {bannerBot}
+              </SingleLineText>
+            </div>
+
+            {/* Student Name & Red Student ID */}
+            <div className="pt-1.5 text-left min-w-0">
+              <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-tight leading-tight text-left">
+                {formattedCommaName}
+              </SingleLineText>
+              <SingleLineText fontSize={10.5} className="font-sans font-extrabold text-[#C81E1E] tabular-nums mt-1 text-left">
+                {displayId}
+              </SingleLineText>
+            </div>
+
+            {/* Bottom Tall Barcode */}
+            <div className="w-full pt-1">
+              <ScannableBarcode
+                value={displayId}
+                className="h-9 w-full"
+                fill="#111827"
+                showValue={false}
+              />
+            </div>
+          </div>
+
+          {/* Right Column: "Student" Header, Portrait Photo, PGT / DOB / Expiry */}
+          <div className="w-[96px] flex flex-col justify-between items-end flex-shrink-0">
+            <div className="w-full text-right pr-0.5">
+              <span className="font-sans font-extrabold text-[13px] text-[#1E3A8A] tracking-tight leading-none">
+                Student
+              </span>
+            </div>
+
+            <div className="w-[84px] h-[94px] bg-sky-100 border border-neutral-200 overflow-hidden shadow-2xs my-0.5">
+              <img
+                src={photoUrl}
+                alt={fullName}
+                className="w-full h-full object-cover object-top"
+                referrerPolicy="no-referrer"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_7.webp'; }}
+              />
+            </div>
+
+            <div className="w-[92px] text-left font-sans text-[8px] leading-[1.24] font-bold text-neutral-900">
+              <div className="font-extrabold text-neutral-950 truncate">{programShort}</div>
+              <div className="flex justify-between gap-1 tabular-nums">
+                <span>DOB</span>
+                <span className="font-extrabold">{dobFormatted}</span>
+              </div>
+              <div className="flex justify-between gap-1 tabular-nums">
+                <span>Expiry</span>
+                <span className="font-extrabold">{expiryFormatted}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================================================
+  // FRONT 13: WILLIAM PENN HIGH SCHOOL (williampenn) — 2s1o6c1p2c.png
+  // ==========================================================================
+  if (template === 'williampenn') {
+    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 30, 5);
+    const yrEnd = String(exp.year).slice(-2);
+    const yrStart = String(exp.year - 1).slice(-2);
+    const displayId = rawId || '012-1013';
+    const subDigits = deriveDigits(displayId, 4, '1013');
+    const { line1: wpLine1, line2: wpLine2 } = splitTwoBalancedLines(cleanUniName);
+    const topLine = wpLine1.toUpperCase();
+    const botLine = wpLine2.toUpperCase();
+
+    return (
+      <div
+        ref={forwardedRef}
+        className="id-card-container shadow-xl bg-[#D1322A] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900"
+      >
+        {/* Upper Red Section */}
+        <div className="relative flex-1 px-3.5 pt-2.5 pb-1.5 flex items-stretch justify-between gap-3 overflow-hidden min-h-0">
+          {/* Subtle Diagonal White/Pink Light Beam Sheen */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-25"
+            style={{
+              background: 'linear-gradient(115deg, transparent 18%, rgba(255,255,255,0.65) 28%, transparent 38%)'
+            }}
+          />
+
+          <div className={`relative z-10 flex-1 flex items-stretch justify-between gap-3 min-h-0 ${isAvatarLeft ? 'flex-row' : 'flex-row-reverse'}`}>
+            {/* Framed Portrait Photo */}
+            <div className="w-[92px] h-[112px] bg-white p-[2px] border border-neutral-900 shadow-xs flex-shrink-0 self-center">
+              <div className="w-full h-full border border-neutral-800 overflow-hidden bg-neutral-200">
+                <img
+                  src={photoUrl}
+                  alt={fullName}
+                  className="w-full h-full object-cover object-top"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/male_6.webp'; }}
+                />
+              </div>
+            </div>
+
+            {/* Right School Title (Centered & Bolded) + Year Split & Mascot Emblem */}
+            <div className="flex-1 flex flex-col justify-between items-center text-center py-0.5 min-w-0">
+              <div className="w-full">
+                <SingleLineText
+                  fontSize={topLine.length > 16 ? 13.5 : 17}
+                  className="font-serif font-black text-neutral-950 uppercase tracking-wide text-center"
+                >
+                  <span
+                    style={{
+                      textShadow: '-1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF, 1px 1px 0 #FFFFFF'
+                    }}
+                  >
+                    {topLine}
+                  </span>
+                </SingleLineText>
+                <SingleLineText
+                  fontSize={botLine.length > 16 ? 11 : 13.5}
+                  className="font-serif font-black text-neutral-950 uppercase tracking-wider mt-0.5 text-center"
+                >
+                  <span
+                    style={{
+                      textShadow: '-0.8px -0.8px 0 #FFFFFF, 0.8px -0.8px 0 #FFFFFF, -0.8px 0.8px 0 #FFFFFF, 0.8px 0.8px 0 #FFFFFF'
+                    }}
+                  >
+                    {botLine}
+                  </span>
+                </SingleLineText>
+              </div>
+
+              {/* Split 2-Digit Year (e.g. 26 [Emblem] 27) */}
+              <div className="w-full flex items-center justify-around px-1 my-auto">
+                <span className="font-sans font-black text-[22px] text-neutral-950 tracking-tight tabular-nums">
+                  {yrStart}
+                </span>
+
+                {/* Colonial Tricorn & Shield Mascot Vector Emblem */}
+                <svg className="w-14 h-14 drop-shadow-xs flex-shrink-0" viewBox="0 0 80 80" fill="none">
+                  <path d="M16 30 L40 14 L64 30 L56 34 L24 34 Z" fill="#111827" stroke="#FFFFFF" strokeWidth="2" />
+                  <circle cx="40" cy="44" r="14" fill="#F8FAFC" stroke="#111827" strokeWidth="2.2" />
+                  <path d="M22 66 C26 54, 54 54, 58 66 Z" fill="#111827" stroke="#FFFFFF" strokeWidth="1.8" />
+                  <line x1="16" y1="18" x2="54" y2="68" stroke="#F8FAFC" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+
+                <span className="font-sans font-black text-[22px] text-neutral-950 tracking-tight tabular-nums">
+                  {yrEnd}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Off-White Strip: Barcode + Single-Line Bold Student Name + Grade Code */}
+        <div className={`w-full h-[52px] bg-[#F7F8F3] px-3.5 py-1 flex items-end justify-between gap-2 flex-shrink-0 ${isAvatarLeft ? 'flex-row' : 'flex-row-reverse'}`}>
+          <div className="flex flex-col items-start justify-end min-w-0 flex-1">
+            <div className="w-[138px]">
+              <ScannableBarcode
+                value={displayId}
+                className="h-6 w-full"
+                fill="#111827"
+                showValue={false}
+              />
+            </div>
+            <div className="w-full mt-0.5">
+              <SingleLineText fontSize={13.5} className="font-sans font-black text-neutral-950 uppercase tracking-tight leading-none text-left">
+                {fullName.toUpperCase()}
+              </SingleLineText>
+            </div>
+          </div>
+
+          <div className="flex items-end gap-3 flex-shrink-0 pb-0.5">
+            <span className="font-sans font-black text-[16px] text-neutral-950 leading-none tabular-nums">
+              012
+            </span>
+            <div className="font-sans font-extrabold text-[7.5px] text-neutral-900 leading-[1.05] text-center tabular-nums">
+              <div>{subDigits}</div>
+              <div>13</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================================================
+  // FRONT 14: STANFORD UNIVERSITY (stanford) — 414l5k435x.png
+  // ==========================================================================
+  if (template === 'stanford') {
+    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 1, 0);
+    const iss = parseMatchingExpiryDate(studentInfo.issueDate, undefined, studentInfo.academicYear, 15, 8);
+    const issueFormatted = `${String(iss.monthIndex + 1).padStart(2, '0')}/${String(iss.day).padStart(2, '0')}/${iss.year}`;
+    const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
+    const displayId = rawId || '05849210';
+    const formattedCommaName = `${toTitleCase(lastName)}, ${firstNames}`;
+    const roleOrCourse =
+      studentInfo.status && !studentInfo.status.toLowerCase().includes('currently enrolled')
+        ? toTitleCase(studentInfo.status)
+        : studentInfo.course
+        ? studentInfo.course
+        : 'Fellow';
+
+    return (
+      <div
+        ref={forwardedRef}
+        className="id-card-container shadow-xl bg-[#FAF9F6] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900 p-3.5"
+      >
+        {/* Top Header Row: Left Cardinal Red Bar + Right Centered Bolded School Name */}
+        <div className="flex items-center justify-between gap-3 w-full">
+          <div className="w-[104px] h-[11px] bg-[#8C1515] flex-shrink-0 -ml-3.5" />
+          <div className="flex-1 text-center min-w-0">
+            <SingleLineText fontSize={cleanUniName.length > 22 ? 13 : 16.5} className="font-serif font-extrabold text-[#8C1515] tracking-tight text-center">
+              {cleanUniName}
+            </SingleLineText>
+          </div>
+        </div>
+
+        {/* Main Body */}
+        <div className={`flex-1 flex items-stretch justify-between gap-3 pt-1 min-h-0 ${isAvatarLeft ? 'flex-row' : 'flex-row-reverse'}`}>
+          {/* Student Name, ID, Role/Course, and Framed Portrait */}
+          <div className="w-[128px] flex flex-col justify-between text-left flex-shrink-0">
+            <div className="leading-tight min-w-0">
+              <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-tight text-left">
+                {formattedCommaName}
+              </SingleLineText>
+              <SingleLineText fontSize={9.5} className="font-mono font-bold text-neutral-700 tabular-nums mt-0.5 text-left">
+                {displayId}
+              </SingleLineText>
+              <SingleLineText fontSize={10} className="font-sans font-bold text-neutral-900 mt-0.5 text-left">
+                {roleOrCourse}
+              </SingleLineText>
+            </div>
+
+            <div className="w-[86px] h-[88px] border-[1.5px] border-neutral-900 bg-neutral-200 overflow-hidden shadow-2xs mt-1">
+              <img
+                src={photoUrl}
+                alt={fullName}
+                className="w-full h-full object-cover object-top"
+                referrerPolicy="no-referrer"
+                onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/male_7.webp'; }}
+              />
+            </div>
+          </div>
+
+          {/* Center/Right Stanford Block "S" Tree Emblem + Valid Dates + Barcode */}
+          <div className="flex-1 flex flex-col justify-between items-start pl-1 min-w-0">
+            {/* Iconic Cardinal Red Block S with Evergreen Tree */}
+            <div className="self-center my-auto">
+              <svg className="w-[62px] h-[78px] drop-shadow-2xs" viewBox="0 0 80 100" fill="none">
+                {/* Outer Octagonal Block S */}
+                <path
+                  d="M18 6 H62 L74 18 V36 H52 V24 L48 20 H32 L28 24 V38 L32 42 H60 L74 56 V82 L62 94 H18 L6 82 V64 H28 V76 L32 80 H48 L52 76 V60 L48 56 H20 L6 42 V18 L18 6 Z"
+                  fill="#8C1515"
+                  stroke="#FFFFFF"
+                  strokeWidth="2.5"
+                />
+                <path
+                  d="M19 8 H61 L72 19 V34 H54 V23 L49 18 H31 L26 23 V39 L31 44 H59 L72 57 V81 L61 92 H19 L8 81 V66 H26 V77 L31 82 H49 L54 77 V59 L49 54 H21 L8 41 V19 L19 8 Z"
+                  stroke="#8C1515"
+                  strokeWidth="1.2"
+                />
+                {/* Central Palo Alto Redwood Tree */}
+                <path
+                  d="M40 12 L32 28 H37 L29 42 H36 L27 58 H35 L25 74 H37 V88 H43 V74 H55 L45 58 H53 L44 42 H51 L43 28 H48 L40 12 Z"
+                  fill="#115E38"
+                  stroke="#FFFFFF"
+                  strokeWidth="1.2"
+                />
+              </svg>
+            </div>
+
+            {/* Valid Date Span & Barcode */}
+            <div className="w-full text-left leading-tight">
+              <div className="text-[8px] font-sans font-semibold text-neutral-800">Valid:</div>
+              <div className="text-[8.5px] font-sans font-bold text-neutral-950 tabular-nums">
+                {issueFormatted} – {expiryFormatted}
+              </div>
+              <div className="w-full pt-1">
+                <ScannableBarcode
+                  value={displayId}
+                  className="h-5 w-36"
+                  fill="#111827"
+                  showValue={false}
+                />
               </div>
             </div>
           </div>
