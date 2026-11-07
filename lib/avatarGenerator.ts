@@ -34,7 +34,8 @@ const HISPANIC_SURNAMES = new Set([
 ]);
 
 const EAST_ASIAN_NAMES = new Set([
-  'nguyen', 'lee', 'tan', 'wong', 'lim', 'ng', 'chua', 'chen', 'teoh', 'goh', 'chung', 'wei', 'mei', 'hui'
+  'nguyen', 'lee', 'tan', 'wong', 'lim', 'ng', 'chua', 'chen', 'teoh', 'goh', 'chung', 'wei', 'mei', 'hui',
+  'lin', 'huang', 'chang', 'wang', 'wu', 'liu', 'tsai', 'yang', 'hsu', 'cheng', 'hsieh', 'kuo', 'hung', 'tseng', 'liao', 'chou', 'yeh', 'lu'
 ]);
 
 const ARAB_MUSLIM_NAMES = new Set([
@@ -146,10 +147,19 @@ export function inferStudentDemographics(studentInfo: StudentInfo): {
     };
   }
 
-  if (EAST_ASIAN_NAMES.has(lastName) || EAST_ASIAN_NAMES.has(firstName)) {
+  if (
+    EAST_ASIAN_NAMES.has(lastName) ||
+    EAST_ASIAN_NAMES.has(firstName) ||
+    location.includes('taiwan') ||
+    location.includes('taipei') ||
+    location.includes('tainan') ||
+    location.includes('taichung') ||
+    location.includes('hsinchu') ||
+    location.includes('puzi')
+  ) {
     return {
       gender,
-      ethnicityDescription: 'East / Southeast Asian Chinese heritage with natural warm fair-to-light-tan skin tone and East Asian facial features',
+      ethnicityDescription: 'East Asian / Taiwanese heritage with natural warm fair-to-light-tan skin tone and East Asian facial features',
       shortEthnicityLabel: 'East Asian'
     };
   }

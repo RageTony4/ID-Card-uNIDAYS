@@ -528,8 +528,8 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
   // FRONT 1: UNIVERSITY OF TASMANIA (utas) — 1i5g121y6m.jpg
   // ==========================================================================
   if (template === 'utas') {
-    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 29, 11);
-    const expiryFormatted = `${String(exp.day).padStart(2, '0')} ${MONTHS_SHORT[exp.monthIndex]} ${exp.year}`;
+    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+    const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
     const displayId = rawId || '219443';
     const barcodeDigits = deriveDigits(displayId, 10, '10018');
     const courseLabel = (studentInfo.course || 'AssocDegArts,BGenStud,UPP,Ur').trim();

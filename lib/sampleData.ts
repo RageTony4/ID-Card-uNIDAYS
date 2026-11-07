@@ -239,7 +239,11 @@ const BANGLADESH_MALE_FIRST_NAMES = ['Shamsil', 'Arafin', 'Tanvir', 'Ahsan', 'Ra
 const BANGLADESH_FEMALE_FIRST_NAMES = ['Nusrat', 'Sadia', 'Fatima', 'Ayesha', 'Tasnim', 'Farhana', 'Samira', 'Sumaiya', 'Anika'];
 const BANGLADESH_LAST_NAMES = ['Ullah', 'Hasan', 'Ahmed', 'Rahman', 'Chowdhury', 'Islam', 'Hossain', 'Khan', 'Ali', 'Siddique'];
 
-type Country = 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' | 'Bangladesh';
+const TAIWAN_MALE_FIRST_NAMES = ['Chia-Hao', 'Chih-Ming', 'Chun-Hung', 'Kuan-Yu', 'Po-Han', 'Yu-Hsuan', 'Wei-Ting', 'Cheng-En', 'Pin-Jui', 'Yu-Chen', 'Po-Yu', 'Tzu-Hao', 'Hao-Yu', 'Yen-Ting', 'Ming-Hao', 'Chia-Wei', 'Kuan-Ting', 'Yi-Chen'];
+const TAIWAN_FEMALE_FIRST_NAMES = ['Shu-Fen', 'Shu-Hui', 'Mei-Ling', 'Ya-Ting', 'Yi-Chun', 'Hsin-Yi', 'Yu-Ting', 'Chia-Ying', 'Pei-Shan', 'Tzu-Ching', 'Pin-Hsuan', 'Yu-Hsuan', 'Chih-Yu', 'Yi-Ting', 'Wan-Ting', 'Chia-Yu', 'Hsin-Yu', 'Yun-Chen'];
+const TAIWAN_LAST_NAMES = ['Chen', 'Lin', 'Huang', 'Chang', 'Lee', 'Wang', 'Wu', 'Liu', 'Tsai', 'Yang', 'Hsu', 'Cheng', 'Hsieh', 'Kuo', 'Hung', 'Tseng', 'Liao', 'Chou', 'Yeh', 'Lu'];
+
+type Country = 'UK' | 'Kenya' | 'Germany' | 'Australia' | 'USA' | 'Canada' | 'India' | 'France' | 'Italy' | 'Ireland' | 'Austria' | 'Malaysia' | 'Bangladesh' | 'Taiwan';
 
 const usedNames = new Set<string>();
 
@@ -397,7 +401,16 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Politecnico di Milano': { city: 'Milan, Italy', address: 'Piazza Leonardo da Vinci, 32', postcode: '20133', country: 'Italy' },
   'Università di Padova': { city: 'Padova, Italy', address: 'Via 8 Febbraio, 2', postcode: '35122', country: 'Italy' },
   'Università di Firenze': { city: 'Florence, Italy', address: 'Piazza di San Marco, 4', postcode: '50121', country: 'Italy' },
-  'Università di Napoli Federico II': { city: 'Naples, Italy', address: 'Corso Umberto I, 40', postcode: '80138', country: 'Italy' }
+  'Università di Napoli Federico II': { city: 'Naples, Italy', address: 'Corso Umberto I, 40', postcode: '80138', country: 'Italy' },
+  'University and cultural institutions': { city: 'Xinfeng Township, Hsinchu County', address: 'No. 1, Sec. 1, Xinxing Rd., Xinfeng Township, Hsinchu County', postcode: '304', country: 'Taiwan' },
+  'University of Kang Ning': { city: 'Tainan, Taiwan', address: 'No. 188, Sec. 5, Anzhong Rd., Annan Dist., Tainan City', postcode: '709', country: 'Taiwan' },
+  'University of Taipei': { city: 'Taipei, Taiwan', address: 'No. 1, Aiguo W. Rd., Zhongzheng Dist., Taipei City', postcode: '10048', country: 'Taiwan' },
+  'University of the People': { city: 'Online', address: '595 E. Colorado Blvd., Suite 623, Pasadena, CA', postcode: '91101', country: 'Taiwan' },
+  'Asia University Taiwan': { city: 'Taichung, Taiwan', address: 'No. 500, Lioufeng Rd., Wufeng Dist., Taichung City', postcode: '41354', country: 'Taiwan' },
+  'Asia University (Taiwan) - FPT University (Vietnam)': { city: 'Taichung, Taiwan', address: 'No. 500, Lioufeng Rd., Wufeng Dist., Taichung City', postcode: '41354', country: 'Taiwan' },
+  'Asia University Alliance With FTP': { city: 'Taichung, Taiwan', address: 'No. 500, Lioufeng Rd., Wufeng Dist., Taichung City', postcode: '41354', country: 'Taiwan' },
+  'Toko University': { city: 'Puzi, Taiwan', address: 'No. 51, Sec. 2, Xuefu Rd., Puzi City, Chiayi County', postcode: '61363', country: 'Taiwan' },
+  'CTBC University of Technology': { city: 'Tainan, Taiwan', address: 'No. 49, Zhengda Rd., Xinshi Dist., Tainan City', postcode: '74448', country: 'Taiwan' }
 };
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -460,6 +473,9 @@ const getRandomPhoneNumber = (country: Country): string => {
   } else if (country === 'Bangladesh') {
     const number = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
     return `+880 17${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`;
+  } else if (country === 'Taiwan') {
+    const number = Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
+    return `+886 9${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`;
   }
   const number = Math.floor(Math.random() * 1000000000).toString().padStart(9, '0');
   return `+44 7${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`;
@@ -578,6 +594,15 @@ const getRandomId = (university: string): string => {
   if (university === 'Alexandria University') return `AU-MY-${year}-${randomNum}`;
   if (university === 'Sunway University') return `SUN-MY-${year}-${randomNum}`;
   if (university === 'BRAC University') return `1910${Math.floor(Math.random() * 9000) + 1000}`;
+  if (university === 'University and cultural institutions') return `UCI-TW-${year}-${randomNum}`;
+  if (university === 'University of Kang Ning') return `UKN-TW-${year}-${randomNum}`;
+  if (university === 'University of Taipei') return `UT-TW-${year}-${randomNum}`;
+  if (university === 'University of the People') return `UOP-${year}-${randomNum}`;
+  if (university === 'Asia University Taiwan') return `AU-TW-${year}-${randomNum}`;
+  if (university === 'Asia University (Taiwan) - FPT University (Vietnam)') return `AUFPT-TW-${year}-${randomNum}`;
+  if (university === 'Asia University Alliance With FTP') return `AUA-TW-${year}-${randomNum}`;
+  if (university === 'Toko University') return `TOKO-TW-${year}-${randomNum}`;
+  if (university === 'CTBC University of Technology') return `CTBC-TW-${year}-${randomNum}`;
   return `CEA-${year}-${randomNum}`;
 };
 
@@ -612,7 +637,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   const countryType = details.country;
   const gender = Math.random() > 0.5 ? 'male' : 'female';
   
-  const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : countryType === 'Italy' ? ITALY_LAST_NAMES : countryType === 'Ireland' ? IRELAND_LAST_NAMES : countryType === 'Austria' ? AUSTRIA_LAST_NAMES : countryType === 'Malaysia' ? MALAYSIA_LAST_NAMES : countryType === 'Bangladesh' ? BANGLADESH_LAST_NAMES : UK_LAST_NAMES;
+  const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : countryType === 'Italy' ? ITALY_LAST_NAMES : countryType === 'Ireland' ? IRELAND_LAST_NAMES : countryType === 'Austria' ? AUSTRIA_LAST_NAMES : countryType === 'Malaysia' ? MALAYSIA_LAST_NAMES : countryType === 'Bangladesh' ? BANGLADESH_LAST_NAMES : countryType === 'Taiwan' ? TAIWAN_LAST_NAMES : UK_LAST_NAMES;
   
   let fullName = '';
   let photo = '';
@@ -622,10 +647,10 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   do {
     let firstName: string;
     if (gender === 'male') {
-      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_MALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_MALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_MALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_MALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_MALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_MALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_MALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_MALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_MALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_MALE_FIRST_NAMES) : countryType === 'Malaysia' ? getRandomElement(MALAYSIA_MALE_FIRST_NAMES) : countryType === 'Bangladesh' ? getRandomElement(BANGLADESH_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
+      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_MALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_MALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_MALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_MALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_MALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_MALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_MALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_MALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_MALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_MALE_FIRST_NAMES) : countryType === 'Malaysia' ? getRandomElement(MALAYSIA_MALE_FIRST_NAMES) : countryType === 'Bangladesh' ? getRandomElement(BANGLADESH_MALE_FIRST_NAMES) : countryType === 'Taiwan' ? getRandomElement(TAIWAN_MALE_FIRST_NAMES) : getRandomElement(UK_MALE_FIRST_NAMES);
       photo = getRandomElement(MALE_AVATARS);
     } else {
-      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_FEMALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_FEMALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_FEMALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_FEMALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_FEMALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_FEMALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_FEMALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_FEMALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_FEMALE_FIRST_NAMES) : countryType === 'Malaysia' ? getRandomElement(MALAYSIA_FEMALE_FIRST_NAMES) : countryType === 'Bangladesh' ? getRandomElement(BANGLADESH_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
+      firstName = countryType === 'Kenya' ? getRandomElement(KENYA_FEMALE_FIRST_NAMES) : countryType === 'Germany' ? getRandomElement(GERMANY_FEMALE_FIRST_NAMES) : countryType === 'Australia' ? getRandomElement(AUSTRALIA_FEMALE_FIRST_NAMES) : countryType === 'USA' ? getRandomElement(US_FEMALE_FIRST_NAMES) : countryType === 'Canada' ? getRandomElement(CANADA_FEMALE_FIRST_NAMES) : countryType === 'India' ? getRandomElement(INDIA_FEMALE_FIRST_NAMES) : countryType === 'France' ? getRandomElement(FRANCE_FEMALE_FIRST_NAMES) : countryType === 'Italy' ? getRandomElement(ITALY_FEMALE_FIRST_NAMES) : countryType === 'Ireland' ? getRandomElement(IRELAND_FEMALE_FIRST_NAMES) : countryType === 'Austria' ? getRandomElement(AUSTRIA_FEMALE_FIRST_NAMES) : countryType === 'Malaysia' ? getRandomElement(MALAYSIA_FEMALE_FIRST_NAMES) : countryType === 'Bangladesh' ? getRandomElement(BANGLADESH_FEMALE_FIRST_NAMES) : countryType === 'Taiwan' ? getRandomElement(TAIWAN_FEMALE_FIRST_NAMES) : getRandomElement(UK_FEMALE_FIRST_NAMES);
       photo = getRandomElement(FEMALE_AVATARS);
     }
     const lastName = getRandomElement(lastNamePool);
@@ -653,7 +678,9 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
     dob: '12 May 2005', // Default or random
     studentId: getRandomId(university),
     phone: phone,
-    address: `${details.address}, ${details.postcode}, ${countryType === 'UK' ? 'UK' : countryType === 'USA' ? 'USA' : countryType === 'Canada' ? 'Canada' : countryType === 'India' ? 'India' : countryType === 'France' ? 'France' : countryType === 'Italy' ? 'Italy' : countryType}`,
+    address: university === 'University of the People'
+      ? `${details.address}, ${details.postcode}, USA`
+      : `${details.address}, ${details.postcode}, ${countryType === 'UK' ? 'UK' : countryType === 'USA' ? 'USA' : countryType === 'Canada' ? 'Canada' : countryType === 'India' ? 'India' : countryType === 'France' ? 'France' : countryType === 'Italy' ? 'Italy' : countryType}`,
     location: details.city,
     academicYear: '2026/2027',
     course: isAirUni ? getRandomElement(airUniCourses) : getRandomElement(COURSES),
@@ -686,6 +713,22 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
       ? 'www.kewcollegeprep.com'
       : university === 'USP College'
       ? 'www.uspcollege.ac.uk'
+      : university === 'University and cultural institutions'
+      ? 'www.must.edu.tw'
+      : university === 'University of Kang Ning'
+      ? 'www.ukn.edu.tw'
+      : university === 'University of Taipei'
+      ? 'www.utaipei.edu.tw'
+      : university === 'University of the People'
+      ? 'www.uopeople.edu'
+      : university.startsWith('Asia University')
+      ? 'www.asia.edu.tw'
+      : university === 'Toko University'
+      ? 'www.toko.edu.tw'
+      : university === 'CTBC University of Technology'
+      ? 'www.ctbctech.edu.tw'
+      : countryType === 'Taiwan'
+      ? `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu.tw`
       : countryType === 'UK'
       ? `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.ac.uk`
       : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
