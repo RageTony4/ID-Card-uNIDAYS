@@ -26,10 +26,9 @@ const App: React.FC = () => {
           parsed.photo.includes('any-link-me') ||
           parsed.photo.includes('xsgames.co') ||
           parsed.photo.includes('randomuser.me') ||
-          parsed.photo.includes('thispersondoesnotexist.com') ||
-          parsed.photo.startsWith('data:image/jpeg;base64,')
+          parsed.photo.includes('thispersondoesnotexist.com')
         ) {
-          parsed.photo = '/assets/avatars/female_1.webp';
+          parsed.photo = generateRandomStudentInfo(parsed.universityName || 'Community-Ed Academy').photo;
         }
         parsed.logo = null;
         return parsed;
@@ -37,25 +36,7 @@ const App: React.FC = () => {
         console.error('Failed to parse saved student info', e);
       }
     }
-    return {
-      universityName: 'Community-Ed Academy',
-      studentName: 'EMILY WATSON',
-      dob: '12 May 2005',
-      studentId: 'CEA-26-8219',
-      phone: '+44 7700 900461',
-      address: '42 High Street, Kensington, London, SW7 2AZ, UK',
-      location: 'London, UK',
-      academicYear: '2026/2027',
-      course: 'Bachelor of Computer Science',
-      status: 'Currently Enrolled',
-      issueDate: '01 Sep 2026',
-      validUntil: getRandomValidUntilDate(),
-      website: 'www.cea-academy.ac.uk',
-      photo: '/assets/avatars/female_1.webp',
-      logo: null,
-      bloodGroup: 'O+',
-      emergencyContact: '+44 7700 900999'
-    };
+    return generateRandomStudentInfo('Community-Ed Academy');
   });
 
   const [template, setTemplate] = useState<IdCardTemplate>(() => {

@@ -282,6 +282,7 @@ const SCHOOL_DATA = {
         'Cornerstone Community'
     ],
     'USA': [
+        'Coe College',
         'Eastbridge University',
         'Houston Christian University',
         'Newport State University',

@@ -193,6 +193,7 @@ const getSchoolAcronym = (uniName: string, defaultAcronym: string = 'UNI'): stri
   if (lower.includes('glasgow')) return 'UOG';
   if (lower.includes('william penn')) return 'WPHS';
   if (lower.includes('stanford')) return 'SU';
+  if (lower.includes('coe college') || lower === 'coe') return 'COE';
 
   const stopWords = new Set(['of', 'the', 'and', 'at', 'in', 'for', 'de', 'di', 'la', 'le']);
   const words = cleaned
@@ -245,6 +246,9 @@ const splitPrimaryAndSuffix = (uniName: string): { primary: string; secondary: s
   }
   if (lower === 'stanford university') {
     return { primary: 'Stanford', secondary: 'University' };
+  }
+  if (lower === 'coe college') {
+    return { primary: 'Coe', secondary: 'College' };
   }
 
   // Check "The University of X" or "University of X"
@@ -663,86 +667,34 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
   }
 
   // ==========================================================================
-  // FRONT 2: BRUNEL UNIVERSITY LONDON (brunel) — 650p0q335y.jpg
+  // FRONT 2: BRUNEL UNIVERSITY LONDON (brunel) — Clean Harvard-Style Simplicity
   // ==========================================================================
   if (template === 'brunel') {
     const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 30, 8);
     const expiryFormatted = `${String(exp.day).padStart(2, '0')}/${String(exp.monthIndex + 1).padStart(2, '0')}/${exp.year}`;
     const displayId = rawId || '2041434';
-    const cardNoDigits = deriveDigits(displayId, 9, '5109');
-    const levelLabel =
+    const barcodeValue = displayId.replace(/\s+/g, '') || '2041434';
+
+    const isBrunel = cleanUniName.toLowerCase().includes('brunel');
+    const { primary, secondary } = splitPrimaryAndSuffix(cleanUniName);
+    const topTitle = isBrunel ? 'BRUNEL' : primary.toUpperCase();
+    const subTitle = isBrunel ? 'UNIVERSITY LONDON' : secondary.toUpperCase();
+    const unionShort = isBrunel ? 'BRUNEL' : primary.split(/\s+/)[0].toUpperCase().slice(0, 10);
+
+    const roleLabel =
       studentInfo.status && !studentInfo.status.toLowerCase().includes('currently enrolled')
         ? studentInfo.status.toUpperCase()
-        : 'POSTGRADUATE';
-
-    // Dynamic 3-line school header + Union circle name
-    const isBrunel = cleanUniName.toLowerCase().includes('brunel');
-    let line1 = 'Brunel';
-    let line2 = 'University';
-    let line3 = 'London';
-    let unionShort = 'BRUNEL';
-
-    if (!isBrunel) {
-      const words = cleanUniName.split(/\s+/);
-      if (words.length >= 3) {
-        line1 = words[0];
-        line2 = words.slice(1, -1).join(' ');
-        line3 = words[words.length - 1];
-      } else if (words.length === 2) {
-        line1 = words[0];
-        line2 = words[1];
-        line3 = (studentInfo.location || '').split(',')[0].trim() || '';
-      } else {
-        line1 = cleanUniName;
-        line2 = 'University';
-        line3 = (studentInfo.location || '').split(',')[0].trim() || '';
-      }
-      const { primary } = splitPrimaryAndSuffix(cleanUniName);
-      unionShort = primary.split(/\s+/)[0].toUpperCase().slice(0, 10);
-    }
+        : 'STUDENT';
 
     return (
       <div
         ref={forwardedRef}
-        className="id-card-container shadow-xl bg-[#FDFDFD] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-neutral-900 p-3.5"
+        className="id-card-container shadow-xl bg-[#FDFDFD] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 !flex-col justify-between text-[#0B1F3A] p-3.5"
       >
-        {/* Top Row: Centered & Bolded School Name + Portrait (Switchable Left/Right) */}
-        <div className={`flex justify-between items-start gap-2 h-[96px] ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
-          {/* Header - Centered & Bolded */}
-          <div className="flex items-center justify-center h-full pt-0.5 min-w-0 flex-1">
-            <div className="w-[1.5px] h-14 bg-[#D9381E] flex-shrink-0" />
-            <div className="flex flex-col items-center justify-center text-center leading-[1.08] px-2 min-w-0 flex-1">
-              <span
-                className={`font-sans font-extrabold text-[#0B1F3A] tracking-tight truncate w-full text-center ${
-                  line1.length > 11 ? 'text-[14px]' : 'text-[18px]'
-                }`}
-              >
-                {line1}
-              </span>
-              {line2 && (
-                <span
-                  className={`font-sans font-bold text-[#0B1F3A] tracking-tight truncate w-full text-center ${
-                    line2.length > 12 ? 'text-[12.5px]' : 'text-[15.5px]'
-                  }`}
-                >
-                  {line2}
-                </span>
-              )}
-              {line3 && (
-                <span
-                  className={`font-sans font-bold text-[#0B1F3A] tracking-tight truncate w-full text-center ${
-                    line3.length > 12 ? 'text-[12px]' : 'text-[15px]'
-                  }`}
-                >
-                  {line3}
-                </span>
-              )}
-            </div>
-            <div className="w-[1.5px] h-14 bg-[#D9381E] flex-shrink-0" />
-          </div>
-
-          {/* Portrait */}
-          <div className={`w-[82px] h-[94px] bg-white overflow-hidden flex-shrink-0 ${isAvatarLeft ? 'ml-1' : 'mr-1'}`}>
+        {/* Top Section: Portrait + School Name / STUDENT / Course (Harvard-style layout) */}
+        <div className={`relative z-10 flex items-start gap-3 ${isAvatarLeft ? 'flex-row' : 'flex-row-reverse'}`}>
+          {/* Clean Portrait Frame */}
+          <div className="w-[84px] h-[94px] border border-[#0B1F3A] bg-neutral-100 overflow-hidden flex-shrink-0 shadow-2xs">
             <img
               src={photoUrl}
               alt={fullName}
@@ -751,53 +703,91 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/male_1.webp'; }}
             />
           </div>
+
+          {/* School Header + Role + Course */}
+          <div className="flex-1 flex flex-col items-center text-center pt-0.5 min-w-0">
+            <div className="w-full flex items-center justify-center gap-2 min-w-0">
+              <div className="w-[1.5px] h-9 bg-[#0B1F3A] flex-shrink-0" />
+              <div className="flex-1 flex flex-col items-center justify-center min-w-0">
+                <SingleLineText
+                  fontSize={topTitle.length > 14 ? 15 : 19}
+                  minFontSize={10}
+                  className="font-sans font-extrabold text-[#0B1F3A] tracking-[0.04em] leading-none text-center"
+                >
+                  {topTitle}
+                </SingleLineText>
+                <SingleLineText
+                  fontSize={subTitle.length > 16 ? 9 : 10.5}
+                  minFontSize={7}
+                  className="font-sans font-bold text-[#0B1F3A] tracking-[0.18em] leading-tight mt-1 text-center"
+                >
+                  {subTitle}
+                </SingleLineText>
+              </div>
+              <div className="w-[1.5px] h-9 bg-[#0B1F3A] flex-shrink-0" />
+            </div>
+
+            <SingleLineText
+              fontSize={14}
+              minFontSize={10}
+              className="font-sans font-extrabold text-[#0B1F3A] tracking-[0.08em] mt-2 leading-none text-center"
+            >
+              {roleLabel}
+            </SingleLineText>
+
+            {studentInfo.course && (
+              <SingleLineText
+                fontSize={8.5}
+                minFontSize={6.5}
+                className="font-sans font-semibold text-[#0B1F3A] mt-1 text-center"
+              >
+                {studentInfo.course}
+              </SingleLineText>
+            )}
+          </div>
         </div>
 
-        {/* Bottom Half: Student Name/Course + Union Circle & Level / Card No / Student ID / Expiry */}
-        <div className={`flex-1 flex justify-between items-end pt-1 gap-2 ${isAvatarLeft ? 'flex-row-reverse' : 'flex-row'}`}>
-          {/* Name/Course + Union Circle Column */}
-          <div className="flex flex-col justify-between h-full flex-1 min-w-0">
-            <div className="pl-2 pr-1 pt-1 text-center w-full min-w-0">
-              <SingleLineText fontSize={13.5} className="font-sans font-extrabold text-neutral-950 tracking-wide leading-tight text-center">
-                {toTitleCase(fullName)}
-              </SingleLineText>
-              {studentInfo.course && (
-                <SingleLineText fontSize={8.5} className="font-sans font-semibold text-[#0B1F3A]/85 leading-tight mt-1 text-center">
-                  {studentInfo.course}
-                </SingleLineText>
-              )}
-            </div>
+        {/* Middle Section: Student Name + Student ID & Expiry Date (Plain Text, No Boxes) */}
+        <div className="relative z-10 text-left mt-1 min-w-0">
+          <SingleLineText
+            fontSize={13}
+            minFontSize={9}
+            className="font-sans font-extrabold text-[#0B1F3A] uppercase tracking-wide text-left"
+          >
+            {fullName.toUpperCase()}
+          </SingleLineText>
 
-            {/* Union of Students Circle */}
-            <div className={`w-11 h-11 rounded-full bg-[#0B1F3A] flex flex-col items-center justify-center text-white p-1 shadow-xs flex-shrink-0 ${isAvatarLeft ? 'self-end' : 'self-start'}`}>
-              <span className="font-sans font-black text-[7.5px] tracking-wider leading-none">
-                UNION
-              </span>
-              <span className="font-sans font-bold text-[3.6px] tracking-wider leading-tight mt-0.5 truncate max-w-[36px]">
-                OF {unionShort}
-              </span>
-              <span className="font-sans font-bold text-[3.8px] tracking-wider leading-none">
-                STUDENTS
-              </span>
-            </div>
+          <div className="flex items-center justify-between mt-0.5 gap-2">
+            <span className="font-sans font-bold text-[11px] text-[#0B1F3A] tabular-nums">
+              ID: {displayId}
+            </span>
+            <span className="font-sans font-bold text-[10.5px] text-[#0B1F3A] tabular-nums flex-shrink-0">
+              EXP: {expiryFormatted}
+            </span>
+          </div>
+        </div>
+
+        {/* Bottom Section: Barcode on Left + Union Circle on Right */}
+        <div className="relative z-10 flex items-end justify-between pt-1">
+          <div className="w-[140px] overflow-hidden">
+            <ScannableBarcode
+              value={barcodeValue}
+              className="h-7 w-full"
+              fill="#0B1F3A"
+              showValue={false}
+            />
           </div>
 
-          {/* Level / Card No / Student ID / Expiry Column */}
-          <div className="w-[122px] text-left flex flex-col justify-end leading-[1.16] pb-0.5 flex-shrink-0">
-            <div className="font-sans font-bold text-[10px] text-neutral-950 uppercase tracking-wide mb-0.5 truncate">
-              {levelLabel}
-            </div>
-            <div className="text-[8.5px] text-neutral-800 font-medium">Card No:</div>
-            <div className="text-[10px] font-sans font-semibold text-neutral-950 pl-3 tabular-nums truncate">
-              {cardNoDigits}
-            </div>
-            <div className="text-[8.5px] text-neutral-800 font-medium mt-0.5">Student ID:</div>
-            <div className="text-[10px] font-sans font-semibold text-neutral-950 pl-3 tabular-nums truncate">
-              {displayId}
-            </div>
-            <div className="text-[8.5px] text-neutral-700 font-semibold mt-0.5">
-              Expiry: <span className="font-bold text-neutral-950 tabular-nums">{expiryFormatted}</span>
-            </div>
+          <div className="w-10 h-10 rounded-full bg-[#0B1F3A] flex flex-col items-center justify-center text-white p-1 flex-shrink-0">
+            <span className="font-sans font-black text-[6.8px] tracking-wider leading-none">
+              UNION
+            </span>
+            <span className="font-sans font-bold text-[3.4px] tracking-wider leading-tight mt-0.5 truncate max-w-[34px]">
+              OF {unionShort}
+            </span>
+            <span className="font-sans font-bold text-[3.6px] tracking-wider leading-none">
+              STUDENTS
+            </span>
           </div>
         </div>
       </div>
@@ -1771,8 +1761,6 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
   if (template === 'glasgow') {
     const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 30, 8);
     const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
-    const dobParsed = parseMatchingExpiryDate(studentInfo.dob, undefined, undefined, 15, 11);
-    const dobFormatted = `${String(dobParsed.day).padStart(2, '0')}/${String(dobParsed.monthIndex + 1).padStart(2, '0')}/${dobParsed.year > 2015 ? 2004 : dobParsed.year}`;
     const displayId = rawId || '20016842';
     const isGlasgow = cleanUniName.toLowerCase().includes('glasgow');
     const { line1: glasgowLine1, line2: glasgowLine2 } = splitTwoBalancedLines(cleanUniName);
@@ -1828,7 +1816,7 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             </div>
           </div>
 
-          {/* Right Column: "Student" Header, Portrait Photo, PGT / DOB / Expiry */}
+          {/* Right Column: "Student" Header, Portrait Photo, PGT / Expiry */}
           <div className="w-[96px] flex flex-col justify-between items-end flex-shrink-0">
             <div className="w-full text-right pr-0.5">
               <span className="font-sans font-extrabold text-[13px] text-[#1E3A8A] tracking-tight leading-none">
@@ -1848,10 +1836,6 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
 
             <div className="w-[92px] text-left font-sans text-[8px] leading-[1.24] font-bold text-neutral-900">
               <div className="font-extrabold text-neutral-950 truncate">{programShort}</div>
-              <div className="flex justify-between gap-1 tabular-nums">
-                <span>DOB</span>
-                <span className="font-extrabold">{dobFormatted}</span>
-              </div>
               <div className="flex justify-between gap-1 tabular-nums">
                 <span>Expiry</span>
                 <span className="font-extrabold">{expiryFormatted}</span>

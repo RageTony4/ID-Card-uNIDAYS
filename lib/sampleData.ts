@@ -1,5 +1,5 @@
-
 import { StudentInfo } from '../types';
+import { cryptoRandom } from './avatarGenerator';
 
 const MALE_AVATARS = [
   "/assets/avatars/t3_headshot.jpg",
@@ -316,6 +316,7 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'University of Wollongong': { city: 'Wollongong, NSW, Australia', address: 'Northfields Ave, Wollongong', postcode: '2522', country: 'Australia' },
   'Mini Bambini Early Learning Centre': { city: 'Sydney, NSW, Australia', address: '15 Bambini Way, Sydney', postcode: '2000', country: 'Australia' },
   'Northfield University': { city: 'Boston, MA, USA', address: '750 University Avenue, Boston, MA', postcode: '02115', country: 'USA' },
+  'Coe College': { city: 'Cedar Rapids, IA, USA', address: '1220 1st Ave NE, Cedar Rapids, IA', postcode: '52402', country: 'USA' },
   'Houston Christian University': { city: 'Houston, TX, USA', address: '7502 Fondren Rd, Houston, TX', postcode: '77074', country: 'USA' },
   'Newport State University': { city: 'Newport, RI, USA', address: '100 Bellevue Ave, Newport, RI', postcode: '02840', country: 'USA' },
   'William Penn High School': { city: 'New Castle, DE, USA', address: '713 E Basin Rd, New Castle, DE', postcode: '19720', country: 'USA' },
@@ -432,7 +433,7 @@ const COURSES = [
   'Bachelor of Education'
 ];
 
-const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+const getRandomElement = <T>(arr: T[]): T => arr[Math.floor(cryptoRandom() * arr.length)];
 
 const getRandomPhoneNumber = (country: Country): string => {
   if (country === 'Kenya') {
@@ -508,6 +509,7 @@ const getRandomId = (university: string): string => {
   if (university === 'Curtin University') return `176${Math.floor(10000 + Math.random() * 89999)}`;
   if (university === 'Brunel University London') return `204${Math.floor(1000 + Math.random() * 8999)}`;
   if (university === 'Durham University') return `000${Math.floor(200000 + Math.random() * 799999)}`;
+  if (university === 'Coe College') return `0${Math.floor(100000 + Math.random() * 899999)}`;
   if (university === 'Elizabeth Seton High School') return `23${Math.floor(100 + Math.random() * 899)}`;
   if (university === 'Houston Christian University') return `H013${Math.floor(10000 + Math.random() * 89999)}`;
   if (university === 'Newport State University') return `26-1-0${Math.floor(10000 + Math.random() * 89999)}`;
@@ -645,7 +647,7 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
   }
   
   const countryType = details.country;
-  const gender = Math.random() > 0.5 ? 'male' : 'female';
+  const gender = cryptoRandom() > 0.5 ? 'male' : 'female';
   
   const lastNamePool = countryType === 'Kenya' ? KENYA_LAST_NAMES : countryType === 'Germany' ? GERMANY_LAST_NAMES : countryType === 'Australia' ? AUSTRALIA_LAST_NAMES : countryType === 'USA' ? US_LAST_NAMES : countryType === 'Canada' ? CANADA_LAST_NAMES : countryType === 'India' ? INDIA_LAST_NAMES : countryType === 'France' ? FRANCE_LAST_NAMES : countryType === 'Italy' ? ITALY_LAST_NAMES : countryType === 'Ireland' ? IRELAND_LAST_NAMES : countryType === 'Austria' ? AUSTRIA_LAST_NAMES : countryType === 'Malaysia' ? MALAYSIA_LAST_NAMES : countryType === 'Bangladesh' ? BANGLADESH_LAST_NAMES : countryType === 'Taiwan' ? TAIWAN_LAST_NAMES : UK_LAST_NAMES;
   
@@ -711,6 +713,8 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
       ? 'www.mccc.edu'
       : university.toLowerCase().includes('eastbridge')
       ? 'www.eastbridge.edu'
+      : university === 'Coe College'
+      ? 'www.coe.edu'
       : university === 'Houston Christian University'
       ? 'www.hc.edu'
       : university === 'Newport State University'
