@@ -61,7 +61,7 @@ export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({
   forwardedRef
 }) => {
   const isAvatarLeft = avatarSide === 'left' || studentInfo.avatarSide === 'left';
-  const university = (studentInfo.universityName || 'EASTBRIDGE UNIVERSITY').trim().toUpperCase();
+  const university = (studentInfo.universityName || 'EASTBRIDGE UNIVERSITY').replace(/\*$/, '').trim().toUpperCase();
   const fullName = (studentInfo.studentName || 'MAYA N. OKELLO').trim().toUpperCase();
   const rawId = studentInfo.studentId || '2026 0148';
   const formattedId = formatStudentNumber(rawId);
@@ -69,10 +69,9 @@ export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({
   const validUntilFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
   const website = studentInfo.website || 'www.eastbridge.edu';
 
-  // Split university into main name and secondary suffix
-  // e.g. "EASTBRIDGE UNIVERSITY" -> "EASTBRIDGE" + "UNIVERSITY"
+  // Split university into main name and secondary suffix without inventing 'UNIVERSITY'
   let mainUniTitle = 'EASTBRIDGE';
-  let subUniTitle = 'UNIVERSITY';
+  let subUniTitle = '';
   if (university.includes('UNIVERSITY')) {
     mainUniTitle = university.replace('UNIVERSITY', '').trim() || 'EASTBRIDGE';
     subUniTitle = 'UNIVERSITY';
@@ -83,9 +82,13 @@ export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({
     const parts = university.split(' ');
     mainUniTitle = parts.slice(0, -1).join(' ');
     subUniTitle = parts[parts.length - 1];
+  } else if (university.includes('-')) {
+    const lastDash = university.lastIndexOf('-');
+    mainUniTitle = university.slice(0, lastDash).trim() || university;
+    subUniTitle = university.slice(lastDash + 1).trim();
   } else {
     mainUniTitle = university;
-    subUniTitle = 'UNIVERSITY';
+    subUniTitle = '';
   }
 
   // ===================== BACK SIDE =====================
@@ -190,14 +193,16 @@ export const EastbridgeTemplate: React.FC<EastbridgeTemplateProps> = ({
           >
             {mainUniTitle}
           </h1>
-          <span 
-            className="font-serif font-bold text-[8.5px] sm:text-[9.5px] tracking-[0.32em] text-[#CBD5E1] uppercase leading-tight mt-1 block text-center"
-            style={{
-              fontFamily: '"Cinzel", "Times New Roman", Georgia, serif'
-            }}
-          >
-            {subUniTitle}
-          </span>
+          {subUniTitle && (
+            <span 
+              className="font-serif font-bold text-[8.5px] sm:text-[9.5px] tracking-[0.32em] text-[#CBD5E1] uppercase leading-tight mt-1 block text-center"
+              style={{
+                fontFamily: '"Cinzel", "Times New Roman", Georgia, serif'
+              }}
+            >
+              {subUniTitle}
+            </span>
+          )}
         </div>
       </div>
 

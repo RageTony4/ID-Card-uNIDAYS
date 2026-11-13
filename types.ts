@@ -29,7 +29,7 @@ export interface ToastMessage {
   type: ToastType;
 }
 
-export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd' | 'd1' | 'westdale' | 'd2' | 't1' | 't2' | 't3' | 'sainik' | 'uoflife' | 'international' | 'eastbridge' | 'utas' | 'brunel' | 'curtin' | 'durham' | 'seton' | 'harvard' | 'byu' | 'usu' | 'hws' | 'hcu' | 'nsu' | 'glasgow' | 'williampenn' | 'stanford';
+export type IdCardTemplate = 'classic' | 'modern' | 'elegant' | 'official' | 'northfield' | 'shepherd' | 'd1' | 'westdale' | 'd2' | 't1' | 't2' | 't3' | 'sainik' | 'uoflife' | 'international' | 'eastbridge' | 'utas' | 'brunel' | 'curtin' | 'durham' | 'seton' | 'harvard' | 'byu' | 'usu' | 'hws' | 'hcu' | 'nsu' | 'glasgow' | 'williampenn' | 'stanford' | 'g1' | 'g2' | 'g3' | 'g4';
 
 export interface GenerationHistoryItem {
   id: string;

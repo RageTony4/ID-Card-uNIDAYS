@@ -268,7 +268,17 @@ const SCHOOL_DATA = {
         'oeoemrang-Skuul',
         'Fritz-Henßler-Berufskolleg*',
         'Luise-Henriette-Gymnasium*',
-        'Städtisches Gymnasium Hennef*'
+        'Städtisches Gymnasium Hennef*',
+        'MeisterCampus',
+        'Meine Fernakademie',
+        'Jade College',
+        'Hansa College',
+        'Driland College',
+        'Cusanos College',
+        'Explorer Community',
+        'NBS School Community',
+        'Mali Community School',
+        'Community College Haar'
     ],
     'Australia': [
         'Cranbourne East Secondary College',
@@ -644,6 +654,46 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             }`}
           >
             Stanford
+          </button>
+          <button 
+            onClick={() => onTemplateChange('g1')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'g1' 
+                ? 'border-[#D9B04C] bg-[#061E3E]/15 text-[#061E3E] dark:text-amber-300 shadow-md font-black ring-2 ring-[#D9B04C]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            G1
+          </button>
+          <button 
+            onClick={() => onTemplateChange('g2')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'g2' 
+                ? 'border-[#0E3A2A] bg-[#0E3A2A]/15 text-[#0E3A2A] dark:text-emerald-300 shadow-md font-black ring-2 ring-[#0E3A2A]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            G2
+          </button>
+          <button 
+            onClick={() => onTemplateChange('g3')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'g3' 
+                ? 'border-[#00D4FF] bg-[#03122B]/15 text-[#0284C7] dark:text-cyan-300 shadow-md font-black ring-2 ring-[#00D4FF]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            G3
+          </button>
+          <button 
+            onClick={() => onTemplateChange('g4')}
+            className={`py-2.5 px-1 rounded-lg border-2 text-[10px] md:text-xs font-bold transition-all ${
+              template === 'g4' 
+                ? 'border-[#F97316] bg-[#041A33]/15 text-[#0F766E] dark:text-teal-300 shadow-md font-black ring-2 ring-[#F97316]/40' 
+                : isDark ? 'border-zinc-800 text-zinc-500 hover:border-zinc-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+            }`}
+          >
+            G4
           </button>
           <button 
             onClick={() => onTemplateChange('eastbridge')}

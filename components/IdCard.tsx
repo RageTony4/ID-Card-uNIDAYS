@@ -5,7 +5,8 @@ import { SainikTemplate } from './templates/SainikTemplate';
 import { UOfLifeTemplate } from './templates/UOfLifeTemplate';
 import { InternationalTemplate } from './templates/InternationalTemplate';
 import { EastbridgeTemplate } from './templates/EastbridgeTemplate';
-import { NewReferenceTemplates } from './templates/NewReferenceTemplates';
+import { NewReferenceTemplates, parseMatchingExpiryDate } from './templates/NewReferenceTemplates';
+import { GSeriesTemplates } from './templates/GSeriesTemplates';
 import { ScannableQRCode } from './ScannableQRCode';
 import { ScannableBarcode } from './ScannableBarcode';
 import { UniversityCrest } from './UniversityCrest';
@@ -94,6 +95,9 @@ const formatToMMYYYY = (dateStr: string): string => {
 };
 
 const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'front', template = 'elegant', t1Variant = 'white', avatarSide = 'right' }, ref) => {
+  if (template === 'g1' || template === 'g2' || template === 'g3' || template === 'g4') {
+    return <GSeriesTemplates studentInfo={studentInfo} side={side} template={template} forwardedRef={ref} />;
+  }
   if (
     template === 'utas' ||
     template === 'brunel' ||
@@ -1201,27 +1205,68 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
       );
     }
     if (template === 'official') {
-        return (
-          <div ref={ref} className="id-card-container id-card-back shadow-lg bg-white overflow-hidden rounded-xl border border-gray-200">
-             {/* Magnetic Stripe */}
-             <div className="h-10 w-full mt-4 bg-black"></div>
-             
-             <div className="p-6 flex flex-col h-full items-center text-center justify-center">
-                <div className="flex flex-col items-center mb-6">
-                    <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wide">{displayUniversityName}</h3>
-                </div>
+      const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+      const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
+      const displayId = (studentInfo.studentId || '90789961').trim();
 
-                <div className="text-[9px] text-gray-600 space-y-2 w-4/5 text-center">
-                    <div className="border-t border-b border-gray-100 py-2 mb-2">
-                        <p className="font-bold text-black uppercase">{studentInfo.studentName}</p>
-                        <p className="font-medium text-gray-500">{studentInfo.academicYear}</p>
-                    </div>
-                    <p>Loss of this card should be reported as soon as possible to the Student Administration Centre.</p>
-                    <p>If this card is found, please contact the Student Administration Centre, {displayUniversityName} or return to {studentInfo.address}.</p>
-                </div>
-             </div>
+      return (
+        <div ref={ref} className="id-card-container id-card-back shadow-xl bg-[#FAFBFD] overflow-hidden relative rounded-xl border border-gray-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-[#0B2545]">
+          {/* Subtle Engraved Crest Watermark */}
+          <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-[0.04]">
+            <UniversityCrest className="w-36 h-36 text-[#0B2545]" monochrome />
           </div>
-        );
+
+          {/* Top D1/Harvard Navy Header Strip */}
+          <div className="h-6 w-full bg-[#0B2545] border-b border-[#D4AF37]/60 flex items-center justify-between px-3.5 flex-shrink-0 relative z-10">
+            <span className="text-[#D4AF37] text-[7.5px] font-bold uppercase tracking-[0.16em]">OFFICIAL STUDENT CREDENTIAL</span>
+            <span className="text-white/90 text-[7px] font-mono tabular-nums tracking-wider">{displayId}</span>
+          </div>
+
+          <div className="relative z-10 flex flex-col flex-1 px-3.5 py-2 justify-between overflow-hidden text-left">
+            <div className="flex items-center justify-between border-b border-[#0B2545]/15 pb-1">
+              <div className="flex items-center gap-1.5 min-w-0 flex-1 pr-2">
+                <UniversityCrest className="w-4 h-5 flex-shrink-0" />
+                <SingleLineText fontSize={9} className="font-serif font-bold uppercase tracking-wide text-[#0B2545] text-left">
+                  {displayUniversityName}
+                </SingleLineText>
+              </div>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <div className="flex flex-col text-[5px] font-sans font-bold text-[#9E1B32] leading-[1.05] text-right uppercase">
+                  <span>VALID</span>
+                  <span>THRU</span>
+                </div>
+                <span className="font-serif font-bold text-[10px] text-[#0B2545] tabular-nums">
+                  {expiryFormatted}
+                </span>
+              </div>
+            </div>
+
+            <div className="text-[#0B2545]/85 text-[6.4px] font-medium leading-[1.35] space-y-0.5 my-1">
+              <p>This credential is the official property of <span className="font-bold text-[#0B2545]">{displayUniversityName}</span> and is non-transferable.</p>
+              <p>If found, please return to Student Registrar Services: <span className="font-semibold">{studentInfo.address || 'Main Campus Administration'}</span>.</p>
+            </div>
+
+            <div className="flex items-end justify-between pt-1 border-t border-[#0B2545]/15 gap-3">
+              <ScannableBarcode
+                value={displayId.replace(/\s+/g, '') || '90789961'}
+                className="h-4 w-32 flex-shrink-0"
+                fill="#0B2545"
+                showValue={false}
+              />
+              <div className="flex flex-col items-end flex-shrink-0">
+                <div className="h-4 w-24 border-b border-[#0B2545]/40 flex items-center justify-center px-1">
+                  <SingleLineText fontSize={8} className="font-serif italic text-[#0B2545] text-center">
+                    {studentInfo.studentName}
+                  </SingleLineText>
+                </div>
+                <span className="text-[5px] font-bold uppercase tracking-widest text-[#0B2545]/60 mt-0.5">
+                  Cardholder Signature
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
     }
 
     if (template === 'northfield') {
@@ -1320,6 +1365,71 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
               <div className="absolute inset-y-0 left-0 w-[63%] bg-[#002B49]" style={{ clipPath: 'polygon(0 0, 100% 0, 85% 100%, 0 100%)' }}></div>
             </div>
 
+          </div>
+        </div>
+      );
+    }
+
+    if (template === 'classic') {
+      const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+      const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
+      const displayId = (studentInfo.studentId || '90789961').trim();
+
+      return (
+        <div ref={ref} className="id-card-container id-card-back shadow-xl bg-[#F9F8F4] overflow-hidden relative rounded-xl border border-neutral-300 font-sans select-none animate-in fade-in duration-300 flex flex-col justify-between text-[#0B2545]">
+          {/* Subtle Engraved Crest Watermark */}
+          <div className="absolute inset-0 z-0 pointer-events-none flex items-center justify-center opacity-[0.045]">
+            <UniversityCrest className="w-36 h-36 text-[#7A1224]" monochrome />
+          </div>
+
+          {/* Top Crimson & Navy Heritage Stripe */}
+          <div className="h-6 w-full bg-[#7A1224] border-b border-[#C8A24A] flex items-center justify-between px-3.5 flex-shrink-0 relative z-10">
+            <span className="text-[#F5E6C4] text-[7.5px] font-serif font-bold uppercase tracking-[0.16em]">CLASSIC ACADEMIC IDENTIFICATION</span>
+            <span className="text-white/90 text-[7px] font-mono tabular-nums tracking-wider">{displayId}</span>
+          </div>
+
+          <div className="relative z-10 flex flex-col flex-1 px-3.5 py-2 justify-between overflow-hidden text-left">
+            <div className="flex items-center justify-between border-b border-[#0B2545]/15 pb-1">
+              <div className="flex items-center gap-1.5 min-w-0 flex-1 pr-2">
+                <UniversityCrest className="w-4 h-5 flex-shrink-0" />
+                <SingleLineText fontSize={9} className="font-serif font-bold uppercase tracking-wide text-[#7A1224] text-left">
+                  {displayUniversityName}
+                </SingleLineText>
+              </div>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <div className="flex flex-col text-[5px] font-sans font-bold text-[#7A1224] leading-[1.05] text-right uppercase">
+                  <span>VALID</span>
+                  <span>THRU</span>
+                </div>
+                <span className="font-serif font-bold text-[10px] text-[#0B2545] tabular-nums">
+                  {expiryFormatted}
+                </span>
+              </div>
+            </div>
+
+            <div className="text-[#0B2545]/85 text-[6.4px] font-medium leading-[1.35] space-y-0.5 my-1">
+              <p>This card is the property of <span className="font-bold text-[#0B2545]">{displayUniversityName}</span> and must be presented upon request by school officials.</p>
+              <p>If found, please return to: <span className="font-semibold">{studentInfo.address || 'Office of the Registrar'}</span>.</p>
+            </div>
+
+            <div className="flex items-end justify-between pt-1 border-t border-[#0B2545]/15 gap-3">
+              <ScannableBarcode
+                value={displayId.replace(/\s+/g, '') || '90789961'}
+                className="h-4 w-32 flex-shrink-0"
+                fill="#0B2545"
+                showValue={false}
+              />
+              <div className="flex flex-col items-end flex-shrink-0">
+                <div className="h-4 w-24 border-b border-[#0B2545]/40 flex items-center justify-center px-1">
+                  <SingleLineText fontSize={8} className="font-serif italic text-[#0B2545] text-center">
+                    {studentInfo.studentName}
+                  </SingleLineText>
+                </div>
+                <span className="text-[5px] font-bold uppercase tracking-widest text-[#0B2545]/60 mt-0.5">
+                  Holder Signature
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -2155,7 +2265,7 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
             {/* Expiry Date / Valid Until Badge */}
             <div className="flex items-center gap-1.5 pt-0.5 border-t border-[#0B2545]/10">
               <span className="text-[6.5px] font-black text-[#0B2545] tracking-wider uppercase leading-none">Valid through:</span>
-              <div className="border border-[#0B2545] bg-[#0B2545]/5 rounded px-1.5 py-0.5">
+              <div className="flex items-center">
                 <span className="text-[8.5px] font-black text-[#0B2545] leading-none uppercase">{formatToMMYYYY(studentInfo.validUntil)}</span>
               </div>
             </div>
@@ -2490,121 +2600,152 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   }
 
-    // Official Template Scaling
-    const officialUniFontSize = displayUniversityName.length > 30 ? 'text-[9px]' : 'text-[11px]';
-    const officialNameFontSize = studentInfo.studentName.length > 25 ? 'text-[10px]' : studentInfo.studentName.length > 18 ? 'text-[12px]' : 'text-[14px]';
-
-  // Official Template (Redesigned for Authenticity)
+  // Official Template — Clean Institutional Synthesis of Harvard & D1
   if (template === 'official') {
+    const uLabel = (displayUniversityName || 'HARVARD UNIVERSITY').trim().toUpperCase();
+    const stuNameUpper = (studentInfo.studentName || 'ALEXANDER JOHNSON').trim().toUpperCase();
+    const displayId = (studentInfo.studentId || '90789961').trim();
+    const barcodeValue = displayId.replace(/\s+/g, '') || '90789961';
+    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+    const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
+
     return (
-      <div ref={ref} className="id-card-container shadow-xl bg-white overflow-hidden flex flex-col relative rounded-xl border border-gray-300">
-        <HologramBackground />
-        {/* Top Security Strip */}
-        <div className="h-2 bg-blue-800 w-full relative z-10"></div>
-        
-        <div className="flex flex-col h-full">
-          {/* Header Section */}
-          <div className="px-3 pt-0.5 pb-0 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-            <div className="flex items-center gap-2 flex-1">
-              <div className="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white border border-gray-200 rounded shadow-sm p-1">
-                <svg className="w-full h-full text-blue-800" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" />
-                </svg>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex flex-col">
-                  <h1 className={`${officialUniFontSize} font-black text-gray-900 uppercase tracking-tight leading-tight`}>
-                    {displayUniversityName}
-                  </h1>
-                  <p className="text-[7px] font-black text-blue-800 uppercase tracking-tight">Official Student ID Card</p>
-                  <p className="text-[6px] font-bold text-blue-700 uppercase tracking-widest">Issued by {displayUniversityName}</p>
-                </div>
-              </div>
-              <div className="text-right ml-auto">
-                <p className="text-[6px] font-bold text-gray-400 uppercase">Academic Year</p>
-                <p className="text-[9px] font-black text-blue-800">{studentInfo.academicYear}</p>
-              </div>
+      <div
+        ref={ref}
+        className="id-card-container shadow-xl bg-[#FAFBFD] overflow-hidden relative rounded-xl border border-neutral-300 flex flex-col justify-between font-sans select-none animate-in fade-in duration-300 text-[#0B2545]"
+      >
+        {/* Subtle Engraved Crest Watermark (D1 Heritage Motif) */}
+        <div className="absolute right-3 bottom-6 z-0 pointer-events-none opacity-[0.055]">
+          <UniversityCrest className="w-32 h-36 text-[#0B2545]" monochrome />
+        </div>
+
+        {/* TOP HEADER: Crest + University Title + Clean STUDENT Classification */}
+        <div className="w-full px-3.5 pt-2 pb-1.5 flex items-center justify-between gap-2.5 relative z-10 bg-white">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <UniversityCrest className="w-7 h-8 flex-shrink-0" />
+            <div className="w-[1px] h-6 bg-[#D4AF37]/80 flex-shrink-0" />
+            <div className="flex-1 min-w-0 text-left">
+              <SingleLineText
+                fontSize={uLabel.length > 24 ? 11.5 : 14}
+                minFontSize={8.5}
+                className="font-serif font-extrabold text-[#0B2545] uppercase tracking-wide leading-none text-left"
+              >
+                {uLabel}
+              </SingleLineText>
+              <span className="block font-sans font-bold text-[6px] text-[#9E1B32] uppercase tracking-[0.18em] mt-0.5 leading-none">
+                OFFICIAL STUDENT IDENTIFICATION
+              </span>
             </div>
           </div>
-  
-          {/* Main Content Area */}
-          <div className="flex flex-row flex-1 px-3 pt-0.5 pb-0 gap-3">
-              {/* Left: Photo */}
-              <div className="w-[38%]">
-                <div className="relative">
-                  <div className="w-full aspect-[3/4] bg-gray-100 rounded border-2 border-gray-200 overflow-hidden shadow-inner">
-                    <img 
-                      src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
-                      alt="Student" 
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  {/* Holographic-style Seal Overlay */}
-                  <div className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-blue-50/90 backdrop-blur-[1px] border border-blue-200 flex items-center justify-center shadow-sm opacity-90 z-20">
-                     <svg className="w-5 h-5 text-blue-500/40" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.1,7 14,7.9 14,9C14,10.1 13.1,11 12,11C10.9,11 10,10.1 10,9C10,7.9 10.9,7 12,7M12,13C14.67,13 20,14.33 20,17V18H4V17C4,14.33 9.33,13 12,13Z" />
-                     </svg>
-                  </div>
-                </div>
-                <div className="mt-1 flex flex-col items-center">
-                  <div className="w-full h-6 bg-white border border-gray-200 flex items-center justify-center">
-                    <div className="w-full h-full opacity-80" style={{ backgroundImage: 'repeating-linear-gradient(to right, black 0, black 1px, transparent 1px, transparent 2px)', backgroundSize: '100% 100%' }}></div>
-                  </div>
-                  <p className="text-[5px] font-mono text-gray-500 mt-0.5">{studentInfo.studentId}</p>
-                </div>
+
+          <div className="flex-shrink-0 pl-1 text-right">
+            <span className="font-serif font-bold text-[10px] text-[#0B2545] uppercase tracking-[0.12em] leading-none">
+              STUDENT
+            </span>
+          </div>
+        </div>
+
+        {/* ARCHITECTURAL ACCENT DIVIDER (D1 Navy & Gold + Harvard Crimson) */}
+        <div className="w-full h-[2.5px] flex relative z-10 flex-shrink-0">
+          <div className="w-[45%] bg-[#0B2545] h-full" />
+          <div className="w-[20%] bg-[#9E1B32] h-full" />
+          <div className="w-[35%] bg-[#D4AF37] h-full" />
+        </div>
+
+        {/* MAIN BODY: Harvard Double-Framed Portrait + Clean Uncluttered Details */}
+        <div className="flex-1 flex items-center gap-3.5 px-3.5 py-2 relative z-10 min-h-0">
+          {/* Left: Harvard-Style Double-Bordered Portrait */}
+          <div className="w-[78px] h-[96px] border-[1.5px] border-[#0B2545] p-[2px] bg-white flex-shrink-0 shadow-xs">
+            <div className="w-full h-full border border-[#0B2545]/75 overflow-hidden bg-neutral-200">
+              <img
+                src={studentInfo.photo || '/assets/avatars/female_1.webp'}
+                onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }}
+                alt={stuNameUpper}
+                className="w-full h-full object-cover object-top"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+
+          {/* Right: Streamlined Identity Block (Name, ID & Program, Barcode + Harvard Valid Thru) */}
+          <div className="flex-1 flex flex-col justify-between h-full py-0.5 min-w-0 text-left">
+            {/* Student Name */}
+            <div className="border-b border-[#0B2545]/15 pb-1">
+              <span className="text-[5.8px] font-bold text-[#0B2545]/60 tracking-[0.12em] uppercase block leading-none">
+                STUDENT NAME
+              </span>
+              <SingleLineText
+                fontSize={13}
+                minFontSize={9}
+                className="font-serif font-bold text-[#0B2545] uppercase tracking-wide leading-tight mt-0.5 text-left"
+              >
+                {stuNameUpper}
+              </SingleLineText>
+            </div>
+
+            {/* Student ID & Program Row (No 'Currently Enrolled' Clutter) */}
+            <div className="grid grid-cols-2 gap-2 my-0.5">
+              <div className="min-w-0">
+                <span className="text-[5.8px] font-bold text-[#0B2545]/60 tracking-[0.1em] uppercase block leading-none">
+                  STUDENT ID
+                </span>
+                <SingleLineText
+                  fontSize={10}
+                  minFontSize={8}
+                  className="font-mono font-bold text-[#0B2545] tabular-nums tracking-tight leading-tight mt-0.5 text-left"
+                >
+                  {displayId}
+                </SingleLineText>
               </div>
-  
-              {/* Right: Details */}
-              <div className="flex-1 flex flex-col justify-center py-0 gap-y-0.5">
-                <div className="space-y-0.5">
-                  <div>
-                    <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Full Name</label>
-                    <h2 className="text-[12px] font-black text-gray-900 uppercase leading-tight tracking-wide">
-                      {studentInfo.studentName}
-                    </h2>
-                  </div>
-  
-                  <div className="grid grid-cols-1 gap-y-0.5">
-                    <div className="flex justify-between">
-                      <div>
-                        <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Course / Enrollment</label>
-                        <p className="text-[8px] font-black text-gray-800 uppercase leading-none">{studentInfo.course}</p>
-                      </div>
-                      <div className="text-right">
-                        <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Status</label>
-                        <p className="text-[8px] font-black text-green-700 uppercase leading-none">{studentInfo.status}</p>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Student ID Number</label>
-                      <p className="text-[9px] font-bold text-gray-800 font-mono tracking-tighter">{studentInfo.studentId}</p>
-                    </div>
-                    <div className="flex justify-between pt-0.5 border-t border-gray-100">
-                      <div>
-                        <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Issued</label>
-                        <p className="text-[8px] font-bold text-gray-800">{studentInfo.issueDate}</p>
-                      </div>
-                      <div className="text-right">
-                        <label className="text-[6px] font-bold text-gray-400 uppercase tracking-wider block">Valid Until</label>
-                        <p className="text-[9px] font-black text-red-700 bg-red-50 px-1 rounded">{formatToDDMMYYYY(studentInfo.validUntil)}</p>
-                      </div>
-                    </div>
-                    <div className="pt-0.5 border-t border-gray-100 flex justify-between items-center">
-                      <div className="text-[6px] text-gray-400 font-medium">
-                        <p>{studentInfo.website}</p>
-                        <p>Verify at registrar office</p>
-                      </div>
-                      <div className="bg-blue-800 text-white px-1.5 py-0.5 rounded-sm">
-                        <p className="text-[7px] font-black uppercase tracking-widest">STUDENT</p>
-                      </div>
-                    </div>
-                  </div>
+
+              <div className="min-w-0">
+                <span className="text-[5.8px] font-bold text-[#0B2545]/60 tracking-[0.1em] uppercase block leading-none">
+                  PROGRAM
+                </span>
+                <SingleLineText
+                  fontSize={9}
+                  minFontSize={7.5}
+                  className="font-sans font-bold text-[#0B2545] leading-tight mt-0.5 text-left"
+                >
+                  {studentInfo.course || 'Undergraduate'}
+                </SingleLineText>
+              </div>
+            </div>
+
+            {/* Bottom Row: Harvard VALID THRU + Scannable Barcode */}
+            <div className="flex items-end justify-between gap-2 pt-1 border-t border-[#0B2545]/15">
+              <div className="w-[104px] overflow-hidden flex-shrink-0">
+                <ScannableBarcode
+                  value={barcodeValue}
+                  className="h-[22px] w-full"
+                  fill="#0B2545"
+                  showValue={false}
+                />
+              </div>
+
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <div className="flex flex-col text-[5.5px] font-sans font-bold text-[#9E1B32] leading-[1.05] text-right uppercase">
+                  <span>VALID</span>
+                  <span>THRU</span>
                 </div>
+                <span className="font-serif font-bold text-[11px] text-[#0B2545] tabular-nums leading-none">
+                  {expiryFormatted}
+                </span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* SLIM DEEP NAVY & GOLD INSTITUTIONAL FOOTER */}
+        <div className="w-full h-[18px] bg-[#0B2545] px-3.5 flex items-center justify-between relative z-10 border-t border-[#D4AF37]/60 flex-shrink-0">
+          <span className="text-[6px] font-bold text-[#D4AF37] tracking-[0.14em] uppercase truncate">
+            {`PROPERTY OF ${uLabel}`}
+          </span>
+          <span className="text-[6.5px] font-mono font-bold text-white/90 tabular-nums tracking-wider flex-shrink-0 ml-2">
+            {studentInfo.academicYear || `${exp.year - 1}–${exp.year}`}
+          </span>
+        </div>
+      </div>
     );
   }
 
@@ -2860,71 +3001,158 @@ const IdCard = forwardRef<HTMLDivElement, IdCardProps>(({ studentInfo, side = 'f
     );
   }
 
-  // Classic Template (Original)
+  // Classic Template — Heritage Archival Split-Pillar Synthesis of Harvard & D1
+  const classicUniLabel = (displayUniversityName || 'HARVARD UNIVERSITY').trim().toUpperCase();
+  const classicStudentName = (studentInfo.studentName || 'ALEXANDER JOHNSON').trim().toUpperCase();
+  const classicDisplayId = (studentInfo.studentId || '90789961').trim();
+  const classicBarcodeValue = classicDisplayId.replace(/\s+/g, '') || '90789961';
+  const classicExp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+  const classicExpiryFormatted = `${String(classicExp.monthIndex + 1).padStart(2, '0')}/${String(classicExp.day).padStart(2, '0')}/${classicExp.year}`;
+
   return (
-    <div ref={ref} className="id-card-container shadow-lg flex-row bg-white relative">
-      <HologramBackground />
-      {/* Microprint Border */}
-      <div className="absolute inset-0 border-[0.5px] border-gray-100 pointer-events-none opacity-20"></div>
-      
-      <div className="photo-section relative">
-        <img 
-          src={studentInfo.photo || '/assets/avatars/female_1.webp'} onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }} 
-          alt="Student"
-          className="w-full h-full object-cover" 
-          referrerPolicy="no-referrer"
-        />
-        <div className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 text-center">
-          <p className="text-white font-bold text-[6px] uppercase tracking-widest">STUDENT</p>
-        </div>
+    <div
+      ref={ref}
+      className="id-card-container shadow-xl bg-[#F9F8F4] overflow-hidden relative rounded-xl border border-neutral-300 flex flex-col justify-between font-serif select-none animate-in fade-in duration-300 text-[#0B2545]"
+    >
+      {/* Top Archival Dual-Tone Crown Bar (Harvard Crimson + Antique Gold + D1 Navy) */}
+      <div className="w-full h-[4px] flex flex-shrink-0 relative z-20">
+        <div className="w-[55%] bg-[#7A1224] h-full" />
+        <div className="w-[15%] bg-[#C8A24A] h-full" />
+        <div className="w-[30%] bg-[#0B2545] h-full" />
       </div>
-      <div className="info-section !p-2 flex flex-col">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <svg className="w-5 h-5 text-gray-700" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L1 7.5V13.75C1 18.31 4.21 22.5 12 24C19.79 22.5 23 18.31 23 13.75V7.5L12 2ZM12 4.3L19.92 8.5L12 12.7L4.08 8.5L12 12.7L4.08 8.5L12 4.3ZM5 14.5C5 15.8 5.75 16.95 7 17.65V15.5H9V19.5C6.2 18.88 5 16.81 5 14.5Z" />
-            </svg>
-            <p className="font-semibold text-gray-700 text-[8px] leading-tight uppercase">{displayUniversityName}</p>
+
+      {/* Faint Engraved Crest Watermark on Right Canvas */}
+      <div className="absolute right-2 bottom-3 z-0 pointer-events-none opacity-[0.05]">
+        <UniversityCrest className="w-36 h-40 text-[#0B2545]" monochrome />
+      </div>
+
+      {/* Main Two-Column Heritage Body */}
+      <div className="flex-1 flex items-stretch px-3.5 py-2.5 gap-3.5 relative z-10 min-h-0">
+        {/* Left Column: Harvard Double-Framed Portrait + Role + Bottom-Left Barcode */}
+        <div className="w-[86px] flex flex-col items-center justify-between flex-shrink-0">
+          {/* Double-Bordered Portrait */}
+          <div className="w-[84px] h-[98px] border-[1.5px] border-[#0B2545] p-[2px] bg-white shadow-xs flex-shrink-0">
+            <div className="w-full h-full border border-[#7A1224]/70 overflow-hidden bg-neutral-200">
+              <img
+                src={studentInfo.photo || '/assets/avatars/female_1.webp'}
+                onError={(e) => { (e.target as HTMLImageElement).src = '/assets/avatars/female_1.webp'; }}
+                alt={classicStudentName}
+                className="w-full h-full object-cover object-top"
+                referrerPolicy="no-referrer"
+              />
+            </div>
           </div>
-          <QRPlaceholder size={20} />
-        </div>
-        
-        <p className="text-[9px] font-bold text-orange-600 mt-0.5 tracking-wider uppercase">Official Student ID Card</p>
-        <p className="text-[12px] font-extrabold text-black mt-0.5 leading-tight uppercase">{studentInfo.studentName}</p>
-        
-        <div className="mt-0.5 flex justify-between items-start">
-          <div>
-            <p className="text-[5px] text-gray-500 font-semibold tracking-wider uppercase">Course / Enrollment</p>
-            <p className="text-[8px] text-black font-bold uppercase leading-none">{studentInfo.course}</p>
+
+          {/* Clean Student Role Strip */}
+          <div className="w-full border-y border-[#C8A24A]/70 py-[2px] text-center my-0.5">
+            <span className="block font-sans font-extrabold text-[7.5px] text-[#7A1224] uppercase tracking-[0.22em] leading-none">
+              STUDENT
+            </span>
           </div>
-          <div className="text-right">
-            <p className="text-[5px] text-gray-500 font-semibold tracking-wider uppercase">Status</p>
-            <p className="text-[8px] text-green-700 font-bold uppercase leading-none">{studentInfo.status}</p>
+
+          {/* Harvard-Style Bottom-Left Scannable Barcode */}
+          <div className="w-full overflow-hidden flex-shrink-0">
+            <ScannableBarcode
+              value={classicBarcodeValue}
+              className="h-[22px] w-full"
+              fill="#0B2545"
+              showValue={false}
+            />
           </div>
         </div>
 
-        <hr className="my-1 border-gray-200" />
-        
-        <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[7px] flex-grow">
+        {/* Vertical Hairline Rule */}
+        <div className="w-[1px] bg-[#C8A24A]/50 my-0.5 flex-shrink-0" />
+
+        {/* Right Column: Crest Header + D1 Divider + Uncluttered Student Details + Harvard Valid Thru */}
+        <div className="flex-1 flex flex-col justify-between min-w-0 text-left py-0.5">
+          {/* Header Lockup: Crest + Crimson Serif University Title */}
           <div>
-            <p className="text-gray-500 font-semibold tracking-wider uppercase">Student ID</p>
-            <p className="text-black font-bold font-mono">{studentInfo.studentId}</p>
+            <div className="flex items-center gap-2 min-w-0">
+              <UniversityCrest className="w-7 h-8 flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <SingleLineText
+                  fontSize={classicUniLabel.length > 22 ? 12 : 15}
+                  minFontSize={8.5}
+                  className="font-serif font-extrabold text-[#7A1224] uppercase tracking-[0.03em] leading-tight text-left"
+                >
+                  {classicUniLabel}
+                </SingleLineText>
+                <span className="block font-sans font-bold text-[5.8px] text-[#0B2545]/75 uppercase tracking-[0.18em] leading-none mt-0.5">
+                  STUDENT IDENTIFICATION CARD
+                </span>
+              </div>
+            </div>
+
+            {/* D1-Style Two-Tone Divider Line */}
+            <div className="w-full h-[2px] flex mt-1.5">
+              <div className="w-[60%] bg-[#7A1224] h-full" />
+              <div className="w-[40%] bg-[#C8A24A] h-full" />
+            </div>
           </div>
-          <div>
-            <p className="text-gray-500 font-semibold tracking-wider uppercase">Academic Year</p>
-            <p className="text-black font-bold">{studentInfo.academicYear}</p>
+
+          {/* Student Name & Course (No 'Currently Enrolled' Clutter) */}
+          <div className="my-auto py-1">
+            <span className="font-sans text-[5.8px] font-bold text-[#0B2545]/60 uppercase tracking-[0.12em] block leading-none">
+              CARDHOLDER NAME
+            </span>
+            <SingleLineText
+              fontSize={13.5}
+              minFontSize={9}
+              className="font-serif font-extrabold text-[#0B2545] uppercase tracking-wide leading-tight mt-0.5 text-left"
+            >
+              {classicStudentName}
+            </SingleLineText>
+
+            <div className="grid grid-cols-2 gap-2 mt-2 pt-1.5 border-t border-[#0B2545]/12">
+              <div className="min-w-0">
+                <span className="font-sans text-[5.5px] font-bold text-[#0B2545]/60 uppercase tracking-[0.1em] block leading-none">
+                  STUDENT ID
+                </span>
+                <SingleLineText
+                  fontSize={10}
+                  minFontSize={8}
+                  className="font-mono font-bold text-[#0B2545] tabular-nums tracking-tight leading-tight mt-0.5 text-left"
+                >
+                  {classicDisplayId}
+                </SingleLineText>
+              </div>
+
+              <div className="min-w-0">
+                <span className="font-sans text-[5.5px] font-bold text-[#0B2545]/60 uppercase tracking-[0.1em] block leading-none">
+                  FACULTY / COURSE
+                </span>
+                <SingleLineText
+                  fontSize={9}
+                  minFontSize={7.5}
+                  className="font-sans font-bold text-[#0B2545] leading-tight mt-0.5 text-left"
+                >
+                  {studentInfo.course || 'Undergraduate'}
+                </SingleLineText>
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="text-gray-500 font-semibold tracking-wider uppercase">Issued</p>
-            <p className="text-black font-medium">{studentInfo.issueDate}</p>
-          </div>
-          <div>
-            <p className="text-gray-500 font-semibold tracking-wider uppercase">Expires</p>
-            <p className="text-red-700 font-black bg-red-50 px-1 rounded inline-block">{formatToDDMMYYYY(studentInfo.validUntil)}</p>
-          </div>
-          <div className="col-span-2 mt-0.5 pt-0.5 border-t border-gray-100">
-            <p className="text-gray-400 font-medium text-[6px] leading-tight">{studentInfo.website}</p>
-            <p className="text-gray-400 font-medium text-[5px] leading-tight italic">Verify via registrar office contact</p>
+
+          {/* Bottom Row: Academic Session on Left + Harvard VALID THRU on Right */}
+          <div className="flex items-center justify-between pt-1.5 border-t border-[#C8A24A]/60 gap-2">
+            <div className="min-w-0">
+              <span className="font-sans text-[5.2px] font-bold text-[#0B2545]/60 uppercase tracking-[0.12em] block leading-none">
+                SESSION
+              </span>
+              <span className="font-sans font-extrabold text-[8.5px] text-[#0B2545] tabular-nums leading-tight block mt-0.5">
+                {studentInfo.academicYear || `${classicExp.year - 1}–${classicExp.year}`}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <div className="flex flex-col text-[5.5px] font-sans font-bold text-[#7A1224] leading-[1.05] text-right uppercase">
+                <span>VALID</span>
+                <span>THRU</span>
+              </div>
+              <span className="font-serif font-bold text-[11.5px] text-[#0B2545] tabular-nums leading-none">
+                {classicExpiryFormatted}
+              </span>
+            </div>
           </div>
         </div>
       </div>

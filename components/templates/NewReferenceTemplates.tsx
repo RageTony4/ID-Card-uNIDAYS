@@ -283,7 +283,15 @@ const splitPrimaryAndSuffix = (uniName: string): { primary: string; secondary: s
 
   const words = cleaned.split(/\s+/);
   if (words.length === 1) {
-    return { primary: words[0], secondary: 'UNIVERSITY' };
+    if (cleaned.includes('-')) {
+      const lastDash = cleaned.lastIndexOf('-');
+      const before = cleaned.slice(0, lastDash).trim();
+      const after = cleaned.slice(lastDash + 1).trim();
+      if (before && after) {
+        return { primary: before, secondary: after };
+      }
+    }
+    return { primary: words[0], secondary: '' };
   }
   if (words.length === 2) {
     return { primary: words[0], secondary: words[1] };
@@ -593,13 +601,15 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                 >
                   {headerTop} {uniOfMatch ? <span className="italic font-serif font-bold">of</span> : null}
                 </div>
-                <div
-                  className={`font-serif tracking-[0.12em] text-neutral-950 font-extrabold mt-0.5 truncate w-full text-center ${
-                    headerBot.length > 16 ? 'text-[10.5px]' : 'text-[13.5px]'
-                  }`}
-                >
-                  {headerBot}
-                </div>
+                {headerBot && (
+                  <div
+                    className={`font-serif tracking-[0.12em] text-neutral-950 font-extrabold mt-0.5 truncate w-full text-center ${
+                      headerBot.length > 16 ? 'text-[10.5px]' : 'text-[13.5px]'
+                    }`}
+                  >
+                    {headerBot}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -670,8 +680,8 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
   // FRONT 2: BRUNEL UNIVERSITY LONDON (brunel) — Clean Harvard-Style Simplicity
   // ==========================================================================
   if (template === 'brunel') {
-    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 30, 8);
-    const expiryFormatted = `${String(exp.day).padStart(2, '0')}/${String(exp.monthIndex + 1).padStart(2, '0')}/${exp.year}`;
+    const exp = parseMatchingExpiryDate(studentInfo.validUntil, studentInfo.issueDate, studentInfo.academicYear, 31, 4);
+    const expiryFormatted = `${String(exp.monthIndex + 1).padStart(2, '0')}/${String(exp.day).padStart(2, '0')}/${exp.year}`;
     const displayId = rawId || '2041434';
     const barcodeValue = displayId.replace(/\s+/g, '') || '2041434';
 
@@ -716,13 +726,15 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                 >
                   {topTitle}
                 </SingleLineText>
-                <SingleLineText
-                  fontSize={subTitle.length > 16 ? 9 : 10.5}
-                  minFontSize={7}
-                  className="font-sans font-bold text-[#0B1F3A] tracking-[0.18em] leading-tight mt-1 text-center"
-                >
-                  {subTitle}
-                </SingleLineText>
+                {subTitle && (
+                  <SingleLineText
+                    fontSize={subTitle.length > 16 ? 9 : 10.5}
+                    minFontSize={7}
+                    className="font-sans font-bold text-[#0B1F3A] tracking-[0.18em] leading-tight mt-1 text-center"
+                  >
+                    {subTitle}
+                  </SingleLineText>
+                )}
               </div>
               <div className="w-[1.5px] h-9 bg-[#0B1F3A] flex-shrink-0" />
             </div>
@@ -757,13 +769,20 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             {fullName.toUpperCase()}
           </SingleLineText>
 
-          <div className="flex items-center justify-between mt-0.5 gap-2">
+          <div className="flex items-center justify-between mt-0.5 pr-2 gap-2">
             <span className="font-sans font-bold text-[11px] text-[#0B1F3A] tabular-nums">
               ID: {displayId}
             </span>
-            <span className="font-sans font-bold text-[10.5px] text-[#0B1F3A] tabular-nums flex-shrink-0">
-              EXP: {expiryFormatted}
-            </span>
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <div className="flex flex-col text-[5.5px] font-sans font-bold text-[#9E1B32] leading-[1.05] text-right uppercase">
+                <span>VALID</span>
+                <span>THRU</span>
+              </div>
+              <span className="text-[#9E1B32] text-[7px] leading-none">▶</span>
+              <span className="font-serif font-bold text-[11.5px] text-[#0B1F3A] tabular-nums">
+                {expiryFormatted}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -935,9 +954,11 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               >
                 {toTitleCase(durhamPrimary)}
               </span>
-              <span className="font-serif font-bold text-[12px] text-neutral-800 tracking-wide mt-0.5 truncate w-full text-center">
-                {toTitleCase(durhamSecondary)}
-              </span>
+              {durhamSecondary && (
+                <span className="font-serif font-bold text-[12px] text-neutral-800 tracking-wide mt-0.5 truncate w-full text-center">
+                  {toTitleCase(durhamSecondary)}
+                </span>
+              )}
             </div>
           </div>
 
@@ -1221,13 +1242,15 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             >
               {topTitle}
             </div>
-            <div
-              className={`font-serif font-semibold text-neutral-900 leading-tight mt-0.5 pl-1 truncate w-full ${
-                subTitle.length > 14 ? 'text-[9px] tracking-[0.16em]' : 'text-[10.5px] tracking-[0.32em]'
-              }`}
-            >
-              {subTitle}
-            </div>
+            {subTitle && (
+              <div
+                className={`font-serif font-semibold text-neutral-900 leading-tight mt-0.5 pl-1 truncate w-full ${
+                  subTitle.length > 14 ? 'text-[9px] tracking-[0.16em]' : 'text-[10.5px] tracking-[0.32em]'
+                }`}
+              >
+                {subTitle}
+              </div>
+            )}
             <SingleLineText fontSize={15.5} className="font-sans font-bold text-neutral-900 tracking-[0.06em] mt-2 leading-none text-center">
               {roleLabel}
             </SingleLineText>
@@ -1312,13 +1335,15 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             >
               {bannerTop}
             </div>
-            <div
-              className={`font-serif font-bold text-slate-200 tracking-[0.2em] uppercase mt-0.5 truncate ${
-                bannerBot.length > 18 ? 'text-[9.5px]' : 'text-[11.5px]'
-              }`}
-            >
-              {bannerBot}
-            </div>
+            {bannerBot && (
+              <div
+                className={`font-serif font-bold text-slate-200 tracking-[0.2em] uppercase mt-0.5 truncate ${
+                  bannerBot.length > 18 ? 'text-[9.5px]' : 'text-[11.5px]'
+                }`}
+              >
+                {bannerBot}
+              </div>
+            )}
           </div>
         </div>
 
@@ -1487,9 +1512,11 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                 <SingleLineText fontSize={10.5} className="font-sans font-extrabold text-neutral-950 tracking-tight text-center">
                   {bottomLogoLine1}
                 </SingleLineText>
-                <SingleLineText fontSize={9.5} className="font-sans font-bold text-neutral-900 tracking-wide text-center">
-                  {bottomLogoLine2}
-                </SingleLineText>
+                {bottomLogoLine2 && (
+                  <SingleLineText fontSize={9.5} className="font-sans font-bold text-neutral-900 tracking-wide text-center">
+                    {bottomLogoLine2}
+                  </SingleLineText>
+                )}
               </div>
             </div>
           </div>
@@ -1564,9 +1591,11 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                     {toTitleCase(line2)}
                   </SingleLineText>
                 )}
-                <SingleLineText fontSize={10.5} className="font-serif font-bold text-white/95 tracking-[0.22em] uppercase mt-1 text-center">
-                  {line3}
-                </SingleLineText>
+                {line3 && (
+                  <SingleLineText fontSize={10.5} className="font-serif font-bold text-white/95 tracking-[0.22em] uppercase mt-1 text-center">
+                    {line3}
+                  </SingleLineText>
+                )}
               </div>
             </div>
 
@@ -1644,9 +1673,11 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
             <SingleLineText fontSize={nsuPrimary.length > 18 ? 13 : 16.5} className="font-serif font-extrabold text-white uppercase tracking-[0.06em] text-center">
               {nsuPrimary.toUpperCase()}
             </SingleLineText>
-            <SingleLineText fontSize={9.5} className="font-serif font-bold text-white/90 uppercase tracking-[0.38em] mt-1 text-center">
-              {nsuSecondary.toUpperCase()}
-            </SingleLineText>
+            {nsuSecondary && (
+              <SingleLineText fontSize={9.5} className="font-serif font-bold text-white/90 uppercase tracking-[0.38em] mt-1 text-center">
+                {nsuSecondary.toUpperCase()}
+              </SingleLineText>
+            )}
           </div>
         </div>
 
@@ -1790,9 +1821,11 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
               <SingleLineText fontSize={bannerTop.length > 16 ? 13 : 16.5} className="font-serif font-extrabold text-white tracking-wide leading-tight text-center">
                 {bannerTop}
               </SingleLineText>
-              <SingleLineText fontSize={bannerBot.length > 16 ? 12.5 : 16} className="font-serif font-extrabold text-white tracking-wide leading-tight text-center">
-                {bannerBot}
-              </SingleLineText>
+              {bannerBot && (
+                <SingleLineText fontSize={bannerBot.length > 16 ? 12.5 : 16} className="font-serif font-extrabold text-white tracking-wide leading-tight text-center">
+                  {bannerBot}
+                </SingleLineText>
+              )}
             </div>
 
             {/* Student Name & Red Student ID */}
@@ -1904,18 +1937,20 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
                     {topLine}
                   </span>
                 </SingleLineText>
-                <SingleLineText
-                  fontSize={botLine.length > 16 ? 11 : 13.5}
-                  className="font-serif font-black text-neutral-950 uppercase tracking-wider mt-0.5 text-center"
-                >
-                  <span
-                    style={{
-                      textShadow: '-0.8px -0.8px 0 #FFFFFF, 0.8px -0.8px 0 #FFFFFF, -0.8px 0.8px 0 #FFFFFF, 0.8px 0.8px 0 #FFFFFF'
-                    }}
+                {botLine && (
+                  <SingleLineText
+                    fontSize={botLine.length > 16 ? 11 : 13.5}
+                    className="font-serif font-black text-neutral-950 uppercase tracking-wider mt-0.5 text-center"
                   >
-                    {botLine}
-                  </span>
-                </SingleLineText>
+                    <span
+                      style={{
+                        textShadow: '-0.8px -0.8px 0 #FFFFFF, 0.8px -0.8px 0 #FFFFFF, -0.8px 0.8px 0 #FFFFFF, 0.8px 0.8px 0 #FFFFFF'
+                      }}
+                    >
+                      {botLine}
+                    </span>
+                  </SingleLineText>
+                )}
               </div>
 
               {/* Split 2-Digit Year (e.g. 26 [Emblem] 27) */}
@@ -2128,13 +2163,15 @@ export const NewReferenceTemplates: React.FC<NewReferenceTemplateProps> = ({
           >
             {hwsTop}
           </div>
-          <div
-            className={`font-serif font-extrabold text-[#1E296B] uppercase tracking-[0.04em] truncate w-full text-center ${
-              hwsBot.length > 22 ? 'text-[10.5px]' : 'text-[13.5px]'
-            }`}
-          >
-            {hwsBot}
-          </div>
+          {hwsBot && (
+            <div
+              className={`font-serif font-extrabold text-[#1E296B] uppercase tracking-[0.04em] truncate w-full text-center ${
+                hwsBot.length > 22 ? 'text-[10.5px]' : 'text-[13.5px]'
+              }`}
+            >
+              {hwsBot}
+            </div>
+          )}
         </div>
       </div>
 

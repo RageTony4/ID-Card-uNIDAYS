@@ -306,6 +306,16 @@ const SCHOOL_ADDRESS_MAP: Record<string, { city: string, address: string, postco
   'Fritz-Henßler-Berufskolleg': { city: 'Dortmund, Germany', address: 'Brügmannstraße 21', postcode: '44135', country: 'Germany' },
   'Luise-Henriette-Gymnasium': { city: 'Berlin, Germany', address: 'Germaniastraße 4-6', postcode: '12099', country: 'Germany' },
   'Städtisches Gymnasium Hennef': { city: 'Hennef, Germany', address: 'Fritz-Jacobi-Straße 10', postcode: '53773', country: 'Germany' },
+  'MeisterCampus': { city: 'Köln, Germany', address: 'Köhlstraße 8', postcode: '50827', country: 'Germany' },
+  'Meine Fernakademie': { city: 'Lippstadt, Germany', address: 'Bremer Straße 12', postcode: '59557', country: 'Germany' },
+  'Jade College': { city: 'Elsfleth, Germany', address: 'Weserstraße 52', postcode: '26931', country: 'Germany' },
+  'Hansa College': { city: 'Hamburg, Germany', address: 'Von-Essen-Straße 82', postcode: '22081', country: 'Germany' },
+  'Driland College': { city: 'Gronau, Germany', address: 'Konrad-Adenauer-Straße 85', postcode: '48599', country: 'Germany' },
+  'Cusanos College': { city: 'Bernkastel-Kues, Germany', address: 'Cusanusstraße 2', postcode: '54470', country: 'Germany' },
+  'Explorer Community': { city: 'Gera, Germany', address: 'Friedericistraße 8a', postcode: '07545', country: 'Germany' },
+  'NBS School Community': { city: 'Rödermark, Germany', address: 'Kapellenstraße 12', postcode: '63322', country: 'Germany' },
+  'Mali Community School': { city: 'Biberach an der Riss, Germany', address: 'Adenauerallee 30', postcode: '88400', country: 'Germany' },
+  'Community College Haar': { city: 'Haar, Germany', address: 'Münchener Straße 3', postcode: '85540', country: 'Germany' },
   'Cornerstone Community': { city: 'Dubbo, Australia', address: '123 Macquarie St, Dubbo', postcode: '2830', country: 'Australia' },
   'Cranbourne East Secondary College': { city: 'Cranbourne East, VIC, Australia', address: '50 Hunt Club Blvd', postcode: '3977', country: 'Australia' },
   'Bond University': { city: 'Gold Coast, QLD, Australia', address: '14 University Dr, Robina', postcode: '4226', country: 'Australia' },
@@ -502,6 +512,16 @@ const getRandomId = (university: string): string => {
   if (university === 'Fritz-Henßler-Berufskolleg') return `FHB-DE-${year}-${randomNum}`;
   if (university === 'Luise-Henriette-Gymnasium') return `LHG-DE-${year}-${randomNum}`;
   if (university === 'Städtisches Gymnasium Hennef') return `SGH-DE-${year}-${randomNum}`;
+  if (university === 'MeisterCampus') return `MC-DE-${year}-${randomNum}`;
+  if (university === 'Meine Fernakademie') return `MFA-DE-${year}-${randomNum}`;
+  if (university === 'Jade College') return `JC-DE-${year}-${randomNum}`;
+  if (university === 'Hansa College') return `HC-DE-${year}-${randomNum}`;
+  if (university === 'Driland College') return `DC-DE-${year}-${randomNum}`;
+  if (university === 'Cusanos College') return `CC-DE-${year}-${randomNum}`;
+  if (university === 'Explorer Community') return `EC-DE-${year}-${randomNum}`;
+  if (university === 'NBS School Community') return `NBS-DE-${year}-${randomNum}`;
+  if (university === 'Mali Community School') return `MCS-DE-${year}-${randomNum}`;
+  if (university === 'Community College Haar') return `CCH-DE-${year}-${randomNum}`;
   if (university === 'Cornerstone Community') return `CC-AU-${year}-${randomNum}`;
   if (university.toLowerCase().includes('cranbourne')) return `CESC-AU-${year}-${randomNum}`;
   if (university === 'Bond University') return `BU-AU-${year}-${randomNum}`;
@@ -751,8 +771,30 @@ export const generateRandomStudentInfo = (fixedUniversity?: string): StudentInfo
       ? 'www.toko.edu.tw'
       : university === 'CTBC University of Technology'
       ? 'www.ctbctech.edu.tw'
+      : university === 'MeisterCampus'
+      ? 'www.hwk-koeln.de'
+      : university === 'Meine Fernakademie'
+      ? 'www.meine-fernakademie.de'
+      : university === 'Jade College'
+      ? 'www.jade-hs.de'
+      : university === 'Hansa College'
+      ? 'www.hansa-kolleg.de'
+      : university === 'Driland College'
+      ? 'www.driland-kolleg.de'
+      : university === 'Cusanos College'
+      ? 'www.cusanus.de'
+      : university === 'Explorer Community'
+      ? 'www.semper-schulen.de'
+      : university === 'NBS School Community'
+      ? 'www.nbs-roedermark.de'
+      : university === 'Mali Community School'
+      ? 'www.malischule.de'
+      : university === 'Community College Haar'
+      ? 'www.vhs-haar.de'
       : countryType === 'Taiwan'
       ? `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu.tw`
+      : countryType === 'Germany'
+      ? `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.de`
       : countryType === 'UK'
       ? `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.ac.uk`
       : `www.${university.toLowerCase().replace(/[^a-z0-9]/g, '-')}.edu`,
