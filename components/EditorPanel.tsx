@@ -5,7 +5,13 @@ import InputField from './InputField';
 import { getRandomValidUntilDate } from '../lib/sampleData';
 import { GenerationHistory } from './GenerationHistory';
 import { QRCodeGenerator } from './QRCodeGenerator';
-import { AvatarBgOption, GeneratedAvatarItem } from '../lib/avatarGenerator';
+import {
+  AvatarBgOption,
+  AvatarProviderOption,
+  AvatarGenderOption,
+  GeneratedAvatarItem,
+  RECRAFT_FREE_CUTOFF
+} from '../lib/avatarGenerator';
 
 interface EditorPanelProps {
   studentInfo: StudentInfo;
@@ -23,6 +29,10 @@ interface EditorPanelProps {
   onToggleAiAvatar?: () => void;
   aiAvatarBg?: AvatarBgOption;
   onAiAvatarBgChange?: (bg: AvatarBgOption) => void;
+  aiAvatarProvider?: AvatarProviderOption;
+  onAiAvatarProviderChange?: (provider: AvatarProviderOption) => void;
+  aiAvatarGender?: AvatarGenderOption;
+  onAiAvatarGenderChange?: (gender: AvatarGenderOption) => void;
   isGeneratingAvatar?: boolean;
   onGenerateAiAvatarNow?: () => void;
   generatedAvatars?: GeneratedAvatarItem[];
@@ -430,6 +440,10 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
   onToggleAiAvatar,
   aiAvatarBg = 'white',
   onAiAvatarBgChange,
+  aiAvatarProvider = 'default',
+  onAiAvatarProviderChange,
+  aiAvatarGender = 'random',
+  onAiAvatarGenderChange,
   isGeneratingAvatar = false,
   onGenerateAiAvatarNow,
   generatedAvatars = [],
@@ -1017,13 +1031,114 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
             </div>
           </div>
 
+          {/* Provider Selector Dropdown & Toggle: Default Generator / Flux 2 Dev (Pollinations Free) / Recraft V4.1 Flash (OpenRouter Free) */}
+          <div className={`mt-3 pt-2.5 border-t flex flex-col gap-2.5 ${
+            isDark ? 'border-zinc-800/80' : 'border-gray-200/80'
+          }`}>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2 flex-wrap flex-1 min-w-[240px]">
+                <label
+                  htmlFor="aiAvatarProviderSelect"
+                  className={`text-[10.5px] font-bold uppercase tracking-wider ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}
+                >
+                  Provider:
+                </label>
+                <select
+                  id="aiAvatarProviderSelect"
+                  value={
+                    Date.now() >= RECRAFT_FREE_CUTOFF.getTime() && aiAvatarProvider === 'openrouter'
+                      ? 'pollinations'
+                      : aiAvatarProvider
+                  }
+                  onChange={(e) =>
+                    onAiAvatarProviderChange &&
+                    onAiAvatarProviderChange(e.target.value as AvatarProviderOption)
+                  }
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-bold border transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 ${
+                    isDark
+                      ? 'bg-zinc-800 text-white border-zinc-700'
+                      : 'bg-white text-gray-900 border-gray-300'
+                  }`}
+                >
+                  <option value="default">Default Generator</option>
+                  <option value="pollinations">Flux 2 Dev (Pollinations Free)</option>
+                  {Date.now() < new Date("2026-11-27T00:00:00Z").getTime() && (
+                    <option value="openrouter">Recraft V4.1 Flash (OpenRouter Free)</option>
+                  )}
+                </select>
+              </div>
+
+              {/* Gender Selector: Random / Male / Female */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className={`text-[10.5px] font-bold uppercase tracking-wider mr-1 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
+                  Gender:
+                </span>
+                {(['random', 'male', 'female'] as AvatarGenderOption[]).map((gOpt) => (
+                  <button
+                    key={gOpt}
+                    type="button"
+                    onClick={() => onAiAvatarGenderChange && onAiAvatarGenderChange(gOpt)}
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-bold capitalize border transition-all ${
+                      aiAvatarGender === gOpt
+                        ? 'bg-purple-600 text-white border-purple-500 shadow-xs'
+                        : isDark ? 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-zinc-200' : 'bg-white/60 text-gray-600 border-gray-200 hover:text-gray-900'
+                    }`}
+                  >
+                    {gOpt === 'random' ? 'Random' : gOpt === 'male' ? 'Male' : 'Female'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Quick Provider Pill Buttons */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                onClick={() => onAiAvatarProviderChange && onAiAvatarProviderChange('default')}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1.5 border transition-all ${
+                  aiAvatarProvider === 'default'
+                    ? 'bg-purple-600 text-white border-purple-500 shadow-xs'
+                    : isDark ? 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-zinc-200' : 'bg-white/60 text-gray-600 border-gray-200 hover:text-gray-900'
+                }`}
+              >
+                Default Generator
+              </button>
+              <button
+                type="button"
+                onClick={() => onAiAvatarProviderChange && onAiAvatarProviderChange('pollinations')}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1.5 border transition-all ${
+                  aiAvatarProvider === 'pollinations'
+                    ? 'bg-indigo-600 text-white border-indigo-400 ring-1 ring-indigo-400/40 shadow-xs'
+                    : isDark ? 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-zinc-200' : 'bg-white/60 text-gray-600 border-gray-200 hover:text-gray-900'
+                }`}
+              >
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                Flux 2 Dev (Pollinations Free)
+              </button>
+              {Date.now() < new Date("2026-11-27T00:00:00Z").getTime() && (
+                <button
+                  type="button"
+                  onClick={() => onAiAvatarProviderChange && onAiAvatarProviderChange('openrouter')}
+                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold flex items-center gap-1.5 border transition-all ${
+                    aiAvatarProvider === 'openrouter'
+                      ? 'bg-teal-600 text-white border-teal-400 ring-1 ring-teal-400/40 shadow-xs'
+                      : isDark ? 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-zinc-200' : 'bg-white/60 text-gray-600 border-gray-200 hover:text-gray-900'
+                  }`}
+                >
+                  <span className="w-2 h-2 rounded-full bg-amber-300" />
+                  Recraft V4.1 Flash (OpenRouter Free)
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Background Selector (White / Blue / Mix) + Generate Now Action */}
-          <div className={`mt-3 pt-2.5 border-t flex flex-wrap items-center justify-between gap-2 ${
+          <div className={`mt-2.5 pt-2.5 border-t flex flex-wrap items-center justify-between gap-2 ${
             isDark ? 'border-zinc-800/80' : 'border-gray-200/80'
           }`}>
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className={`text-[10.5px] font-bold uppercase tracking-wider mr-1 ${isDark ? 'text-zinc-400' : 'text-gray-600'}`}>
-                Backdrop:
+                Background:
               </span>
               <button
                 type="button"
@@ -1035,7 +1150,7 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                 }`}
               >
                 <span className="w-2.5 h-2.5 rounded-full bg-white border border-gray-400" />
-                White BG
+                White
               </button>
               <button
                 type="button"
@@ -1046,8 +1161,8 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                     : isDark ? 'bg-zinc-800 text-zinc-400 border-zinc-700 hover:text-zinc-200' : 'bg-white/60 text-gray-600 border-gray-200 hover:text-gray-900'
                 }`}
               >
-                <span className="w-2.5 h-2.5 rounded-full bg-[#93C5FD] border border-sky-600" />
-                Blue BG
+                <span className="w-2.5 h-2.5 rounded-full bg-[#3B82F6] border border-sky-600" />
+                Blue
               </button>
               <button
                 type="button"
@@ -1069,9 +1184,19 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all ${
                 isGeneratingAvatar
                   ? 'bg-purple-600/50 text-white cursor-wait'
+                  : aiAvatarProvider === 'openrouter'
+                  ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-sm active:scale-95'
+                  : aiAvatarProvider === 'pollinations'
+                  ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm active:scale-95'
                   : 'bg-purple-600 hover:bg-purple-500 text-white shadow-sm active:scale-95'
               }`}
-              title="Generate a brand-new unique AI face for the current student right now"
+              title={
+                aiAvatarProvider === 'openrouter'
+                  ? 'Generate a unique university student passport photo with Recraft V4.1 Flash (OpenRouter Free)'
+                  : aiAvatarProvider === 'pollinations'
+                  ? 'Generate a unique university student passport photo with Flux 2 Dev (Pollinations Free)'
+                  : 'Generate a brand-new unique AI face for the current student right now'
+              }
             >
               {isGeneratingAvatar ? (
                 <>
@@ -1079,14 +1204,26 @@ const EditorPanel: React.FC<EditorPanelProps> = ({
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  <span>Generating Face...</span>
+                  <span>
+                    {aiAvatarProvider === 'openrouter'
+                      ? 'Generating Recraft V4.1...'
+                      : aiAvatarProvider === 'pollinations'
+                      ? 'Generating Flux 2 Dev...'
+                      : 'Generating Face...'}
+                  </span>
                 </>
               ) : (
                 <>
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span>Generate New Face Now</span>
+                  <span>
+                    {aiAvatarProvider === 'openrouter'
+                      ? 'Generate with Recraft V4.1'
+                      : aiAvatarProvider === 'pollinations'
+                      ? 'Generate with Flux 2 Dev'
+                      : 'Generate New Face Now'}
+                  </span>
                 </>
               )}
             </button>

@@ -1,6 +1,14 @@
 import { StudentInfo } from '../types';
 
 export type AvatarBgOption = 'white' | 'blue' | 'random';
+export type AvatarProviderOption = 'default' | 'pollinations' | 'openrouter';
+export type AvatarGenderOption = 'random' | 'male' | 'female';
+
+export const RECRAFT_FREE_CUTOFF = new Date("2026-11-27T00:00:00Z");
+
+export function isRecraftFreeCutoffPassed(): boolean {
+  return Date.now() >= RECRAFT_FREE_CUTOFF.getTime();
+}
 
 export interface GeneratedAvatarItem {
   id: string;
@@ -10,6 +18,8 @@ export interface GeneratedAvatarItem {
   gender: 'male' | 'female';
   bgType: 'white' | 'blue';
   clothing: string;
+  provider?: AvatarProviderOption;
+  modelUsed?: string;
   timestamp: number;
 }
 
@@ -789,20 +799,106 @@ function w_const(w: number): number {
 
 export async function generateUniqueStudentAvatar(
   studentInfo: StudentInfo,
-  bgOption: AvatarBgOption = 'white'
+  bgOption: AvatarBgOption = 'white',
+  provider: AvatarProviderOption = 'default',
+  genderOption: AvatarGenderOption = 'random'
 ): Promise<GeneratedAvatarItem> {
-  const { gender, ethnicityDescription, shortEthnicityLabel } = inferStudentDemographics(studentInfo);
+  const inferred = inferStudentDemographics(studentInfo);
+  const gender: 'male' | 'female' =
+    genderOption === 'male' || genderOption === 'female'
+      ? genderOption
+      : provider === 'pollinations' || provider === 'openrouter'
+      ? cryptoRandom() < 0.5
+        ? 'male'
+        : 'female'
+      : inferred.gender;
+  const { ethnicityDescription, shortEthnicityLabel } = inferred;
+
   const resolvedBg: 'white' | 'blue' =
     bgOption === 'random'
       ? cryptoRandom() > 0.45 ? 'white' : 'blue'
       : bgOption;
+
+  const uniqueSeed = cryptoRandomInt(100000, 999999);
+
+  if (provider === 'openrouter') {
+    const cutoffPassed = Date.now() >= RECRAFT_FREE_CUTOFF.getTime();
+    if (cutoffPassed) {
+      console.warn('Recraft free model disabled ahead of Nov 28 expiration');
+    }
+
+    const endpoint = cutoffPassed
+      ? '/api/generate-avatar-pollinations'
+      : '/api/generate-avatar-openrouter';
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gender,
+        bgColor: resolvedBg,
+      }),
+    });
+
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data?.success || !data?.image) {
+      throw new Error(data?.error || `OpenRouter Recraft generation failed (HTTP ${response.status})`);
+    }
+
+    return {
+      id: `openrouter-avatar-${Date.now()}-${uniqueSeed}`,
+      url: data.image,
+      studentName: studentInfo.studentName || 'Student',
+      ethnicity: shortEthnicityLabel,
+      gender,
+      bgType: resolvedBg,
+      clothing: 'everyday university attire',
+      provider: cutoffPassed ? 'pollinations' : 'openrouter',
+      modelUsed: data.modelUsed || data.provider || 'recraft/recraft-v4.1-flash-v2:free',
+      timestamp: Date.now(),
+    };
+  }
+
+  if (provider === 'pollinations') {
+    const response = await fetch('/api/generate-avatar-pollinations', {
+      method: 'POST',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gender,
+        bgColor: resolvedBg,
+      }),
+    });
+
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data?.success || !data?.image) {
+      throw new Error(data?.error || `Pollinations generation failed (HTTP ${response.status})`);
+    }
+
+    return {
+      id: `pollinations-avatar-${Date.now()}-${uniqueSeed}`,
+      url: data.image,
+      studentName: studentInfo.studentName || 'Student',
+      ethnicity: shortEthnicityLabel,
+      gender,
+      bgType: resolvedBg,
+      clothing: 'everyday university attire',
+      provider: 'pollinations',
+      modelUsed: data.modelUsed || 'community/scriptsnsenses-sys/flux-2-dev-free',
+      timestamp: Date.now(),
+    };
+  }
 
   const clothing = pickRandom(STUDENT_CLOTHING_OPTIONS);
   const hairstyle = gender === 'male' ? pickRandom(HAIRSTYLE_MALE) : pickRandom(HAIRSTYLE_FEMALE);
   const expression = pickRandom(FACIAL_EXPRESSIONS);
   const age = cryptoRandomInt(18, 25);
   const glassesTrait = cryptoRandom() < 0.22 ? 'wearing modern thin-framed eyeglasses,' : 'no glasses,';
-  const uniqueSeed = cryptoRandomInt(100000, 999999);
 
   const bgPrompt =
     resolvedBg === 'white'
@@ -838,6 +934,7 @@ export async function generateUniqueStudentAvatar(
           gender,
           bgType: resolvedBg,
           clothing,
+          provider: 'default',
           timestamp: Date.now()
         };
       }
@@ -856,6 +953,8 @@ export async function generateUniqueStudentAvatar(
     gender,
     bgType: resolvedBg,
     clothing: synthesized.clothingLabel,
+    provider: 'default',
     timestamp: Date.now()
   };
 }
+

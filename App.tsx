@@ -6,7 +6,14 @@ import PreviewPanel from './components/PreviewPanel';
 import Toast from './components/Toast';
 import { generateRandomStudentInfo, getRandomValidUntilDate } from './lib/sampleData';
 import { copyTextToClipboard } from './lib/clipboard';
-import { AvatarBgOption, GeneratedAvatarItem, generateUniqueStudentAvatar } from './lib/avatarGenerator';
+import {
+  AvatarBgOption,
+  AvatarProviderOption,
+  AvatarGenderOption,
+  GeneratedAvatarItem,
+  RECRAFT_FREE_CUTOFF,
+  generateUniqueStudentAvatar
+} from './lib/avatarGenerator';
 
 const App: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -74,6 +81,19 @@ const App: React.FC = () => {
   const [aiAvatarBg, setAiAvatarBg] = useState<AvatarBgOption>(() => {
     const saved = localStorage.getItem('id_gen_ai_avatar_bg');
     return (saved === 'white' || saved === 'blue' || saved === 'random') ? saved : 'white';
+  });
+
+  const [aiAvatarProvider, setAiAvatarProvider] = useState<AvatarProviderOption>(() => {
+    const saved = localStorage.getItem('id_gen_ai_avatar_provider');
+    const cutoffPassed = Date.now() >= RECRAFT_FREE_CUTOFF.getTime();
+    if (saved === 'openrouter' && !cutoffPassed) return 'openrouter';
+    if (saved === 'openrouter' && cutoffPassed) return 'pollinations';
+    return (saved === 'default' || saved === 'pollinations') ? saved : 'default';
+  });
+
+  const [aiAvatarGender, setAiAvatarGender] = useState<AvatarGenderOption>(() => {
+    const saved = localStorage.getItem('id_gen_ai_avatar_gender');
+    return (saved === 'random' || saved === 'male' || saved === 'female') ? saved : 'random';
   });
 
   const [isGeneratingAvatar, setIsGeneratingAvatar] = useState<boolean>(false);
@@ -151,6 +171,14 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('id_gen_ai_avatar_bg', aiAvatarBg);
   }, [aiAvatarBg]);
+
+  useEffect(() => {
+    localStorage.setItem('id_gen_ai_avatar_provider', aiAvatarProvider);
+  }, [aiAvatarProvider]);
+
+  useEffect(() => {
+    localStorage.setItem('id_gen_ai_avatar_gender', aiAvatarGender);
+  }, [aiAvatarGender]);
 
   useEffect(() => {
     try {
@@ -440,7 +468,12 @@ const App: React.FC = () => {
   const triggerAiAvatarForStudent = async (targetStudent: StudentInfo, tpl?: IdCardTemplate): Promise<StudentInfo> => {
     setIsGeneratingAvatar(true);
     try {
-      const generated = await generateUniqueStudentAvatar(targetStudent, aiAvatarBg);
+      const generated = await generateUniqueStudentAvatar(
+        targetStudent,
+        aiAvatarBg,
+        aiAvatarProvider,
+        aiAvatarGender
+      );
       const updatedWithFace: StudentInfo = {
         ...targetStudent,
         photo: generated.url
@@ -452,8 +485,9 @@ const App: React.FC = () => {
       }));
       recordGeneration(updatedWithFace, tpl || template);
       return updatedWithFace;
-    } catch (e) {
+    } catch (e: any) {
       console.error('AI Avatar generation failed:', e);
+      showToast(e?.message || 'Avatar generation failed. Please try again.', 'error');
       return targetStudent;
     } finally {
       setIsGeneratingAvatar(false);
@@ -475,10 +509,24 @@ const App: React.FC = () => {
 
   const handleGenerateAiAvatarNow = async () => {
     if (isGeneratingAvatar) return;
-    showToast('Generating unique AI student portrait...', 'info');
+    showToast(
+      aiAvatarProvider === 'openrouter'
+        ? 'Generating passport portrait via Recraft V4.1 Flash (OpenRouter Free)...'
+        : aiAvatarProvider === 'pollinations'
+        ? 'Generating passport portrait via Flux 2 Dev (Pollinations)...'
+        : 'Generating unique AI student portrait...',
+      'info'
+    );
     const updated = await triggerAiAvatarForStudent(studentInfo, template);
     if (updated.photo !== studentInfo.photo) {
-      showToast('New unique AI avatar generated and selected!', 'success');
+      showToast(
+        aiAvatarProvider === 'openrouter'
+          ? 'New Recraft V4.1 Flash (OpenRouter Free) passport photo generated and selected!'
+          : aiAvatarProvider === 'pollinations'
+          ? 'New Flux 2 Dev (Pollinations) passport photo generated and selected!'
+          : 'New unique AI avatar generated and selected!',
+        'success'
+      );
     }
   };
 
@@ -678,6 +726,10 @@ const App: React.FC = () => {
             onToggleAiAvatar={handleToggleAiAvatar}
             aiAvatarBg={aiAvatarBg}
             onAiAvatarBgChange={setAiAvatarBg}
+            aiAvatarProvider={aiAvatarProvider}
+            onAiAvatarProviderChange={setAiAvatarProvider}
+            aiAvatarGender={aiAvatarGender}
+            onAiAvatarGenderChange={setAiAvatarGender}
             isGeneratingAvatar={isGeneratingAvatar}
             onGenerateAiAvatarNow={handleGenerateAiAvatarNow}
             generatedAvatars={generatedAvatars}
